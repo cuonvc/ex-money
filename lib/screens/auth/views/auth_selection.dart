@@ -1,5 +1,4 @@
-import 'package:ex_money/utils/constants/colors.dart';
-import 'package:ex_money/utils/constants/sizes.dart';
+import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,7 @@ class _AuthSelectionState extends State<AuthSelection> {
       body: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: hozPadScreen),
+          padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -25,9 +24,19 @@ class _AuthSelectionState extends State<AuthSelection> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buttonView(true, "Đăng nhập"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/auth/sign_in');
+                    },
+                    child: buttonView(true, "Đăng nhập"),
+                  ),
                   const SizedBox(height: 24,),
-                  buttonView(false, "Tạo tài khoản"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/auth/sign_up');
+                    },
+                    child: buttonView(false, "Tạo tài khoản"),
+                  ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 24),
                     child: Text("Or", style: TextStyle(color: cText, fontWeight: FontWeight.w500),),
@@ -50,7 +59,7 @@ class _AuthSelectionState extends State<AuthSelection> {
 
       },
       child: Container(
-        height: buttonHeight,
+        height: Size.buttonHeight,
         decoration: BoxDecoration(
           color: color,
           border: Border.all(color: cLineText),
