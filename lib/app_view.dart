@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/auth/views/auth_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,7 +27,7 @@ class AppView extends StatelessWidget {
       //     outline: Colors.grey,
       //   )
       // ),
-      // home: BlocProvider(),
+      home: AuthSelection()
     );
   }
 }
