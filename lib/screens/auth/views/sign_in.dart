@@ -51,9 +51,9 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                   const SizedBox(height: 18,),
-                  emailFormFiled(),
+                  credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.person, "Nhập địa chỉ email"),
                   const SizedBox(height: 18,),
-                  passwordFormFiled(),
+                  credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
                   const SizedBox(height: 16,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -126,71 +126,41 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  TextFormField emailFormFiled() {
+  TextFormField credInputFiled(TextEditingController controller, TextInputType inputType, bool passwordField, IconData icon, String hintText) {
     return TextFormField(
-      textAlignVertical: TextAlignVertical.center,
-      controller: emailInput,
-      keyboardType: TextInputType.emailAddress,
-      cursorColor: Colors.black,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 1, color: cLineText),
-            borderRadius: BorderRadius.circular(Size.borderButton)
-        ),
-        focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 1, color: cLineText),
-            borderRadius: BorderRadius.circular(Size.borderButton)
-        ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10),
-        prefixIcon: const Icon(
-          Icons.person,
-          size: 26,
-        ),
-        hintText: "Nhập địa chỉ email",
-        hintStyle: const TextStyle(
-            fontWeight: FontWeight.w400
-        ),
-        // filled: true,
-        fillColor: Colors.white,
-      ),
-    );
-  }
-
-  TextField passwordFormFiled() {
-    return TextField(
-      controller: passwordInput,
-      keyboardType: TextInputType.text,
-      obscureText: passwordVisible,
+      controller: controller,
+      keyboardType: inputType,
+      obscureText: passwordField ? passwordVisible : false,
       cursorColor: Colors.black,
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: cLineText, width: 1),
-            borderRadius: BorderRadius.circular(Size.borderButton)
+              borderSide: const BorderSide(color: cLineText, width: 1),
+              borderRadius: BorderRadius.circular(Size.borderButton)
           ),
           focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: cLineText),
               borderRadius: BorderRadius.circular(Size.borderButton)
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
-          prefixIcon: const Icon(
-            Icons.key_outlined,
+          prefixIcon: Icon(
+            icon,
             size: 26,
           ),
-          hintText: "Nhập mật khẩu",
+          hintText: hintText,
           hintStyle: const TextStyle(
-            fontWeight: FontWeight.w400
+              fontWeight: FontWeight.w400
           ),
           // filled: true,
           fillColor: Colors.white,
-          suffixIcon: IconButton(
+          suffixIcon: passwordField ?
+          IconButton(
             onPressed: () {
               setState(() {
                 passwordVisible = !passwordVisible;
               });
             },
             icon: Icon(passwordVisible ? Icons.visibility : Icons.visibility_off),
-          )
+          ) : null
       ),
     );
   }
