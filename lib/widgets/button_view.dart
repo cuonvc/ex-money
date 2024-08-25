@@ -7,7 +7,7 @@ Widget buttonView(bool isPrimary, String text) {
     decoration: BoxDecoration(
       color: isPrimary ? cPrimary : Colors.white,
       border: Border.all(color: isPrimary ? Colors.white : cLineText),
-      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderRadius: BorderRadius.circular(Size.borderButton),
     ),
     child: Center(
       child: Text(

@@ -39,7 +39,7 @@ class _AuthSelectionState extends State<AuthSelection> {
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Text("Or", style: TextStyle(color: cText, fontWeight: FontWeight.w500),),
+                    child: Text("Or", style: TextStyle(color: cTextMediumBlur, fontWeight: FontWeight.w500),),
                   ),
                   authSelectionBtn(Colors.white, "Google", 14, "google", 28),
                   const SizedBox(height: 24,),
@@ -63,7 +63,7 @@ class _AuthSelectionState extends State<AuthSelection> {
         decoration: BoxDecoration(
           color: color,
           border: Border.all(color: cLineText),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.circular(Size.borderButton),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

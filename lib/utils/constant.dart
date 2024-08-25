@@ -10,6 +10,7 @@ const cDisableBtn = Color(0xFF9D9D9D);
 class Size {
   static const double hozPadScreen = 20;
   static const double buttonHeight = 44;
+  static const double borderButton = 16;
 }
 
 class NavigatePath {
