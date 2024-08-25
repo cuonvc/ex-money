@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:ex_money/utils/auth_service.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/button_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthSelection extends StatefulWidget {
@@ -55,8 +59,9 @@ class _AuthSelectionState extends State<AuthSelection> {
 
   Widget authSelectionBtn(Color color, String text, double space, String imageName, double imageScale) {
     return GestureDetector(
-      onTap: () {
-
+      onTap: () async {
+        UserCredential cred = await AuthService().signInWithGoogle();
+        log(cred.additionalUserInfo?.profile?['email']);
       },
       child: Container(
         height: Size.buttonHeight,

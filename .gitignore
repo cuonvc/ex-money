@@ -10,6 +10,10 @@
 .svn/
 migrate_working_dir/
 
+#customize
+/lib/firebase_options.dart
+firebase.json
+
 # IntelliJ related
 *.iml
 *.ipr
