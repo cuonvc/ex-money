@@ -13,6 +13,7 @@ migrate_working_dir/
 #customize
 /lib/firebase_options.dart
 firebase.json
+android/app/google-services.json
 
 # IntelliJ related
 *.iml
