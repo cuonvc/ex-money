@@ -26,102 +26,105 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
       body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/images/logo/1.png'),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Đăng nhập",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 18,),
-                  credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.person, "Nhập địa chỉ email"),
-                  const SizedBox(height: 18,),
-                  credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
-                  const SizedBox(height: 16,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: const Text("Quên mật khẩu?", style: TextStyle(color: cPrimary),),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16,),
-                  GestureDetector(
-                    onTap: () {
-
-                    },
-                    child: buttonView(true, "Đăng nhập"),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text(
-                      "Hoặc đăng nhập với",
-                      style: TextStyle(
-                        color: cTextMediumBlur,
-                        fontWeight: FontWeight.w500
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: oAuthSelectionBtn(Colors.white, "Google", 14, "google", 28),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: oAuthSelectionBtn(Colors.white, "Github", 14, "github", 64),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+          color: Colors.white,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset('assets/images/logo/1.png'),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Bạn chưa có tài khoản? ",
+                        const Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Đăng nhập",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700
+                              ),
+                            )
+                          ],
                         ),
+                        const SizedBox(height: 18,),
+                        credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.person, "Nhập địa chỉ email"),
+                        const SizedBox(height: 18,),
+                        credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
+                        const SizedBox(height: 16,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+
+                              },
+                              child: const Text("Quên mật khẩu?", style: TextStyle(color: cPrimary),),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16,),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/auth/sign_up');
+
                           },
-                          child: const Text("Đăng ký", style: TextStyle(color: cPrimary),),
+                          child: buttonView(true, "Đăng nhập"),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          child: Text(
+                            "Hoặc đăng nhập với",
+                            style: TextStyle(
+                                color: cTextMediumBlur,
+                                fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+
+                              },
+                              child: oAuthSelectionBtn(Colors.white, "Google", 14, "google", 28),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+
+                              },
+                              child: oAuthSelectionBtn(Colors.white, "Github", 14, "github", 64),
+                            )
+                          ],
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Bạn chưa có tài khoản? ",
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/auth/sign_up');
+                                  },
+                                  child: const Text("Đăng ký", style: TextStyle(color: cPrimary),),
+                                )
+                              ],
+                            )
                         )
                       ],
-                    )
-                  )
-                ],
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-        ),
+          )
       ),
     );
   }

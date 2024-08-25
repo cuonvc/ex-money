@@ -24,67 +24,71 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/images/logo/1.png'),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Tạo tài khoản",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 18,),
-                  credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.email, "Nhập địa chỉ email"),
-                  const SizedBox(height: 18,),
-                  credInputFiled(nameInput, TextInputType.text, false, Icons.person, "Nhập tên của bạn"),
-                  const SizedBox(height: 18,),
-                  credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
-                  const SizedBox(height: 18,),
-                  credInputFiled(passwordConfirmInput, TextInputType.visiblePassword, true, Icons.key, "Nhập lại mật khẩu"),
-                  const SizedBox(height: 16,),
-
-                  const SizedBox(height: 16,),
-                  GestureDetector(
-                    onTap: () {
-
-                    },
-                    child: buttonView(true, "Tạo tài khoản"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+          color: Colors.white,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Image.asset('assets/images/logo/1.png'),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Bạn đã có tài khoản? ",
+                        const Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Tạo tài khoản",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700
+                              ),
+                            )
+                          ],
                         ),
+                        const SizedBox(height: 18,),
+                        credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.email, "Nhập địa chỉ email"),
+                        const SizedBox(height: 18,),
+                        credInputFiled(nameInput, TextInputType.text, false, Icons.person, "Nhập tên của bạn"),
+                        const SizedBox(height: 18,),
+                        credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
+                        const SizedBox(height: 18,),
+                        credInputFiled(passwordConfirmInput, TextInputType.visiblePassword, true, Icons.key, "Nhập lại mật khẩu"),
+                        const SizedBox(height: 16,),
+
+                        const SizedBox(height: 16,),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/auth/sign_in');
+
                           },
-                          child: const Text("Đăng nhập", style: TextStyle(color: cPrimary),),
+                          child: buttonView(true, "Tạo tài khoản"),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Bạn đã có tài khoản? ",
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/auth/sign_in');
+                                  },
+                                  child: const Text("Đăng nhập", style: TextStyle(color: cPrimary),),
+                                )
+                              ],
+                            )
                         )
                       ],
-                    )
-                  )
-                ],
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-        ),
+          )
       ),
     );
   }
