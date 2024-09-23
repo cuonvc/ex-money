@@ -16,4 +16,5 @@ class Size {
 class NavigatePath {
   static String signInPath = "/auth/sign_in";
   static String signUpPath = "/auth/sign_up";
+  static String homePath = "/home";
 }

@@ -1,10 +1,14 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/auth/blocs/sign_in_block/sign_in_bloc.dart';
+import 'package:ex_money/screens/auth/views/sign_in.dart';
 import 'package:ex_money/utils/auth_service.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repository/repository.dart';
 
 class AuthSelection extends StatefulWidget {
   const AuthSelection({super.key});
@@ -29,7 +33,20 @@ class _AuthSelectionState extends State<AuthSelection> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute<SignInModel>(
+                          builder: (BuildContext ctx) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (ctx) => SignInBloc(UserRepositoryImpl()),
+                              )
+                            ],
+                            child: const SignIn(),
+                          )
+                        ),
+                      );
                       Navigator.pushNamed(context, '/auth/sign_in');
                     },
                     child: buttonView(true, "Đăng nhập"),
