@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 Widget oAuthSelectionBtn(Color color, String text, double space, String imageName, double imageScale) {
   return Container(
-    height: Size.buttonHeight,
+    height: ConstantSize.buttonHeight,
     width: 160,
     decoration: BoxDecoration(
       color: color,
       border: Border.all(color: cLineText),
-      borderRadius: BorderRadius.circular(Size.borderButton),
+      borderRadius: BorderRadius.circular(ConstantSize.borderButton),
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,

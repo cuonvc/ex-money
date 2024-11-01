@@ -10,7 +10,7 @@ class UserRepositoryImpl implements UserRepository {
   final authController = AuthController();
 
   @override
-  Future<void> signIn(SignInModel signModel) async {
+  Future<dynamic> signIn(SignInModel signModel) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await authController.handleSignIn(signModel)).bodyBytes));
@@ -18,8 +18,10 @@ class UserRepositoryImpl implements UserRepository {
 
       if(response.code == 0) {
         log("Login success");
+        return response.data;
       } else {
         log("Login failed");
+        return null;
       }
     } catch (e) {
       log('Error cached - ${e.toString()}');

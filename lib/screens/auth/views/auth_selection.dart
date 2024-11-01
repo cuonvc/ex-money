@@ -24,7 +24,7 @@ class _AuthSelectionState extends State<AuthSelection> {
       body: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
+          padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -81,11 +81,11 @@ class _AuthSelectionState extends State<AuthSelection> {
         log(cred.additionalUserInfo?.profile?['email']);
       },
       child: Container(
-        height: Size.buttonHeight,
+        height: ConstantSize.buttonHeight,
         decoration: BoxDecoration(
           color: color,
           border: Border.all(color: cLineText),
-          borderRadius: BorderRadius.circular(Size.borderButton),
+          borderRadius: BorderRadius.circular(ConstantSize.borderButton),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

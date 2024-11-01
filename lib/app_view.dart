@@ -1,6 +1,8 @@
 import 'package:ex_money/screens/auth/views/auth_selection.dart';
 import 'package:ex_money/screens/auth/views/sign_in.dart';
 import 'package:ex_money/screens/auth/views/sign_up.dart';
+import 'package:ex_money/screens/main/views/home_screen.dart';
+import 'package:ex_money/screens/main/views/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -33,6 +35,7 @@ class AppView extends StatelessWidget {
         '/auth/selection': (context) => AuthSelection(),
         '/auth/sign_in': (context) => SignIn(),
         '/auth/sign_up': (context) => SignUp(),
+        '/home': (context) => MainScreen()
       },
     );
   }

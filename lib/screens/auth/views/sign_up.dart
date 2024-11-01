@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
+                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -102,11 +102,11 @@ class _SignUpState extends State<SignUp> {
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: cLineText, width: 1),
-              borderRadius: BorderRadius.circular(Size.borderButton)
+              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
           ),
           focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: cLineText),
-              borderRadius: BorderRadius.circular(Size.borderButton)
+              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
           prefixIcon: Icon(
