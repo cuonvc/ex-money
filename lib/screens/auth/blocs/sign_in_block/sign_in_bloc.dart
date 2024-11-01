@@ -13,8 +13,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInEv>((event, emit) async {
       emit(SignInLoading());
       try {
-        await userRepository.signIn(event.signInModel);
-        emit(SignInSuccess());
+        List data = await userRepository.signIn(event.signInModel);
+        emit(SignInSuccess(data));
       } catch (e) {
         emit(SignInFailure());
       }

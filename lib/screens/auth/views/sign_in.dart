@@ -41,7 +41,7 @@ class _SignInState extends State<SignIn> {
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
         if (state is SignInSuccess) {
-          Navigator.pushNamed(context, NavigatePath.homePath);
+          Navigator.pushNamed(context, NavigatePath.homePath, arguments: state.data);
         } else if (state is SignInLoading) {
           setState(() {
             isLoading = true;
@@ -58,7 +58,7 @@ class _SignInState extends State<SignIn> {
             child: ListView(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Size.hozPadScreen),
+                  padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -169,11 +169,11 @@ class _SignInState extends State<SignIn> {
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: cLineText, width: 1),
-              borderRadius: BorderRadius.circular(Size.borderButton)
+              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
           ),
           focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: cLineText),
-              borderRadius: BorderRadius.circular(Size.borderButton)
+              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
           prefixIcon: Icon(
