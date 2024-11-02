@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/views/home/components/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -212,65 +213,7 @@ class _HomeState extends State<HomeScreen> {
           ],
         ),
 
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 10),
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (ctx, int i) {
-                return Container(
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.pets,
-                            color: Colors.amber,
-                            size: 30,
-                          ),
-                          SizedBox(width: 10,),
-                          Text(
-                            "Thức ăn chó",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: cText
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "-450.000",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          Text(
-                            "Hôm nay - 7:30",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
+        const Expanded(child: ExpenseList(),),
       ],
     );
   }

@@ -1,4 +1,4 @@
-import 'package:ex_money/screens/main/views/home_screen.dart';
+import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note_screen.dart';
 import 'package:ex_money/screens/main/views/stats_screen.dart';
 import 'package:ex_money/screens/main/views/wallet_screen.dart';

@@ -1,5 +1,7 @@
 const String domain = "https://viper-chief-secondly.ngrok-free.app";
 
+const accessTokenTest = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsIm5hbWUiOiJDdW9uZyB1cGQiLCJpZCI6IjIwMjQ4MjcyMDk0NTMxNjVmNGU0NzgwYTk5YWU0MjcwZmUzYzI5NzIxMDI3Iiwic3ViIjoiMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczMDM4NDI1MywiZXhwIjoxNzM4MTYwMjUzfQ.9jfY1u6IoUYf6aYAOeGJesF-Jp5BCTgHrmseM-vLhio";
+
 const String response_code = "code";
 const String responpse_status = "status";
 const String response_status_code = "statusCode";
