@@ -1,4 +1,5 @@
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,7 @@ class _ExpenseListState extends State<ExpenseList> {
                                 ),
                               ),
                               Text(
-                                "${expense.createdAt}",
+                                "${dateTimeFormatedFromStr(expense.createdAt)}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300
                                 ),
