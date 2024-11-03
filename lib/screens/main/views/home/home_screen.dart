@@ -25,7 +25,7 @@ class _HomeState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 60,),
+        SizedBox(height: 20,),
         //header
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

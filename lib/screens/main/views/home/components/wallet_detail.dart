@@ -37,7 +37,7 @@ class _WalletDetailState extends State<WalletDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Đã chi tiêu",
+                        "Số dư còn lại",
                         style: TextStyle(
                           fontSize: 14,
                           color: cText,
@@ -65,7 +65,7 @@ class _WalletDetailState extends State<WalletDetail> {
                   SizedBox(height: 10,),
 
                   Text(
-                    "${response.totalExpense} VND",
+                    "${response.balance} VND",
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900
@@ -93,12 +93,13 @@ class _WalletDetailState extends State<WalletDetail> {
                               color: Colors.green,
                             ),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "Số dư",
+                                  "Hạn mức",
                                 ),
                                 Text(
-                                    "${response.balance}"
+                                    "${response.totalIncome}"
                                 )
                               ],
                             )
@@ -121,6 +122,7 @@ class _WalletDetailState extends State<WalletDetail> {
                               size: 34,
                             ),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
                                   "Đã chi",
