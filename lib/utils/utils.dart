@@ -14,15 +14,7 @@ String dateTimeFormated(DateTime dateTime) {
 
 String dateTimeFormatedFromStr(String dateTime) {
   DateTime input = DateTime.parse(dateTime);
-  DateTime now = DateTime.now();
-  late String formated = "";
-  if (now.year == input.year && now.month == input.month && now.day == input.day) {
-    formated = 'Hôm nay - ${DateFormat('HH:mm').format(input)}';
-  } else {
-    formated = DateFormat('dd/MM/yyyy').format(input);
-  }
-
-  return formated;
+  return dateTimeFormated(input);
 }
 
 String getAmountFormated(int amount) {

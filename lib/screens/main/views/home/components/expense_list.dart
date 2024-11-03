@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,53 +35,58 @@ class _ExpenseListState extends State<ExpenseList> {
                   itemCount: list.length,
                   itemBuilder: (ctx, int i) {
                     ExpenseResponse expense = ExpenseResponse.fromMap(list[i]);
-                    return Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.pets,
-                                color: Colors.amber,
-                                size: 30,
-                              ),
-                              SizedBox(width: 10,),
-                              Text(
-                                "${expense.name}",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: cText
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, NavigatePath.expenseDetailPath, arguments: expense);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.pets,
+                                  color: Colors.amber,
+                                  size: 30,
                                 ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${expense.amount}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                SizedBox(width: 10,),
+                                Text(
+                                  "${expense.name}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: cText
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${expense.amount}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "${dateTimeFormatedFromStr(expense.createdAt)}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                                Text(
+                                  "${dateTimeFormatedFromStr(expense.createdAt)}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w300
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     );
                   },

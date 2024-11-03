@@ -101,7 +101,7 @@ class _SignInState extends State<SignIn> {
                               signInModel.password = passwordInput.text;
                               context.read<SignInBloc>().add(SignInEv(signInModel));
                             },
-                            child: buttonView(true, "Đăng nhập"),
+                            child: buttonView(true, "Đăng nhập", null),
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 14),

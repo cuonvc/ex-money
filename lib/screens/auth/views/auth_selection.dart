@@ -49,14 +49,14 @@ class _AuthSelectionState extends State<AuthSelection> {
                       );
                       Navigator.pushNamed(context, '/auth/sign_in');
                     },
-                    child: buttonView(true, "Đăng nhập"),
+                    child: buttonView(true, "Đăng nhập", null),
                   ),
                   const SizedBox(height: 24,),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, '/auth/sign_up');
                     },
-                    child: buttonView(false, "Tạo tài khoản"),
+                    child: buttonView(false, "Tạo tài khoản", null),
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 24),

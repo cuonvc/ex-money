@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-const cPrimary = Color(0xFF1F6AFC);
+const cPrimary = Color(0xFF636AE8);
+const cBlurPrimary = Color(0xFFF2F2FD);
 const cText = Color(0xFF1D1B20);
 const cTextDisable = Color(0xFF707070);
 const cLineText = Color(0xFF9D9D9D);
@@ -18,4 +19,5 @@ class NavigatePath {
   static String signInPath = "/auth/sign_in";
   static String signUpPath = "/auth/sign_up";
   static String homePath = "/home";
+  static String expenseDetailPath = "/expense_detail";
 }

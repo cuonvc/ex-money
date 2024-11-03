@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUp> {
                           onTap: () {
 
                           },
-                          child: buttonView(true, "Tạo tài khoản"),
+                          child: buttonView(true, "Tạo tài khoản", null),
                         ),
                         Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
