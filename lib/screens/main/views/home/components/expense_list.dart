@@ -18,7 +18,7 @@ class _ExpenseListState extends State<ExpenseList> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GetExpenseBloc(ExpenseRepositoryImpl())..add(GetExpenseEv()),
+      create: (context) => GetExpenseBloc(ExpenseRepositoryImpl())..add(GetExpenseEv(null)), //default walletId is blank
       child: BlocBuilder<GetExpenseBloc, GetExpenseState>(
           builder: (context, state) {
             if (state is GetExpenseFailure) {

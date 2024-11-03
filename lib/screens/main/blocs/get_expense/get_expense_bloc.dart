@@ -12,10 +12,10 @@ class GetExpenseBloc extends Bloc<GetExpenseEvent, GetExpenseState> {
   final ExpenseRepository expenseRepository;
 
   GetExpenseBloc(this.expenseRepository) : super(GetExpenseInitial()) {
-    on<GetExpenseEvent>((event, emit) async {
+    on<GetExpenseEv>((event, emit) async {
       emit(GetExpenseLoading());
       try {
-        List data = await expenseRepository.getExpenseList();
+        List data = await expenseRepository.getExpenseList(event.walletId);
         emit(GetExpenseSuccess(data[0]));
       } catch (e) {
         log("Get Expense failed: $e");

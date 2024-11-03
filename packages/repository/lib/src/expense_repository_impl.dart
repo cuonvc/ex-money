@@ -10,10 +10,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   final expenseController = ExpenseController();
 
   @override
-  Future<dynamic> getExpenseList() async {
+  Future<dynamic> getExpenseList(String? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await expenseController.getExpenseList()).bodyBytes));
+          utf8.decode((await expenseController.getExpenseList(walletId)).bodyBytes));
       HttpResponse response = HttpResponse.toObject(mapResponse);
       if(response.code == 0) {
         log("Login success");

@@ -8,7 +8,11 @@ sealed class GetExpenseEvent extends Equatable {
 }
 
 class GetExpenseEv extends GetExpenseEvent {
-  late final ExpenseResponse expenseResponse;
+  ExpenseResponse? expenseResponse;
+  String? walletId;
+
+
+  GetExpenseEv(this.walletId);
 
   @override
   List<Object?> get props => [expenseResponse];

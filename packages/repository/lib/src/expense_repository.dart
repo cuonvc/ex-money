@@ -1,3 +1,3 @@
 abstract class ExpenseRepository {
-  Future<dynamic> getExpenseList();
+  Future<dynamic> getExpenseList(String? walletId);
 }
