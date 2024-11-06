@@ -10,6 +10,7 @@ class WalletDetailResponse {
   num totalExpense;
   num balance;
   List<ExpenseResponse> expenses;
+  List<Map<dynamic, dynamic>> otherWalletMap;
   bool isDefault;
   String createdAt;
   String? updatedAt;
@@ -24,6 +25,7 @@ class WalletDetailResponse {
     required this.totalExpense,
     required this.balance,
     required this.expenses,
+    required this.otherWalletMap,
     required this.isDefault,
     required this.createdAt,
     required this.updatedAt,
@@ -35,7 +37,10 @@ class WalletDetailResponse {
         .map((e) => ExpenseResponse.fromMap(e))
         .toList()
         .cast<ExpenseResponse>();
-    
+
+    List otherWallets = data['otherWallets'];
+    List<Map<dynamic, dynamic>> listOfMap = otherWallets.toList().cast<Map<dynamic, dynamic>>();
+
     return WalletDetailResponse(
       id: data['id'],
       status: data['status'],
@@ -46,6 +51,7 @@ class WalletDetailResponse {
       totalExpense: data['totalExpense'],
       balance: data['balance'],
       expenses: responseList,
+      otherWalletMap: listOfMap,
       isDefault: data['isDefault'],
       createdAt: data['createdAt'],
       updatedAt: data['updatedAt'],

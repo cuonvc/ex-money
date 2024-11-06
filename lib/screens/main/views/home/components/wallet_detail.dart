@@ -14,21 +14,23 @@ class WalletDetail extends StatefulWidget {
 }
 
 class _WalletDetailState extends State<WalletDetail> {
+
+  bool isShowWalletList = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv('2024101068fbfc4c1c2444d38c9c31874bdcf3cc52339')), //temp
+      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv('')), //temp
       child: BlocBuilder<WalletDetailBloc, WalletDetailState>(
         builder: (context, state) {
-          if (state is WalletDetailLoading) {
-            return Center(child: CircularProgressIndicator(),);
-          } else if (state is WalletDetailFailure) {
-            return Center(child: Text("Loading detail failed"),);
+          if (state is WalletDetailFailure) {
+            return const Center(child: Text("Loading detail failedd"),);
           } else {
             final List data = state.props;
             if(data.isNotEmpty) {
               WalletDetailResponse response = WalletDetailResponse.fromMap(data[0]);
               List<ExpenseResponse> expenseList = response.expenses;
+              List<Map<dynamic, dynamic>> otherWalletMap = response.otherWalletMap;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -62,11 +64,11 @@ class _WalletDetailState extends State<WalletDetail> {
                     ],
                   ),
 
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
 
                   Text(
                     "${response.balance} VND",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900
                     ),
@@ -87,7 +89,7 @@ class _WalletDetailState extends State<WalletDetail> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.trending_up,
                               size: 34,
                               color: Colors.green,
@@ -95,7 +97,7 @@ class _WalletDetailState extends State<WalletDetail> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(
+                                const Text(
                                   "Hạn mức",
                                 ),
                                 Text(
@@ -145,15 +147,22 @@ class _WalletDetailState extends State<WalletDetail> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            "${response.name}",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: cTextDisable,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isShowWalletList = !isShowWalletList;
+                              });
+                            },
+                            child: Text(
+                              response.name,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: cTextDisable,
+                              ),
                             ),
                           ),
                           Icon(
-                            Icons.keyboard_arrow_down_sharp,
+                            isShowWalletList ? Icons.keyboard_arrow_up_sharp : Icons.keyboard_arrow_down_sharp,
                             color: cTextDisable,
                             size: 14,
                           )
@@ -173,6 +182,41 @@ class _WalletDetailState extends State<WalletDetail> {
                       )
                     ],
                   ),
+                  const SizedBox(height: 10,),
+                  Visibility(
+                    visible: isShowWalletList,
+                    child: SizedBox(
+                      height: otherWalletMap.length * 34,
+                      child: ListView.builder(
+                        itemCount: otherWalletMap.length,
+                        itemBuilder: (context, index) {
+                          Map<dynamic, dynamic> walletMap = otherWalletMap[index];
+                          String name = walletMap.values.first;
+                          String id = walletMap.keys.first;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isShowWalletList = false;
+                              });
+                              context.read<WalletDetailBloc>().add(WalletDetailEv(id));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.wallet, size: 18,),
+                                  ),
+                                  Text(name, style: const TextStyle(color: cTextDisable, fontSize: 14),)
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(top: 10),
@@ -188,7 +232,7 @@ class _WalletDetailState extends State<WalletDetail> {
                               padding: const EdgeInsets.all(12),
                               margin: const EdgeInsets.only(bottom: 20),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: cBlurPrimary,
                                   borderRadius: BorderRadius.circular(10)
                               ),
                               child: Row(
@@ -241,7 +285,7 @@ class _WalletDetailState extends State<WalletDetail> {
                 ],
               );
             }
-            return Center();
+            return const Center();
           }
         },
       ),

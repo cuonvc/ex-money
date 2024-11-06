@@ -17,10 +17,10 @@ class WalletRepositoryImpl implements WalletRepository {
     HttpResponse response = HttpResponse.toObject(mapResponse);
 
     if(response.code == 0) {
-    log("Login success");
+    log("Get wallet  success");
     return response.data;
     } else {
-    log("Login failed");
+    log("Get wallet  failed");
     return null;
     }
     } catch (e) {

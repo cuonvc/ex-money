@@ -6,7 +6,8 @@ const cText = Color(0xFF1D1B20);
 const cTextDisable = Color(0xFF707070);
 const cLineText = Color(0xFF9D9D9D);
 const cTextMediumBlur = Color(0xFF6A6A6A);
-const cBackground = Color(0xFFEBE7E7);
+// const cBackground = Color(0xFFEBE7E7);
+const cBackground = Color(0xFFFFFFFF);
 const cDisableBtn = Color(0xFF9D9D9D);
 
 class ConstantSize {

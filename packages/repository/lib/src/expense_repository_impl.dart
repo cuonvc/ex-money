@@ -16,10 +16,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
           utf8.decode((await expenseController.getExpenseList(walletId)).bodyBytes));
       HttpResponse response = HttpResponse.toObject(mapResponse);
       if(response.code == 0) {
-        log("Login success");
+        log("Get expenses success");
         return response.data;
       } else {
-        log("Login failed");
+        log("Get expenses failed");
         return null;
       }
     } catch (e) {
