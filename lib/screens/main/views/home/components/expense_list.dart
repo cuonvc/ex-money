@@ -24,9 +24,9 @@ class _ExpenseListState extends State<ExpenseList> {
       child: BlocBuilder<GetExpenseBloc, GetExpenseState>(
           builder: (context, state) {
             if (state is GetExpenseFailure) {
-              return Center(child: Text("Get Expense failed!"),);
+              return const Center(child: Text("Get Expense failed!"),);
             } else if (state is GetExpenseLoading) {
-              return Center(child: CircularProgressIndicator(),);
+              return const Center(child: CircularProgressIndicator(),);
             } else {
               final List list = state.props;
               return Container(
@@ -52,15 +52,15 @@ class _ExpenseListState extends State<ExpenseList> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.pets,
                                   color: Colors.amber,
                                   size: 30,
                                 ),
-                                SizedBox(width: 10,),
+                                const SizedBox(width: 10,),
                                 Text(
-                                  "${expense.name}",
-                                  style: TextStyle(
+                                  expense.name,
+                                  style: const TextStyle(
                                       fontSize: 14,
                                       color: cText
                                   ),
@@ -73,13 +73,13 @@ class _ExpenseListState extends State<ExpenseList> {
                               children: [
                                 Text(
                                   "${expense.amount}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold
                                   ),
                                 ),
                                 Text(
-                                  "${dateTimeFormatedFromStr(expense.createdAt)}",
-                                  style: TextStyle(
+                                  dateTimeFormatedFromStr(expense.createdAt),
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w300
                                   ),
                                 )

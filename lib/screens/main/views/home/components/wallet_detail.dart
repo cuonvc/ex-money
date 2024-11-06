@@ -35,7 +35,7 @@ class _WalletDetailState extends State<WalletDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -74,7 +74,7 @@ class _WalletDetailState extends State<WalletDetail> {
                     ),
                   ),
 
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +118,7 @@ class _WalletDetailState extends State<WalletDetail> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.trending_down,
                               color: Colors.red,
                               size: 34,
@@ -126,7 +126,7 @@ class _WalletDetailState extends State<WalletDetail> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(
+                                const Text(
                                   "Đã chi",
                                 ),
                                 Text(
@@ -155,7 +155,7 @@ class _WalletDetailState extends State<WalletDetail> {
                             },
                             child: Text(
                               response.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14,
                                   color: cTextDisable,
                               ),
@@ -241,7 +241,7 @@ class _WalletDetailState extends State<WalletDetail> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.pets,
                                         color: Colors.amber,
                                         size: 30,
@@ -249,7 +249,7 @@ class _WalletDetailState extends State<WalletDetail> {
                                       SizedBox(width: 10,),
                                       Text(
                                         "${expense.name}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 14,
                                             color: cText
                                         ),
@@ -262,13 +262,13 @@ class _WalletDetailState extends State<WalletDetail> {
                                     children: [
                                       Text(
                                         "${expense.amount}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold
                                         ),
                                       ),
                                       Text(
-                                        "${dateTimeFormatedFromStr(expense.createdAt)}",
-                                        style: TextStyle(
+                                        dateTimeFormatedFromStr(expense.createdAt),
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w300
                                         ),
                                       )

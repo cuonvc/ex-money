@@ -25,7 +25,7 @@ class _HomeState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         //header
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,7 +43,7 @@ class _HomeState extends State<HomeScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Chào buổi tối",
                         style: TextStyle(
                             fontSize: 12,
@@ -51,8 +51,8 @@ class _HomeState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        "${userInfo.name}",
-                        style: TextStyle(
+                        userInfo.name,
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: cText
@@ -62,7 +62,7 @@ class _HomeState extends State<HomeScreen> {
                   )
                 ]
             ),
-            Icon(
+            const Icon(
               Icons.notifications_outlined,
               size: 28,
             )
