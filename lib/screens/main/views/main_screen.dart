@@ -1,9 +1,11 @@
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
-import 'package:ex_money/screens/main/views/note_screen.dart';
-import 'package:ex_money/screens/main/views/stats_screen.dart';
-import 'package:ex_money/screens/main/views/wallet_screen.dart';
+import 'package:ex_money/screens/main/views/note/note_screen.dart';
+import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
+import 'package:ex_money/screens/main/views/wallet_list/wallet_screen.dart';
+import 'package:ex_money/widgets/expense_edit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../utils/constant.dart';
 
@@ -181,7 +183,12 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: cPrimary,
           child: const Icon(Icons.add, color: Colors.white),
           onPressed: () {
-
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return expenseEdit(context);
+                }
+            );
           },
         ),
       ),

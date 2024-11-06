@@ -20,7 +20,7 @@ class _WalletDetailState extends State<WalletDetail> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv('')), //temp
+      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv('')), //get default the wallet
       child: BlocBuilder<WalletDetailBloc, WalletDetailState>(
         builder: (context, state) {
           if (state is WalletDetailFailure) {
@@ -81,7 +81,7 @@ class _WalletDetailState extends State<WalletDetail> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -110,7 +110,7 @@ class _WalletDetailState extends State<WalletDetail> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -140,7 +140,7 @@ class _WalletDetailState extends State<WalletDetail> {
                     ],
                   ),
 
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,9 +246,9 @@ class _WalletDetailState extends State<WalletDetail> {
                                         color: Colors.amber,
                                         size: 30,
                                       ),
-                                      SizedBox(width: 10,),
+                                      const SizedBox(width: 10,),
                                       Text(
-                                        "${expense.name}",
+                                        expense.name,
                                         style: const TextStyle(
                                             fontSize: 14,
                                             color: cText
