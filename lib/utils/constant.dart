@@ -22,4 +22,5 @@ class NavigatePath {
   static String signUpPath = "/auth/sign_up";
   static String homePath = "/home";
   static String expenseDetailPath = "/expense_detail";
+  static String categoryListPath = "/category/list";
 }

@@ -5,7 +5,7 @@ class ExpenseEditResource {
   late String walletId;
   late String walletName;
   late List<Map<dynamic, dynamic>> otherWalletMap;
-  late List<ExpenseCategoryResponse> categories;
+  late List categories;
 
   ExpenseEditResource({
     required this.walletId,
@@ -24,7 +24,7 @@ class ExpenseEditResource {
       walletId: data['walletId'],
       walletName: data['walletName'],
       otherWalletMap: listOfMap,
-      categories: [],
+      categories: data['categories'],
     );
   }
 }

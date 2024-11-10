@@ -31,14 +31,23 @@ class ExpenseCategoryResponse {
     required this.updatedBy,
   });
 
-  static fromMap(Map<String, dynamic> data) {
+  static fromList(List categories) {
+    List<ExpenseCategoryResponse> response = [];
+    if (categories.isNotEmpty) {
+      List<Map<dynamic, dynamic>> categoriesMap = categories.cast<Map<dynamic, dynamic>>();
+      for (var itemMap in categoriesMap) {
+        response.add(fromMap(itemMap));
+      }
+    }
+    return response;
+  }
+
+  static fromMap(Map<dynamic, dynamic> data) {
     List children = data['children'];
-    // if (children.isNotEmpty) {
-    //   for (final c in children) {
-    //     List<ExpenseCategoryResponse> children = ExpenseCategoryResponse.fromMap(c);
-    //   }
-    //
-    // }
+    List<ExpenseCategoryResponse> childrenObj = [];
+    if (children.isNotEmpty) {
+      childrenObj = fromList(children);
+    }
 
     return ExpenseCategoryResponse(
       id: data['id'],
@@ -48,7 +57,7 @@ class ExpenseCategoryResponse {
       iconImage: data['iconImage'],
       status: data['status'],
       type: data['type'],
-      children: [],
+      children: childrenObj,
       refId: data['refId'],
       saveType: data['saveType'],
       createdAt: data['createdAt'],

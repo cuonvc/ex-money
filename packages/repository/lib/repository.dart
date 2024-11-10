@@ -8,6 +8,8 @@ export 'src/expense_repository.dart';
 export 'src/expense_repository_impl.dart';
 export 'src/wallet_repository.dart';
 export 'src/wallet_repository_impl.dart';
+export 'src/category_repository.dart';
+export 'src/category_repository_impl.dart';
 export 'src/models/sign_in_model.dart';
 export 'src/models/user_response.dart';
 export 'src/models/expense_response.dart';

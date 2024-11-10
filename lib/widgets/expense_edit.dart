@@ -49,7 +49,7 @@ Widget expenseEdit(BuildContext context) {
                   ExpenseEditResource resource = ExpenseEditResource.fromMap(data[0]);
                   String walletId = resource.walletId;
                   String walletName = resource.walletName;
-                  List<String> categories = ['test 1, test 2'];
+                  var categories = ExpenseCategoryResponse.fromList(resource.categories);
                   List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
                   return Column(
                     children: [
@@ -142,11 +142,28 @@ Widget expenseEdit(BuildContext context) {
                       ),
                       const SizedBox(height: 20,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          iconStyle(Icons.format_list_bulleted),
-                          const SizedBox(width: 10,),
-                          Text("Danh mục", style: textStyle(),)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              iconStyle(Icons.format_list_bulleted),
+                              const SizedBox(width: 10,),
+                              Text("Danh mục", style: textStyle(),)
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text("Tất cả", style: textStyle(),),
+                                iconStyle(Icons.keyboard_arrow_right)
+                              ],
+                            ),
+                          )
                         ],
                       ),
                       const SizedBox(height: 10,),
