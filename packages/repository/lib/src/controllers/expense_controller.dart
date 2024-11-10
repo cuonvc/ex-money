@@ -14,4 +14,14 @@ class ExpenseController {
         }
     );
   }
+
+  Future<dynamic> getExpenseResourceForEdit(String? walletId) async {
+    walletId = walletId ?? '';
+    return http.get(
+        Uri.parse('$domain/api/expense/edit_resource?wallet_id=$walletId&locale=vi'),
+        headers: {
+          'Authorization': 'Bearer $accessTokenTest'
+        }
+    );
+  }
 }
