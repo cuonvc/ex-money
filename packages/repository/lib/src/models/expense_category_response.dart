@@ -7,8 +7,8 @@ class ExpenseCategoryResponse {
   late String status;
   late String type;
   late List<ExpenseCategoryResponse> children;
-  late String refId;
-  late String saveType;
+  late String? refId;
+  late String? saveType;
   late String createdAt;
   late String createdBy;
   late String? updatedAt;
@@ -30,6 +30,25 @@ class ExpenseCategoryResponse {
     required this.updatedAt,
     required this.updatedBy,
   });
+
+  static isEmpty() {
+    return ExpenseCategoryResponse(
+      id: '',
+      name: '',
+      description: '',
+      color: '',
+      iconImage: '',
+      status: '',
+      type: '',
+      children: [],
+      refId: '',
+      saveType: '',
+      createdAt: '',
+      createdBy: '',
+      updatedAt: '',
+      updatedBy: '',
+    );
+  }
 
   static fromList(List categories) {
     List<ExpenseCategoryResponse> response = [];

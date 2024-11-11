@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
+import 'package:ex_money/screens/main/views/category/category_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -13,6 +14,7 @@ import '../utils/constant.dart';
 
 Widget expenseEdit(BuildContext context) {
   bool isShowWalletList = false;
+  ExpenseCategoryResponse categorySelected = ExpenseCategoryResponse.isEmpty();
   return AlertDialog(
     backgroundColor: Colors.white,
     title: Stack(
@@ -153,8 +155,15 @@ Widget expenseEdit(BuildContext context) {
                             ],
                           ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
+                            onTap: () async {
+                              // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
+                              ExpenseCategoryResponse selected = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CategoryList(walletId: walletId,))
+                              );
+                              setState (() {
+                                categorySelected = selected;
+                              });
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -165,6 +174,17 @@ Widget expenseEdit(BuildContext context) {
                             ),
                           )
                         ],
+                      ),
+                      const SizedBox(height: 6,),
+                      Visibility(
+                        visible: categorySelected.id.isEmpty ? false : true,
+                        child: Column(
+                          children: [
+                            Text("Test đã chọn"),
+                            Text("id: ${categorySelected.id}"),
+                            Text("name: ${categorySelected.name}")
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10,),
                       Row(

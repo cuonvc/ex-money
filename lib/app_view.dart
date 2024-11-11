@@ -40,7 +40,7 @@ class AppView extends StatelessWidget {
         NavigatePath.signUpPath: (context) => const SignUp(),
         NavigatePath.homePath: (context) => const MainScreen(),
         NavigatePath.expenseDetailPath: (context) => const ExpenseDetail(),
-        NavigatePath.categoryListPath: (context) => const CategoryList()
+        NavigatePath.categoryListPath: (context) => CategoryList()
       },
     );
   }
