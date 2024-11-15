@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+import 'package:repository/repository.dart';
 
 import '../utils/constant.dart';
 
@@ -22,6 +25,17 @@ class ExpenseController {
         headers: {
           'Authorization': 'Bearer $accessTokenTest'
         }
+    );
+  }
+
+  Future<dynamic> addExpense(ExpenseCreateRequest request) async {
+    return http.post(
+      Uri.parse('$domain/api/expense?locale=vi'),
+      headers: {
+        'Authorization': 'Bearer $accessTokenTest',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(ExpenseCreateRequest.toMap(request))
     );
   }
 }

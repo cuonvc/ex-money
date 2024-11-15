@@ -1,255 +1,391 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/views/category/category_list.dart';
+import 'package:ex_money/utils/utils.dart';
+import 'package:ex_money/widgets/button_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
 import '../utils/constant.dart';
 
-Widget expenseEdit(BuildContext context) {
+class ExpenseEdit extends StatefulWidget {
+  const ExpenseEdit({super.key});
+
+  @override
+  State<ExpenseEdit> createState() => _ExpenseEditState();
+}
+
+class _ExpenseEditState extends State<ExpenseEdit> {
+
+  bool isLoading = false;
+
   bool isShowWalletList = false;
-  ExpenseCategoryResponse categorySelected = ExpenseCategoryResponse.isEmpty();
-  return AlertDialog(
-    backgroundColor: Colors.white,
-    title: Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.close),
-          ),
-        ),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+  late ExpenseCategoryResponse categorySelected;
+  late ExpenseCreateRequest expenseRequest;
+  late DateTime selectedDateTime;
+
+  TextEditingController amountController = TextEditingController();
+  TextEditingController walletIdController = TextEditingController();
+  TextEditingController categoryIdController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
+  TextEditingController dateTimeText = TextEditingController();
+
+
+  @override
+  void initState() {
+    selectedDateTime = DateTime.now();
+    dateTimeText.text = dateTimeFormated(selectedDateTime, true);
+    categorySelected = ExpenseCategoryResponse.empty();
+    expenseRequest = ExpenseCreateRequest.empty();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AddExpenseBloc, AddExpenseState>(
+      listener: (context, state) {
+        if(state is AddExpenseLoading) {
+          setState(() {
+            isLoading = true;
+          });
+        } else if (state is AddExpenseFailure) {
+          Text("Failed");
+        } else {
+          Navigator.pop(context, expenseRequest);
+        }
+      },
+      child: AlertDialog(
+        backgroundColor: Colors.white,
+        title: Stack(
           children: [
-            Text("Thêm chi tiêu", style: TextStyle(fontSize: 18),),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.close),
+              ),
+            ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Thêm chi tiêu", style: TextStyle(fontSize: 18),),
+              ],
+            ),
           ],
         ),
-      ],
-    ),
-    content: StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height / 2,
-            child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
-              builder: (context, state) {
-                if (state.props.isNotEmpty) {
-                  List data = state.props;
-                  ExpenseEditResource resource = ExpenseEditResource.fromMap(data[0]);
-                  String walletId = resource.walletId;
-                  String walletName = resource.walletName;
-                  var categories = ExpenseCategoryResponse.fromList(resource.categories);
-                  List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
-                  return Column(
-                    children: [
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly, // Only allow digits
-                          LengthLimitingTextInputFormatter(11),
-                          MoneyInputFormatter(), // Custom formatter
-                        ],
-                        style: const TextStyle(
-                            color: cTextDisable,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900
-                        ),
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          hintText: '0 VND',
-                          hintStyle: TextStyle(
-                              color: cTextInputHint,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w900
-                          ),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    iconStyle(Icons.wallet),
-                                    const SizedBox(width: 10,),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isShowWalletList = !isShowWalletList;
-                                        });
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Text(walletName, style: textStyle(),),
-                                          iconStyle(isShowWalletList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
-                                        ],
-                                      )
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Visibility(
-                                child: Text("Mặc định", style: textStyle(),),
-                                visible: false,
-                              )
-                            ],
-                          ),
-                          Visibility(
-                            visible: isShowWalletList,
-                            child: SizedBox(
-                              height: otherWalletMap.length * 30,
-                              width: MediaQuery.sizeOf(context).width,
-                              child: ListView.builder(
-                                itemCount: otherWalletMap.length,
-                                itemBuilder: (context, index) {
-                                  Map<dynamic, dynamic> walletMap = otherWalletMap[index];
-                                  String name = walletMap.values.first;
-                                  String id = walletMap.keys.first;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isShowWalletList = false;
-                                      });
-                                      context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(id));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
-                                      child: Text(name, style: const TextStyle(color: cTextDisable, fontSize: 14),),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              iconStyle(Icons.format_list_bulleted),
-                              const SizedBox(width: 10,),
-                              Text("Danh mục", style: textStyle(),)
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
-                              ExpenseCategoryResponse selected = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => CategoryList(walletId: walletId,))
+        content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              final screenHeight = MediaQuery.of(context).size.height;
+              return SizedBox(
+                height: screenHeight / 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
+                          builder: (context, state) {
+                            if (state.props.isNotEmpty) {
+                              List data = state.props;
+                              ExpenseEditResource resource = ExpenseEditResource.fromMap(data[0]);
+                              String walletId = resource.walletId;
+                              String walletName = resource.walletName;
+                              walletIdController.text = walletId;
+                              var categories = ExpenseCategoryResponse.fromList(resource.categories);
+                              List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
+                              return Column(
+                                children: [
+                                  typeAmount(),
+                                  selectWallet(walletName, otherWalletMap),
+                                  const SizedBox(height: 20,),
+                                  selectCategory(walletId),
+                                  const SizedBox(height: 10,),
+                                  noteInput(),
+                                  // const SizedBox(height: 10,), //??
+                                  selectDateTime(),
+                                  const SizedBox(height: 10,),
+                                ],
                               );
-                              setState (() {
-                                categorySelected = selected;
-                              });
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text("Tất cả", style: textStyle(),),
-                                iconStyle(Icons.keyboard_arrow_right)
-                              ],
-                            ),
-                          )
-                        ],
+                            } else {
+                              return Center();
+                            }
+                          },
+                        )
+                    ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width,
+                      child: TextButton(
+                        child: buttonView(true, "Lưu", null),
+                        onPressed: () {
+                          log("Amount: ${amountController.text}");
+                          log("Wallet ID: ${walletIdController.text}");
+                          log("Category ID: ${categoryIdController.text}");
+                          log("Note: ${noteController.text}");
+                          log("Date time selected: ${selectedDateTime}");
+                          String rawAmount = amountController.text;
+                          ExpenseCreateRequest request = ExpenseCreateRequest(
+                            description: noteController.text,
+                            amount: num.parse(rawAmount.substring(0, rawAmount.length - 4)),
+                            entryType: ExpenseConstant.entry_type_expense, //tạm
+                            entryDate: getDateTimeToRequest(selectedDateTime.toString()),
+                            type: ExpenseConstant.type_manual, //tạm
+                            walletId: walletIdController.text,
+                            categoryId: categoryIdController.text,
+
+                          );
+                          context.read<AddExpenseBloc>().add(AddExpenseEv(request));
+                        },
                       ),
-                      const SizedBox(height: 6,),
-                      Visibility(
-                        visible: categorySelected.id.isEmpty ? false : true,
-                        child: Column(
-                          children: [
-                            Text("Test đã chọn"),
-                            Text("id: ${categorySelected.id}"),
-                            Text("name: ${categorySelected.name}")
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    ),
+                  ],
+                ),
+              );
+            }
+        ),
+      ),
+    );
+  }
+
+  TextField typeAmount() {
+    return TextField(
+      controller: amountController,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly, // Only allow digits
+        LengthLimitingTextInputFormatter(11),
+        MoneyInputFormatter(), // Custom formatter
+      ],
+      style: const TextStyle(
+          color: cTextDisable,
+          fontSize: 28,
+          fontWeight: FontWeight.w900
+      ),
+      textAlign: TextAlign.center,
+      decoration: const InputDecoration(
+        hintText: '0 VND',
+        hintStyle: TextStyle(
+            color: cTextInputHint,
+            fontSize: 28,
+            fontWeight: FontWeight.w900
+        ),
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+      ),
+    );
+  }
+
+  Column selectWallet(String walletName, List<Map<dynamic, dynamic>> otherWalletMap) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  iconStyle(Icons.wallet),
+                  const SizedBox(width: 10,),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isShowWalletList = !isShowWalletList;
+                        });
+                      },
+                      child: Row(
                         children: [
-                          iconStyle(Icons.sticky_note_2_outlined),
-                          const SizedBox(width: 10,),
-                          Expanded(
-                            child: TextField(
-                              style: textStyle(),
-                              decoration: InputDecoration(
-                                  hintText: "Ghi chú",
-                                  hintStyle: textStyle(),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      // const SizedBox(height: 10,), //??
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          iconStyle(Icons.access_time_rounded),
-                          const SizedBox(width: 10,),
-                          Expanded(
-                            child: TextField(
-                              style: textStyle(),
-                              decoration: InputDecoration(
-                                  hintText: "Thời gian",
-                                  hintStyle: textStyle(),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none
-                              ),
-                            ),
-                          )
+                          Text(walletName, style: selectedStyle(),),
+                          iconStyle(isShowWalletList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                         ],
                       )
-                    ],
-                  );
-                } else {
-                  return Center();
-                }
-              },
+                  )
+                ],
+              ),
+            ),
+            Visibility(
+              child: Text("Mặc định", style: hintStyle(),),
+              visible: false,
             )
-        );
-      }
-    ),
-  );
-}
+          ],
+        ),
+        Visibility(
+          visible: isShowWalletList,
+          child: SizedBox(
+            height: otherWalletMap.length * 30,
+            width: MediaQuery.sizeOf(context).width,
+            child: ListView.builder(
+              itemCount: otherWalletMap.length,
+              itemBuilder: (context, index) {
+                Map<dynamic, dynamic> walletMap = otherWalletMap[index];
+                String name = walletMap.values.first;
+                String id = walletMap.keys.first;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isShowWalletList = false;
+                    });
+                    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(id));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+                    child: Text(name, style: const TextStyle(color: cTextDisable, fontSize: 14),),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-Widget iconStyle(IconData icon) {
-  return Icon(
-    icon,
-    size: 20,
-    color: cTextDisable,
-  );
-}
+  Row selectCategory(String walletId) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            iconStyle(Icons.format_list_bulleted),
+            const SizedBox(width: 10,),
+            categorySelected.id.isEmpty
+                ? Text("Danh mục", style: hintStyle(),)
+                : Text(categorySelected.name, style: selectedStyle(),)
+          ],
+        ),
+        const SizedBox(width: 8,),
+        GestureDetector(
+          onTap: () async {
+            // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
+            ExpenseCategoryResponse selected = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CategoryList(walletId: walletId,))
+            );
+            setState (() {
+              categorySelected = selected;
+              categoryIdController.text = selected.id;
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text("Tất cả", style: hintStyle(),),
+              iconStyle(Icons.keyboard_arrow_right)
+            ],
+          ),
+        )
+      ],
+    );
+  }
 
-TextStyle textStyle() {
-  return const TextStyle(
-    fontSize: 16,
-    color: cTextDisable,
-  );
+  Row noteInput() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        iconStyle(Icons.sticky_note_2_outlined),
+        const SizedBox(width: 10,),
+        Expanded(
+          child: TextField(
+            controller: noteController,
+            style: hintStyle(),
+            decoration: InputDecoration(
+                hintText: "Ghi chú",
+                hintStyle: hintStyle(),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget selectDateTime() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        iconStyle(Icons.access_time_rounded),
+        Expanded(
+          child: TextFormField(
+            controller: dateTimeText,
+            readOnly: true,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+                hintText: "Time",
+                // filled: true,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none
+                )
+            ),
+            onTap: () async {
+              TimeOfDay? timeOfDay;
+              DateTime? newDate = await showDatePicker(
+                  context: context,
+                  locale: const Locale("vi"),
+                  initialDate: selectedDateTime,
+                  firstDate: DateTime.now().add(Duration(days: -1)),
+                  lastDate: DateTime.now().add(Duration(days: 365))
+              );
+
+              if(newDate != null) {
+                timeOfDay = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay(hour: newDate.hour, minute: newDate.minute)
+                );
+              }
+
+              if(newDate != null && timeOfDay != null) {
+                setState(() {
+                  selectedDateTime = DateTime(
+                    newDate.year,
+                    newDate.month,
+                    newDate.day,
+                    timeOfDay!.hour,
+                    timeOfDay.minute
+                  );
+                  dateTimeText.text = dateTimeFormated(selectedDateTime, true);
+                });
+              }
+            },
+          )
+        )
+      ],
+    );
+  }
+
+  Widget iconStyle(IconData icon) {
+    return Icon(
+      icon,
+      size: 20,
+      color: cTextDisable,
+    );
+  }
+
+  TextStyle hintStyle() {
+    return const TextStyle(
+      fontSize: 16,
+      color: cTextDisable,
+    );
+  }
+
+  TextStyle selectedStyle() {
+    return const TextStyle(
+      fontSize: 16,
+      color: cText,
+    );
+  }
 }
 
 

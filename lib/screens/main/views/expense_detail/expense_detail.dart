@@ -43,7 +43,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Ngày tạo", style: labelFormat(),),
-                Text(dateTimeFormatedFromStr(detail.createdAt), style: valueFormat()),
+                Text(dateTimeFormatedFromStr(detail.createdAt, true), style: valueFormat()),
               ],
             ),
             const SizedBox(height: 16,),

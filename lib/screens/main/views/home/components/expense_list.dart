@@ -59,7 +59,7 @@ class _ExpenseListState extends State<ExpenseList> {
                                 ),
                                 const SizedBox(width: 10,),
                                 Text(
-                                  expense.name,
+                                  "hmmm",
                                   style: const TextStyle(
                                       fontSize: 14,
                                       color: cText
@@ -78,7 +78,7 @@ class _ExpenseListState extends State<ExpenseList> {
                                   ),
                                 ),
                                 Text(
-                                  dateTimeFormatedFromStr(expense.createdAt),
+                                  dateTimeFormatedFromStr(expense.createdAt, false),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w300
                                   ),

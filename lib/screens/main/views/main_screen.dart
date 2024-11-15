@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
@@ -188,10 +189,17 @@ class _MainScreenState extends State<MainScreen> {
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (context) => BlocProvider(
-                  create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv('')),
-                  child: expenseEdit(context),
-                )
+                builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv('')),
+                  ),
+                  BlocProvider(
+                    create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
+                  ),
+                ],
+                child: const ExpenseEdit(),
+              )
             );
           },
         ),

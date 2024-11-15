@@ -31,7 +31,7 @@ class ExpenseCategoryResponse {
     required this.updatedBy,
   });
 
-  static isEmpty() {
+  static empty() {
     return ExpenseCategoryResponse(
       id: '',
       name: '',

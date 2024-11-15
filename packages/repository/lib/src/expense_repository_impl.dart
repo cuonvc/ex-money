@@ -47,4 +47,25 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     }
   }
 
+  @override
+  Future addExpense(ExpenseCreateRequest request) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await expenseController.addExpense(request)).bodyBytes));
+      HttpResponse response = HttpResponse.toObject(mapResponse);
+      if(response.code == 0) {
+        log("Add expense resource success");
+        return response.data;
+      } else {
+        log(response.message);
+        return null;
+      }
+    } catch (e) {
+      log("Add expense resource error - $e");
+      rethrow;
+    }
+  }
+
+
+
 }

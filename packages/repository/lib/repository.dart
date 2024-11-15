@@ -1,5 +1,6 @@
 library expense_repository;
 
+export 'src/utils/constant.dart';
 export 'src/entities/user_entity.dart';
 export 'src/models/user_model.dart';
 export 'src/user_repository.dart';
@@ -17,3 +18,4 @@ export 'src/models/wallet_detail_response.dart';
 export 'src/models/expense_category_response.dart';
 export 'src/models/expense_edit_resource.dart';
 export 'src/entities/sign_in_entity.dart';
+export 'src/models/expense_create_request.dart';

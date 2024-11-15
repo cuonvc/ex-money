@@ -7,3 +7,10 @@ const String responpse_status = "status";
 const String response_status_code = "statusCode";
 const String response_message = "message";
 const String response_data = "data";
+
+class ExpenseConstant {
+  static const String entry_type_income = "INCOME";
+  static const String entry_type_expense = "EXPENSE";
+  static const String type_manual = "MANUAL";
+  static const String type_bank = "BANK"; //...
+}

@@ -1,10 +1,11 @@
 class ExpenseResponse {
   late String id;
   late String status;
-  late String name;
   late String? description;
   late num amount;
   late String? currencyUnit;
+  late String entryDate;
+  late String entryType;
   late String? type;
   late String walletId;
   late String walletName;
@@ -20,10 +21,11 @@ class ExpenseResponse {
   ExpenseResponse({
     required this.id,
     required this.status,
-    required this.name,
     required this.description,
     required this.amount,
     required this.currencyUnit,
+    required this.entryDate,
+    required this.entryType,
     required this.type,
     required this.walletId,
     required this.walletName,
@@ -41,10 +43,11 @@ class ExpenseResponse {
     return ExpenseResponse(
         id: data['id'],
         status: data['status'],
-        name: data['name'],
         description: data['description'],
         amount: data['amount'],
         currencyUnit: data['currencyUnit'],
+        entryDate: data['entryDate'],
+        entryType: data['entryType'],
         type: data['type'],
         walletId: data['walletId'],
         walletName: data['walletName'],
