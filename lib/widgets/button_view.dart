@@ -21,3 +21,19 @@ Widget buttonView(bool isPrimary, String text, Color? textColor) {
     ),
   );
 }
+
+Widget buttonLoading(bool isPrimary, Color? loadingColor) {
+  return Container(
+    height: ConstantSize.buttonHeight,
+    decoration: BoxDecoration(
+      color: isPrimary ? cPrimary : cBlurPrimary,
+      border: Border.all(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(ConstantSize.borderButton),
+    ),
+    child: Center(
+      child: CircularProgressIndicator(
+        color: loadingColor,
+      )
+    ),
+  );
+}

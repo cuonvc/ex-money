@@ -1,4 +1,5 @@
 import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense/get_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:repository/repository.dart';
 
 import '../../../utils/constant.dart';
@@ -186,21 +188,27 @@ class _MainScreenState extends State<MainScreen> {
         child: FloatingActionButton(
           backgroundColor: cPrimary,
           child: const Icon(Icons.add, color: Colors.white),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv('')),
-                  ),
-                  BlocProvider(
-                    create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
-                  ),
-                ],
-                child: const ExpenseEdit(),
-              )
+          onPressed: () async {
+            ExpenseCreateRequest? newExpense = await showDialog<ExpenseCreateRequest>(
+              context: context,
+              builder: (BuildContext ctx) {
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv('')),
+                    ),
+                    BlocProvider(
+                      create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
+                    ),
+                  ],
+                  child: const ExpenseEdit(),
+                );
+              }
             );
+
+            if (newExpense != null) {
+              context.read<GetExpenseBloc>().add(GetExpenseEv(newExpense.walletId));
+            }
           },
         ),
       ),

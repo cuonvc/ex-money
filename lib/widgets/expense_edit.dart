@@ -125,7 +125,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width,
                       child: TextButton(
-                        child: buttonView(true, "Lưu", null),
+                        child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
                         onPressed: () {
                           log("Amount: ${amountController.text}");
                           log("Wallet ID: ${walletIdController.text}");
