@@ -4,7 +4,7 @@ import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expens
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
-import 'package:ex_money/screens/main/views/wallet_list/wallet_screen.dart';
+import 'package:ex_money/screens/main/views/wallet_list/wallet_list_screen.dart';
 import 'package:ex_money/widgets/expense_edit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -222,7 +222,7 @@ class _MainScreenState extends State<MainScreen> {
       case _statsIndex:
         return const StatsScreen();
       case _walletIndex:
-        return const WalletScreen();
+        return const WalletListScreen();
       case _noteIndex:
         return const NoteScreen();
       default:
