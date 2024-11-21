@@ -135,7 +135,9 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                           String rawAmount = amountController.text;
                           ExpenseCreateRequest request = ExpenseCreateRequest(
                             description: noteController.text,
-                            amount: num.parse(rawAmount.substring(0, rawAmount.length - 4)),
+                            amount: rawAmount.isNotEmpty
+                                ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
+                                : 0,
                             entryType: ExpenseConstant.entry_type_expense, //tạm
                             entryDate: getDateTimeToRequest(selectedDateTime.toString()),
                             type: ExpenseConstant.type_manual, //tạm

@@ -206,9 +206,9 @@ class _MainScreenState extends State<MainScreen> {
               }
             );
 
-            if (newExpense != null) {
-              context.read<GetExpenseBloc>().add(GetExpenseEv(newExpense.walletId));
-            }
+            // if (newExpense != null) {
+            //   context.read<GetExpenseBloc>().add(GetExpenseEv(newExpense.walletId));
+            // }
           },
         ),
       ),
