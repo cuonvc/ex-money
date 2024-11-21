@@ -2,7 +2,7 @@ import '../../repository.dart';
 
 //data for expense edit screen
 class ExpenseEditResource {
-  late String walletId;
+  late num walletId;
   late String walletName;
   late List<Map<dynamic, dynamic>> otherWalletMap;
   late List categories;

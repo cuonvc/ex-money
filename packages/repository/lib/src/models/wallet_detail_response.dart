@@ -1,9 +1,9 @@
 import 'package:repository/repository.dart';
 
 class WalletDetailResponse {
-  String id;
+  num id;
   String status;
-  String ownerUserId;
+  num ownerUserId;
   String name;
   String? description;
   num totalIncome;

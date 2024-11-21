@@ -1,3 +1,3 @@
 abstract class CategoryRepository {
-  Future<dynamic> getCategoryList(String? walletId);
+  Future<dynamic> getCategoryList(num? walletId);
 }

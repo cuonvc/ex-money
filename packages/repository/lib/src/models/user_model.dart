@@ -1,7 +1,7 @@
 import 'package:repository/repository.dart';
 
 class UserModel {
-  String id;
+  num id;
   String name;
   String email;
   String password;

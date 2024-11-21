@@ -1,5 +1,5 @@
 class ExpenseResponse {
-  late String id;
+  late num id;
   late String status;
   late String? description;
   late num amount;
@@ -7,11 +7,11 @@ class ExpenseResponse {
   late String entryDate;
   late String entryType;
   late String? type;
-  late String walletId;
+  late num walletId;
   late String walletName;
-  late String userId;
+  late num userId;
   late String userName;
-  late String categoryId;
+  late num categoryId;
   late String categoryName;
   late String createdAt;
   late String createdBy;

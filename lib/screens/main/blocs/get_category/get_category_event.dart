@@ -9,7 +9,7 @@ sealed class GetCategoryEvent extends Equatable {
 
 class GetCategoryEv extends GetCategoryEvent {
   ExpenseCategoryResponse? category;
-  String? walletId;
+  num? walletId;
 
   GetCategoryEv(this.walletId);
 

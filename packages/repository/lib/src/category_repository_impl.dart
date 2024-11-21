@@ -10,7 +10,7 @@ class CategoryRepositoryImpl extends CategoryRepository {
   final categoryController = CategoryController();
 
   @override
-  Future getCategoryList(String? walletId) async {
+  Future getCategoryList(num? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await categoryController.getCategoryList(walletId)).bodyBytes));

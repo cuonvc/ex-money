@@ -1,5 +1,5 @@
 class ExpenseCategoryResponse {
-  late String id;
+  late num id;
   late String name;
   late String description;
   late String? color;
@@ -7,7 +7,7 @@ class ExpenseCategoryResponse {
   late String status;
   late String type;
   late List<ExpenseCategoryResponse> children;
-  late String? refId;
+  late num? refId;
   late String? saveType;
   late String createdAt;
   late String createdBy;
@@ -33,7 +33,7 @@ class ExpenseCategoryResponse {
 
   static empty() {
     return ExpenseCategoryResponse(
-      id: '',
+      id: 0,
       name: '',
       description: '',
       color: '',
@@ -41,7 +41,7 @@ class ExpenseCategoryResponse {
       status: '',
       type: '',
       children: [],
-      refId: '',
+      refId: 0,
       saveType: '',
       createdAt: '',
       createdBy: '',

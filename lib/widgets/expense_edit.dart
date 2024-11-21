@@ -98,9 +98,9 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                             if (state.props.isNotEmpty) {
                               List data = state.props;
                               ExpenseEditResource resource = ExpenseEditResource.fromMap(data[0]);
-                              String walletId = resource.walletId;
+                              num walletId = resource.walletId;
                               String walletName = resource.walletName;
-                              walletIdController.text = walletId;
+                              walletIdController.text = walletId.toString();
                               var categories = ExpenseCategoryResponse.fromList(resource.categories);
                               List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
                               return Column(
@@ -139,8 +139,8 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                             entryType: ExpenseConstant.entry_type_expense, //tạm
                             entryDate: getDateTimeToRequest(selectedDateTime.toString()),
                             type: ExpenseConstant.type_manual, //tạm
-                            walletId: walletIdController.text,
-                            categoryId: categoryIdController.text,
+                            walletId: num.parse(walletIdController.text),
+                            categoryId: num.parse(categoryIdController.text),
 
                           );
                           context.read<AddExpenseBloc>().add(AddExpenseEv(request));
@@ -229,7 +229,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
               itemBuilder: (context, index) {
                 Map<dynamic, dynamic> walletMap = otherWalletMap[index];
                 String name = walletMap.values.first;
-                String id = walletMap.keys.first;
+                num id = num.parse(walletMap.keys.first);
                 return GestureDetector(
                   onTap: () {
                     setState(() {
@@ -250,7 +250,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Row selectCategory(String walletId) {
+  Row selectCategory(num walletId) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -259,7 +259,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
           children: [
             iconStyle(Icons.format_list_bulleted),
             const SizedBox(width: 10,),
-            categorySelected.id.isEmpty
+            categorySelected.id == 0
                 ? Text("Danh mục", style: hintStyle(),)
                 : Text(categorySelected.name, style: selectedStyle(),)
           ],
@@ -274,7 +274,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             );
             setState (() {
               categorySelected = selected;
-              categoryIdController.text = selected.id;
+              categoryIdController.text = selected.id.toString();
             });
           },
           child: Row(

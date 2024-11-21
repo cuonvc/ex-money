@@ -9,7 +9,7 @@ sealed class WalletDetailEvent extends Equatable {
 
 class WalletDetailEv extends WalletDetailEvent {
   WalletDetailResponse? response;
-  String walletId;
+  num? walletId;
 
   WalletDetailEv(this.walletId);
 

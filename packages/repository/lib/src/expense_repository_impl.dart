@@ -10,7 +10,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   final expenseController = ExpenseController();
 
   @override
-  Future<dynamic> getExpenseList(String? walletId) async {
+  Future<dynamic> getExpenseList(num? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await expenseController.getExpenseList(walletId)).bodyBytes));
@@ -29,7 +29,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
-  Future getExpenseEditResource(String? walletId) async {
+  Future getExpenseEditResource(num? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await expenseController.getExpenseResourceForEdit(walletId)).bodyBytes));

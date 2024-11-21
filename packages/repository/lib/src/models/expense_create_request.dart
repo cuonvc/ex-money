@@ -6,8 +6,8 @@ class ExpenseCreateRequest {
   late String entryType; //EXPENSE - INCOME
   late String entryDate;
   late String type;
-  late String categoryId;
-  late String walletId;
+  late num categoryId;
+  late num walletId;
 
   ExpenseCreateRequest({
     required this.description,
@@ -26,8 +26,8 @@ class ExpenseCreateRequest {
       entryType: ExpenseConstant.entry_type_expense,
       entryDate: '',
       type: ExpenseConstant.type_manual,
-      categoryId: '',
-      walletId: '',
+      categoryId: 0,
+      walletId: 0,
     );
   }
 

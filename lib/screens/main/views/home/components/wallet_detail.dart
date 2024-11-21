@@ -20,7 +20,7 @@ class _WalletDetailState extends State<WalletDetail> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv('')), //get default the wallet
+      create: (context) => WalletDetailBloc(WalletRepositoryImpl())..add(WalletDetailEv(null)), //get default the wallet
       child: BlocBuilder<WalletDetailBloc, WalletDetailState>(
         builder: (context, state) {
           if (state is WalletDetailFailure) {
@@ -192,7 +192,7 @@ class _WalletDetailState extends State<WalletDetail> {
                         itemBuilder: (context, index) {
                           Map<dynamic, dynamic> walletMap = otherWalletMap[index];
                           String name = walletMap.values.first;
-                          String id = walletMap.keys.first;
+                          num id = walletMap.keys.first;
                           return GestureDetector(
                             onTap: () {
                               setState(() {

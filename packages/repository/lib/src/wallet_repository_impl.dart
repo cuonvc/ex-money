@@ -10,7 +10,7 @@ class WalletRepositoryImpl implements WalletRepository {
   final walletController = WalletController();
 
   @override
-  Future<dynamic> getWalletDetail(String walletId) async {
+  Future<dynamic> getWalletDetail(num? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await walletController.getWalletDetail(walletId)).bodyBytes));

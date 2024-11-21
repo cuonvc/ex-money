@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
 class CategoryList extends StatefulWidget {
-  String? walletId;
+  num? walletId;
   CategoryList({super.key, this.walletId});
 
   @override

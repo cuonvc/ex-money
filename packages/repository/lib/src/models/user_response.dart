@@ -1,5 +1,5 @@
 class UserResponse {
-  late String id;
+  late num id;
   late String name;
   late String email;
   late String? avatarUrl;

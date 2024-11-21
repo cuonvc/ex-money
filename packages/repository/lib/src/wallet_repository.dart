@@ -1,3 +1,3 @@
 abstract class WalletRepository {
-  Future<dynamic> getWalletDetail(String walletId);
+  Future<dynamic> getWalletDetail(num? walletId);
 }

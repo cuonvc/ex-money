@@ -9,7 +9,7 @@ sealed class GetExpenseEditResourceEvent extends Equatable {
 
 class GetExpenseEditResourceEv extends GetExpenseEditResourceEvent {
   ExpenseEditResource? expenseEditResource;
-  String? walletId;
+  num? walletId;
 
   GetExpenseEditResourceEv(this.walletId);
 

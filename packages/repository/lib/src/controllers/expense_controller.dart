@@ -7,8 +7,7 @@ import '../utils/constant.dart';
 
 class ExpenseController {
 
-  Future<dynamic> getExpenseList(String? walletId) async {
-    walletId = walletId ?? '';
+  Future<dynamic> getExpenseList(num? walletId) async {
     return http.get(
         Uri.parse('$domain/api/expense?wallet_id=$walletId&locale=vi'),
         headers: {
@@ -18,10 +17,10 @@ class ExpenseController {
     );
   }
 
-  Future<dynamic> getExpenseResourceForEdit(String? walletId) async {
-    walletId = walletId ?? '';
+  Future<dynamic> getExpenseResourceForEdit(num? walletId) async {
+    String id = walletId == null ? "" : walletId.toString();
     return http.get(
-        Uri.parse('$domain/api/expense/edit_resource?wallet_id=$walletId&locale=vi'),
+        Uri.parse('$domain/api/expense/edit_resource?wallet_id=$id&locale=vi'),
         headers: {
           'Authorization': 'Bearer $accessTokenTest'
         }

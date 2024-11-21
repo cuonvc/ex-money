@@ -195,7 +195,7 @@ class _MainScreenState extends State<MainScreen> {
                 return MultiBlocProvider(
                   providers: [
                     BlocProvider(
-                      create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv('')),
+                      create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),
                     ),
                     BlocProvider(
                       create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
