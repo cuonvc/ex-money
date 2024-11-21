@@ -18,8 +18,8 @@ class _HomeState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final data = ModalRoute.of(context)?.settings.arguments as List;
-    UserResponse userInfo = UserResponse.fromMap(data[2]);
+    // final data = ModalRoute.of(context)?.settings.arguments as List;
+    // UserResponse userInfo = UserResponse.fromMap(data[2]);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class _HomeState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        userInfo.name,
+                        "Username",
                         style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

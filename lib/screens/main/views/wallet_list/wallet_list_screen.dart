@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +34,27 @@ class _WalletListScreenState extends State<WalletListScreen> {
         ),
         const SizedBox(height: 30),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
                 "Tất cả ví ($walletCount)",
               style: TextStyle(fontSize: 16),
-            ), //sau sẽ thêm bộ lọc
+            ),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) => BaseBottomSheet(),
+                  isScrollControlled: false
+                );
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.add, color: cPrimary,),
+                  Text("Thêm ví mới", style: TextStyle(color: cPrimary),)
+                ],
+              ),
+            )//sau sẽ thêm bộ lọc
           ],
         ),
         Expanded(
