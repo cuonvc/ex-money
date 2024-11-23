@@ -54,142 +54,143 @@ class _MainScreenState extends State<MainScreen> {
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
                   height: 64,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: const Offset(0, 3), // changes position of shadow
-                        ),
-                      ]
-                    ),
-                    child: BottomAppBar(
-                        color: Colors.white,
-                        shadowColor: Colors.grey,
-                        shape: const CircularNotchedRectangle(),
-                        notchMargin: 6,
-                        clipBehavior: Clip.antiAlias,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget> [
-                            Flexible(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 5,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      screenIndex = _homeIndex;
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.home,
-                                        color: screenIndex == _homeIndex ? selectedTab : unselectedTab,
-                                        size: screenIndex == _homeIndex ? 22 : 20,
+                  child: BottomAppBar(
+                      color: Colors.white,
+                      shadowColor: Colors.grey,
+                      shape: const CircularNotchedRectangle(),
+                      notchMargin: 6,
+                      clipBehavior: Clip.antiAlias,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget> [
+                          Flexible(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 5,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    screenIndex = _homeIndex;
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.home,
+                                      color: screenIndex == _homeIndex ? selectedTab : unselectedTab,
+                                      size: screenIndex == _homeIndex ? 22 : 20,
+                                    ),
+                                    Text(
+                                      "Tổng quan",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: screenIndex == _homeIndex ? selectedTab : unselectedTab
                                       ),
-                                      Text(
-                                        "Tổng quan",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: screenIndex == _homeIndex ? selectedTab : unselectedTab
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                            Flexible(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 5,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      screenIndex = _statsIndex;
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.query_stats,
-                                        color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
-                                        size: screenIndex == _statsIndex ? 22 : 20,
+                          ),
+                          Flexible(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 5,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    screenIndex = _statsIndex;
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.query_stats,
+                                      color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
+                                      size: screenIndex == _statsIndex ? 22 : 20,
+                                    ),
+                                    Text(
+                                      "Biểu đồ",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: screenIndex == _statsIndex ? selectedTab : unselectedTab
                                       ),
-                                      Text(
-                                        "Biểu đồ",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: screenIndex == _statsIndex ? selectedTab : unselectedTab
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                            Container(width: MediaQuery.of(context).size.width / 5,),
-                            Flexible(
-                              child: Container(
+                          ),
+                          Flexible(
+                            child: Container(
                                 width: MediaQuery.of(context).size.width / 5,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      screenIndex = _walletIndex;
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.wallet,
-                                        color: screenIndex == _walletIndex ? selectedTab : unselectedTab,
-                                        size: screenIndex == _walletIndex ? 22 : 20,
-                                      ),
-                                      Text(
-                                        "Quản lý ví",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: screenIndex == _walletIndex ? selectedTab : unselectedTab
-                                        ),
-                                      )
-                                    ],
+                                padding: const EdgeInsets.only(top: 12),
+                                child: Text(
+                                  textAlign: TextAlign.center,
+                                  "Thêm \nchi tiêu",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: unselectedTab
                                   ),
+                                )
+                            ),
+                          ),
+                          Flexible(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 5,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    screenIndex = _walletIndex;
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.wallet,
+                                      color: screenIndex == _walletIndex ? selectedTab : unselectedTab,
+                                      size: screenIndex == _walletIndex ? 22 : 20,
+                                    ),
+                                    Text(
+                                      "Quản lý ví",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: screenIndex == _walletIndex ? selectedTab : unselectedTab
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                            Flexible(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 5,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      screenIndex = _noteIndex;
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.edit_note_sharp,
-                                        color: screenIndex == _noteIndex ? selectedTab : unselectedTab,
-                                        size: screenIndex == _noteIndex ? 22 : 20,
+                          ),
+                          Flexible(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 5,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    screenIndex = _noteIndex;
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.edit_note_sharp,
+                                      color: screenIndex == _noteIndex ? selectedTab : unselectedTab,
+                                      size: screenIndex == _noteIndex ? 22 : 20,
+                                    ),
+                                    Text(
+                                      "Ghi chú",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: screenIndex == _noteIndex ? selectedTab : unselectedTab
                                       ),
-                                      Text(
-                                        "Ghi chú",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: screenIndex == _noteIndex ? selectedTab : unselectedTab
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        )
-                    ),
+                          ),
+                        ],
+                      )
                   ),
                 ),
               ),
