@@ -87,7 +87,79 @@ class _WalletListScreenState extends State<WalletListScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text("")
+                        Text(
+                          "${"-3.500.000"} VND",
+                          style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900
+                          ),
+                        ),
+
+                        const SizedBox(height: 10,),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Icon(
+                                    Icons.trending_up,
+                                    size: 34,
+                                    color: Colors.green,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      const Text(
+                                        "Hạn mức",
+                                      ),
+                                      Text(
+                                          "${"4.000.000"}"
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Icon(
+                                    Icons.trending_down,
+                                    color: Colors.red,
+                                    size: 34,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      const Text(
+                                        "Đã chi",
+                                      ),
+                                      Text(
+                                          "${"5.000.000"}"
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

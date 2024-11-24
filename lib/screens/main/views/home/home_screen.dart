@@ -1,5 +1,5 @@
 import 'package:ex_money/screens/main/views/home/components/expense_list.dart';
-import 'package:ex_money/screens/main/views/home/components/wallet_detail.dart';
+import 'package:ex_money/screens/main/views/home/components/home_expense_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class _HomeState extends State<HomeScreen> {
         ),
         //---- end header
         const SizedBox(height: 30,),
-        const Expanded(child: WalletDetail())
+        const Expanded(child: HomeExpenseScreen())
       ]
     );
   }
