@@ -169,6 +169,13 @@ class _HomeState extends State<HomeScreen> {
                       ],
                     ),
 
+                    //demo
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        height: 150,
+                        child: Image.asset('assets/images/test/test_stats_home.png')
+                    ),
+
                     const SizedBox(height: 10,),
 
                     Expanded(child: ExpenseList(expenseList))
