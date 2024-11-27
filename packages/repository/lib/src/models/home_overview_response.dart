@@ -17,8 +17,7 @@ class HomeOverviewResponse {
     List expenses = data['ownerExpenses'];
     List<ExpenseResponse> responseList = expenses
         .map((e) => ExpenseResponse.fromMap(e))
-        .toList()
-        .cast<ExpenseResponse>();
+        .toList();
 
     UserResponse user = UserResponse.fromMap(data['user']);
 

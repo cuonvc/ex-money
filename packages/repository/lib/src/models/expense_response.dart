@@ -39,7 +39,7 @@ class ExpenseResponse {
     required this.updatedBy
   });
 
-  static fromMap(Map<String, dynamic> data) {
+  static ExpenseResponse fromMap(Map<String, dynamic> data) {
     return ExpenseResponse(
         id: data['id'],
         status: data['status'],
