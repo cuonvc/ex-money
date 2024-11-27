@@ -8,7 +8,7 @@ const cTextDisable = Color(0xFF707070);
 const cTextInputHint = Color(0xFFD3D3D3);
 const cLineText = Color(0xFF9D9D9D);
 const cTextMediumBlur = Color(0xFF6A6A6A);
-const cGreyBackground = Color(0xFFEBE7E7);
+const cGreyBackground = Color(0xFFFAFAFA);
 const cBackground = Color(0xFFFFFFFF);
 const cDisableBtn = Color(0xFF9D9D9D);
 

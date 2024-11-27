@@ -1,5 +1,6 @@
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,19 +43,13 @@ class _WalletListScreenState extends State<WalletListScreen> {
 
               return Column(
                 children: [
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text("Quản lý ví", style: titleStyle(),)
-                  //   ],
-                  // ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         "Tất cả ví ($walletCount)",
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -73,7 +68,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                       )//sau sẽ thêm bộ lọc
                     ],
                   ),
-                  SizedBox(height: 14,),
+                  const SizedBox(height: 14,),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height / 4,
                     child: PageView.builder(
@@ -86,16 +81,17 @@ class _WalletListScreenState extends State<WalletListScreen> {
                         });
                       },
                       itemBuilder: (context, idx) {
-                        double fullWidth = MediaQuery.sizeOf(context).width;
                         double fullHeight = MediaQuery.sizeOf(context).height;
+                        double heightCard = fullHeight / 5;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               margin: EdgeInsets.symmetric(horizontal: walletCount >= 2 ? 6 : 0),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               // width: fullWidth,
-                              height: fullHeight / 4 - 30,
+                              height: heightCard,
                               decoration: BoxDecoration(
                                   color: cBlurPrimary,
                                   borderRadius: const BorderRadius.all(Radius.circular(18)),
@@ -109,140 +105,186 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                   ]
                               ),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Text(
-                                      "${walletList[currentWallet].balance} VND",
-                                      style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w900
-                                      ),
-                                    ),
-                                  ),
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        // width: MediaQuery.of(context).size.width * 0.4,
-                                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                                        decoration: BoxDecoration(
-                                          // color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Icon(
-                                              Icons.trending_up,
-                                              size: 34,
-                                              color: Colors.green,
-                                            ),
-                                            SizedBox(width: 6,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                const Text(
-                                                  "Hạn mức",
-                                                ),
-                                                Text(
-                                                    "${walletList[currentWallet].totalIncome}"
-                                                )
-                                              ],
-                                            )
-                                          ],
+                                      Text(
+                                        "${walletList[currentWallet].balance} VND",
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w900
                                         ),
                                       ),
-                                      Container(
-                                        // width: MediaQuery.of(context).size.width * 0.4,
-                                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                                        decoration: BoxDecoration(
-                                          // color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Icon(
-                                              Icons.trending_down,
-                                              color: Colors.red,
-                                              size: 34,
-                                            ),
-                                            SizedBox(width: 6,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                const Text(
-                                                  "Đã chi",
-                                                ),
-                                                Text(
-                                                    "${walletList[currentWallet].totalExpense}"
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
+
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const Icon(
+                                                Icons.circle_sharp,
+                                                size: 24,
+                                                color: Colors.green,
+                                              ),
+                                              const SizedBox(width: 6,),
+                                              Text("Hạn mức ${walletList[currentWallet].totalIncome}")
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const Icon(
+                                                Icons.trending_down,
+                                                color: Colors.red,
+                                                size: 24,
+                                              ),
+                                              const SizedBox(width: 6,),
+                                              Text("Đã chi ${walletList[currentWallet].totalExpense}")
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 60, left: ConstantSize.hozPadScreen),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          walletList[currentWallet].name,
-                                          style: TextStyle(fontSize: 14, color: cTextDisable, fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                  )
+                                  Row(
+                                    children: [
+                                      Text(
+                                        walletList[currentWallet].name,
+                                        style: const TextStyle(fontSize: 14, color: cTextDisable, fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
-                            // const SizedBox(height: 10,),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     SizedBox(
-                            //       width: walletCount * 24,
-                            //       height: 20,
-                            //       child: ListView.builder(
-                            //         scrollDirection: Axis.horizontal,
-                            //         itemCount: walletCount,
-                            //         itemBuilder: (context1, index1) {
-                            //           return walletCount < 2 ? const Text("") : Row(
-                            //             mainAxisAlignment: MainAxisAlignment.center,
-                            //             children: [
-                            //               Icon(
-                            //                 index > index1 || index == walletCount - 1 ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
-                            //                 size: 24, color: index == index1 ? cPrimary : Colors.grey,
-                            //               )
-                            //             ],
-                            //           );
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            // const SizedBox(height: 20,),
                           ],
                         );
                       },
                     ),
                   ),
 
-                  //khi pageView bên trên kéo qua lại sẽ cần reload data dưới này
-
+                  //khi pageView bên trên kéo qua lại, Bloc sẽ reload data dưới này, không call lại API
                   //demo
                   SizedBox(
                       width: MediaQuery.sizeOf(context).width,
-                      height: 150,
+                      height: 120,
                       child: Image.asset('assets/images/test/test_stats_wallet.png')
                   ),
 
-                  Expanded(child: ExpenseList(walletList[currentWallet].expenses))
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  expenseTab = true;
+                                  accountTab = false;
+                                  informationTab = false;
+                                });
+                              },
+                              child: tabTitle("Gần đây", expenseTab),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  expenseTab = false;
+                                  accountTab = true;
+                                  informationTab = false;
+                                });
+                              },
+                              child: tabTitle("Tài khoản", accountTab),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    expenseTab = false;
+                                    accountTab = false;
+                                    informationTab = true;
+                                  });
+                                },
+                                child: tabTitle("Thông tin", informationTab)
+                            ),
+                          ],
+                        ),
+                        //expenses tab
+                        Visibility(
+                          visible: expenseTab,
+                          child: Expanded(child: ExpenseList(walletList[currentWallet].expenses),),
+                        ),
+                        //member tab
+                        Visibility(
+                            visible: accountTab,
+                            child: Expanded(
+                              child: ListView.builder(
+                                itemCount: walletList[currentWallet].members.length,
+                                itemBuilder: (context3, index3) {
+                                  return Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            accountExpandedList[index3] = !accountExpandedList[index3];
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.account_circle_rounded),
+                                            Text(walletList[currentWallet].members[index3]),
+                                            AnimatedRotation(
+                                              turns: accountExpandedList[index3] ? 0.75 : 0.5,
+                                              duration: const Duration(milliseconds: 200),
+                                              child: const Icon(
+                                                Icons.keyboard_arrow_left,
+                                                color: Colors.grey,
+                                                size: 26,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AnimatedSize(
+                                          duration: const Duration(milliseconds: 200),
+                                          curve: Curves.linear,
+                                          child: Visibility(
+                                            visible: accountExpandedList[index3],
+                                            child: Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade200,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("Xóa khỏi ví"),
+                                                  Text("Chỉnh sửa quyền"),
+                                                  Text("Thông tin")
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
+                        ),
+                        Visibility(
+                          visible: informationTab,
+                          child: Center(child: Text("Thong tin vi"),),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               );
             }

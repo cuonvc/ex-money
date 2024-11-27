@@ -83,7 +83,7 @@ class _HomeState extends State<HomeScreen> {
                       ],
                     ),
                     //---- end header
-                    const SizedBox(height: 30,),
+                    const SizedBox(height: 16,),
 
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,7 +114,7 @@ class _HomeState extends State<HomeScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 10,),
+                    const SizedBox(height: 6,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

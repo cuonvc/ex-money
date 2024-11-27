@@ -41,15 +41,16 @@ class WalletResponse {
 
   static WalletResponse fromMap(Map<String, dynamic> map) {
 
-    List members = map['members'];
+    List rawMembers = map['members'];
     List rawExpenses = map['expenses'];
     List<ExpenseResponse> expenses = rawExpenses.map((expense) => ExpenseResponse.fromMap(expense)).toList();
+    List<String> members = rawMembers.toList().cast<String>();
 
     return WalletResponse(
       id: map['id'],
       status: map['status'],
       ownerUserId: map['ownerUserId'],
-      members: [],
+      members: members,
       name: map['name'],
       description: map['description'],
       totalIncome: map['totalIncome'],

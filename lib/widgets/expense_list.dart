@@ -16,7 +16,7 @@ class ExpenseList extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
                 Text(
                   "Tất cả giao dịch",
@@ -43,10 +43,18 @@ class ExpenseList extends StatelessWidget {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.only(bottom: 12),
+                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     decoration: BoxDecoration(
-                        color: cBlurPrimary,
-                        borderRadius: BorderRadius.circular(10)
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                            // offset: const Offset(0, 10), // changes position of shadow
+                          ),
+                        ]
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
