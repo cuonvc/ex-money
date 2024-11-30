@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:repository/repository.dart';
 import 'package:repository/src/controllers/expense_controller.dart';
+import 'package:repository/src/repository/expense_repository.dart';
 import 'package:repository/src/utils/http_response.dart';
 
 class ExpenseRepositoryImpl implements ExpenseRepository {

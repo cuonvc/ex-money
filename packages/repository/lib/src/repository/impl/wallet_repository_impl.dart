@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:repository/src/controllers/wallet_controller.dart';
+import 'package:repository/src/repository/wallet_repository.dart';
 import 'package:repository/src/utils/http_response.dart';
-import 'package:repository/src/wallet_repository.dart';
 
 class WalletRepositoryImpl implements WalletRepository {
 

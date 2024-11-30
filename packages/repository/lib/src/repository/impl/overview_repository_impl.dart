@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:repository/src/controllers/overview_controller.dart';
+import 'package:repository/src/repository/overview_repository.dart';
 import 'package:repository/src/utils/http_response.dart';
-import 'package:repository/src/overview_repository.dart';
 
 class OverviewRepositoryImpl implements OverviewRepository {
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:repository/src/category_repository.dart';
+import 'package:repository/src/repository/category_repository.dart';
 import 'package:repository/src/controllers/category_controller.dart';
 import 'package:repository/src/utils/http_response.dart';
 
