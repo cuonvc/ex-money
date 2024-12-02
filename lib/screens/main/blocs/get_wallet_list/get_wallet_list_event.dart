@@ -14,9 +14,14 @@ class GetWalletListEv extends GetWalletListEvent {
   List<Object?> get props => wallets;
 }
 
-// class UpdateCurrentWalletEv extends GetWalletListEvent {
-//    late WalletResponse walletResponse;
-//
-//    @override
-//    List<Object?> get props => [walletResponse];
-// }
+class UpdateCurrentWalletEv extends GetWalletListEvent {
+  final WalletResponse walletResponse;
+  final int index;
+
+  const UpdateCurrentWalletEv(
+    this.walletResponse,
+    this.index,
+  );
+  @override
+  List<Object?> get props => [walletResponse];
+}
