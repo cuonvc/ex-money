@@ -65,4 +65,25 @@ class WalletResponse {
       updatedBy: map['updatedBy'],
     );
   }
+
+  static WalletResponse empty() {
+    return WalletResponse(
+      id: 0,
+      status: '',
+      ownerUserId: 0,
+      members: [],
+      name: '',
+      description: '',
+      totalIncome: 0,
+      totalExpense: 0,
+      balance: 0,
+      expenses: [],
+      otherWallets: null,
+      isDefault: false,
+      createdAt: '',
+      updatedAt: '',
+      createdBy: 0,
+      updatedBy: 0,
+    );
+  }
 }

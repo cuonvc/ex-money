@@ -13,3 +13,10 @@ class GetWalletListEv extends GetWalletListEvent {
   @override
   List<Object?> get props => wallets;
 }
+
+// class UpdateCurrentWalletEv extends GetWalletListEvent {
+//    late WalletResponse walletResponse;
+//
+//    @override
+//    List<Object?> get props => [walletResponse];
+// }

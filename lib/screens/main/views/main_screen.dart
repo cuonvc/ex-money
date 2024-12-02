@@ -41,11 +41,9 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Stack(
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-                  child: getSelectedScreen(screenIndex) //dynamic switch screens
-                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+                child: getSelectedScreen(screenIndex) //dynamic switch screens
               ),
 
 
@@ -141,6 +139,7 @@ class _MainScreenState extends State<MainScreen> {
                                   setState(() {
                                     screenIndex = _walletIndex;
                                   });
+
                                 },
                                 child: Column(
                                   children: [

@@ -11,4 +11,14 @@ class Walletcontroller {
         }
     );
   }
+
+  Future<dynamic> changeUser(String action, String email, String walletId) async {
+    return http.put(
+        Uri.parse('$domain/api/wallet/change_user?locale=vi&action=$action&user_email=$email&wallet_id=$walletId'),
+        headers: {
+          'Authorization': 'Bearer $accessTokenTest',
+          'Content-Type': 'application/json'
+        },
+    );
+  }
 }

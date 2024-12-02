@@ -25,3 +25,8 @@ class NavigatePath {
   static String expenseDetailPath = "/expense_detail";
   static String categoryListPath = "/category/list";
 }
+
+class WalletUserChange {
+  static String wallet_user_change_add = "ADD";
+  static String wallet_user_change_remove = "REMOVE";
+}
