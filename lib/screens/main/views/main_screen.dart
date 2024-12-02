@@ -23,7 +23,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   int screenIndex = 0;
   late Color selectedTab = cPrimary;
   Color unselectedTab = Colors.grey;
@@ -39,164 +38,168 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: cBackground,
       body: SafeArea(
-        child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-                child: getSelectedScreen(screenIndex) //dynamic switch screens
+        child: Stack(children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: ConstantSize.hozPadScreen),
+              child: getSelectedScreen(screenIndex) //dynamic switch screens
               ),
 
-
-              // ---- Bottom bar ----
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  height: 64,
-                  child: BottomAppBar(
-                      color: Colors.white,
-                      shadowColor: Colors.grey,
-                      shape: const CircularNotchedRectangle(),
-                      notchMargin: 6,
-                      clipBehavior: Clip.antiAlias,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget> [
-                          Flexible(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    screenIndex = _homeIndex;
-                                  });
-                                },
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.home,
-                                      color: screenIndex == _homeIndex ? selectedTab : unselectedTab,
-                                      size: screenIndex == _homeIndex ? 22 : 20,
-                                    ),
-                                    Text(
-                                      "Tổng quan",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: screenIndex == _homeIndex ? selectedTab : unselectedTab
-                                      ),
-                                    )
-                                  ],
+          // ---- Bottom bar ----
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 64,
+              child: BottomAppBar(
+                  color: Colors.white,
+                  shadowColor: Colors.grey,
+                  shape: const CircularNotchedRectangle(),
+                  notchMargin: 6,
+                  clipBehavior: Clip.antiAlias,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Flexible(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                screenIndex = _homeIndex;
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.home,
+                                  color: screenIndex == _homeIndex
+                                      ? selectedTab
+                                      : unselectedTab,
+                                  size: screenIndex == _homeIndex ? 22 : 20,
                                 ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    screenIndex = _statsIndex;
-                                  });
-                                },
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.query_stats,
-                                      color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
-                                      size: screenIndex == _statsIndex ? 22 : 20,
-                                    ),
-                                    Text(
-                                      "Biểu đồ",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: screenIndex == _statsIndex ? selectedTab : unselectedTab
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                padding: const EdgeInsets.only(top: 12),
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Thêm \nchi tiêu",
+                                Text(
+                                  "Tổng quan",
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: unselectedTab
-                                  ),
+                                      fontSize: 12,
+                                      color: screenIndex == _homeIndex
+                                          ? selectedTab
+                                          : unselectedTab),
                                 )
+                              ],
                             ),
                           ),
-                          Flexible(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    screenIndex = _walletIndex;
-                                  });
-
-                                },
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.wallet,
-                                      color: screenIndex == _walletIndex ? selectedTab : unselectedTab,
-                                      size: screenIndex == _walletIndex ? 22 : 20,
-                                    ),
-                                    Text(
-                                      "Quản lý ví",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: screenIndex == _walletIndex ? selectedTab : unselectedTab
-                                      ),
-                                    )
-                                  ],
+                        ),
+                      ),
+                      Flexible(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                screenIndex = _statsIndex;
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.query_stats,
+                                  color: screenIndex == _statsIndex
+                                      ? selectedTab
+                                      : unselectedTab,
+                                  size: screenIndex == _statsIndex ? 22 : 20,
                                 ),
-                              ),
+                                Text(
+                                  "Biểu đồ",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: screenIndex == _statsIndex
+                                          ? selectedTab
+                                          : unselectedTab),
+                                )
+                              ],
                             ),
                           ),
-                          Flexible(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    screenIndex = _noteIndex;
-                                  });
-                                },
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.edit_note_sharp,
-                                      color: screenIndex == _noteIndex ? selectedTab : unselectedTab,
-                                      size: screenIndex == _noteIndex ? 22 : 20,
-                                    ),
-                                    Text(
-                                      "Ghi chú",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: screenIndex == _noteIndex ? selectedTab : unselectedTab
-                                      ),
-                                    )
-                                  ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Container(
+                            width: MediaQuery.of(context).size.width / 5,
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "Thêm \nchi tiêu",
+                              style:
+                                  TextStyle(fontSize: 10, color: unselectedTab),
+                            )),
+                      ),
+                      Flexible(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                screenIndex = _walletIndex;
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.wallet,
+                                  color: screenIndex == _walletIndex
+                                      ? selectedTab
+                                      : unselectedTab,
+                                  size: screenIndex == _walletIndex ? 22 : 20,
                                 ),
-                              ),
+                                Text(
+                                  "Quản lý ví",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: screenIndex == _walletIndex
+                                          ? selectedTab
+                                          : unselectedTab),
+                                )
+                              ],
                             ),
                           ),
-                        ],
-                      )
-                  ),
-                ),
-              ),
-            ]
-        ),
+                        ),
+                      ),
+                      Flexible(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                screenIndex = _noteIndex;
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.edit_note_sharp,
+                                  color: screenIndex == _noteIndex
+                                      ? selectedTab
+                                      : unselectedTab,
+                                  size: screenIndex == _noteIndex ? 22 : 20,
+                                ),
+                                Text(
+                                  "Ghi chú",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: screenIndex == _noteIndex
+                                          ? selectedTab
+                                          : unselectedTab),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ),
+        ]),
       ),
-
       floatingActionButtonLocation: CustomFABLocation(offsetY: 2),
       floatingActionButton: ClipRRect(
         borderRadius: BorderRadius.circular(100),
@@ -207,22 +210,25 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: cPrimary,
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () async {
-              ExpenseCreateRequest? newExpense = await showDialog<ExpenseCreateRequest>(
-                context: context,
-                builder: (BuildContext ctx) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
-                      ),
-                    ],
-                    child: const ExpenseEdit(),
-                  );
-                }
-              );
+              ExpenseCreateRequest? newExpense =
+                  await showDialog<ExpenseCreateRequest>(
+                      context: context,
+                      builder: (BuildContext ctx) {
+                        return MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (ctx) => GetExpenseEditResourceBloc(
+                                  ExpenseRepositoryImpl())
+                                ..add(GetExpenseEditResourceEv(null)),
+                            ),
+                            BlocProvider(
+                              create: (ctx) =>
+                                  AddExpenseBloc(ExpenseRepositoryImpl()),
+                            ),
+                          ],
+                          child: const ExpenseEdit(),
+                        );
+                      });
 
               // if (newExpense != null) {
               //   context.read<GetExpenseBloc>().add(GetExpenseEv(newExpense.walletId));
@@ -241,7 +247,7 @@ class _MainScreenState extends State<MainScreen> {
       case _statsIndex:
         return const StatsScreen();
       case _walletIndex:
-        return const WalletListScreen();
+        return const WallerScreenWrapper();
       case _noteIndex:
         return const NoteScreen();
       default:
