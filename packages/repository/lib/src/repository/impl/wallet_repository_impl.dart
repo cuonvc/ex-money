@@ -29,4 +29,24 @@ class WalletRepositoryImpl implements WalletRepository {
     }
   }
 
+  @override
+  Future changeUser(String action, String email, String walletId ) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await walletController.changeUser(action, email, walletId)).bodyBytes));
+      HttpResponse response = HttpResponse.toObject(mapResponse);
+
+      if(response.code == 0) {
+        log("Change user in wallet success");
+        return response;
+      } else {
+        log("Change user in wallet failed");
+        return response;
+      }
+    } catch (e) {
+      log('Error cached - ${e.toString()}');
+      rethrow;
+    }
+  }
+
 }

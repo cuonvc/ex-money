@@ -41,11 +41,9 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Stack(
             children: [
-              Expanded(
-                child: Padding(
+              Padding(
                   padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
                   child: getSelectedScreen(screenIndex) //dynamic switch screens
-                ),
               ),
 
 
@@ -141,6 +139,7 @@ class _MainScreenState extends State<MainScreen> {
                                   setState(() {
                                     screenIndex = _walletIndex;
                                   });
+
                                 },
                                 child: Column(
                                   children: [
@@ -209,20 +208,20 @@ class _MainScreenState extends State<MainScreen> {
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () async {
               ExpenseCreateRequest? newExpense = await showDialog<ExpenseCreateRequest>(
-                context: context,
-                builder: (BuildContext ctx) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
-                      ),
-                    ],
-                    child: const ExpenseEdit(),
-                  );
-                }
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (ctx) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),
+                        ),
+                        BlocProvider(
+                          create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
+                        ),
+                      ],
+                      child: const ExpenseEdit(),
+                    );
+                  }
               );
 
               // if (newExpense != null) {

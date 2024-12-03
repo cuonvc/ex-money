@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class HttpResponse {
   late int code;
   late String status;
@@ -21,7 +19,7 @@ class HttpResponse {
         status: response['status'],
         statusCode: response['statusCode'],
         message: response['message'],
-        data: response['data']
+        data: response['data'] != null ? response['data'] : []
     );
   }
 }
