@@ -27,3 +27,11 @@ String getAmountFormated(int amount) {
   var formatter = NumberFormat.decimalPattern('vi_VN');
   return formatter.format(amount);
 }
+
+num numberFromString(String input) {
+  try {
+    return num.parse(input);
+  } catch (e) {
+    return 0;
+  }
+}

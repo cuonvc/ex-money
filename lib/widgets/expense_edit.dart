@@ -6,6 +6,7 @@ import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expens
 import 'package:ex_money/screens/main/views/category/category_list.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
+import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -57,9 +58,13 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             isLoading = true;
           });
         } else if (state is AddExpenseFailure) {
-          Text("Failed");
-        } else {
-          Navigator.pop(context, expenseRequest);
+          Navigator.pop(context, null);
+          showDialogResponse(context, false, "Thêm chi tiêu", state.message);
+        } else if (state is AddExpenseSuccess) {
+          // if (state.expense != null) {
+          //
+          // }
+          Navigator.pop(context, state.expense);
         }
       },
       child: AlertDialog(
@@ -127,11 +132,6 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                       child: TextButton(
                         child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
                         onPressed: () {
-                          log("Amount: ${amountController.text}");
-                          log("Wallet ID: ${walletIdController.text}");
-                          log("Category ID: ${categoryIdController.text}");
-                          log("Note: ${noteController.text}");
-                          log("Date time selected: ${selectedDateTime}");
                           String rawAmount = amountController.text;
                           ExpenseCreateRequest request = ExpenseCreateRequest(
                             description: noteController.text,
@@ -141,8 +141,8 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                             entryType: ExpenseConstant.entry_type_expense, //tạm
                             entryDate: getDateTimeToRequest(selectedDateTime.toString()),
                             type: ExpenseConstant.type_manual, //tạm
-                            walletId: num.parse(walletIdController.text),
-                            categoryId: num.parse(categoryIdController.text),
+                            walletId: numberFromString(walletIdController.text),
+                            categoryId: numberFromString(categoryIdController.text),
 
                           );
                           context.read<AddExpenseBloc>().add(AddExpenseEv(request));
@@ -231,13 +231,12 @@ class _ExpenseEditState extends State<ExpenseEdit> {
               itemBuilder: (context, index) {
                 Map<dynamic, dynamic> walletMap = otherWalletMap[index];
                 String name = walletMap.values.first;
-                num id = num.parse(walletMap.keys.first);
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       isShowWalletList = false;
                     });
-                    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(id));
+                    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(numberFromString(walletMap.keys.first)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),

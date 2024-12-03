@@ -30,11 +30,11 @@ class _AddUserToWalletState extends State<AddUserToWallet> {
             isLoading = true;
           });
         } else if (state is WalletChangeUserSuccess) {
-          Navigator.pop(context, state.props[0]);
+          Navigator.pop(context, state.response);
           showDialogResponse(context, true, "Thêm thành viên", "Đã gửi yêu cầu");
-        } else {
-          String message = state.props[0].toString();
-          Navigator.pop(context, "Test data response");
+        } else if (state is WalletChangeUserFailure) {
+          String message = state.message;
+          Navigator.pop(context, null);
           showDialogResponse(context, true, "Thêm thành viên", message);
         }
       },

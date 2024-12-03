@@ -9,5 +9,14 @@ sealed class AddExpenseState extends Equatable {
 
 final class AddExpenseInitial extends AddExpenseState {}
 final class AddExpenseLoading extends AddExpenseState {}
-final class AddExpenseFailure extends AddExpenseState {}
-final class AddExpenseSuccess extends AddExpenseState {}
+final class AddExpenseFailure extends AddExpenseState {
+  final String message;
+
+  const AddExpenseFailure({required this.message});
+}
+
+final class AddExpenseSuccess extends AddExpenseState {
+  final ExpenseResponse expense;
+
+  const AddExpenseSuccess({required this.expense});
+}

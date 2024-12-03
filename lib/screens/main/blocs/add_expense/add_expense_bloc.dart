@@ -14,11 +14,16 @@ class AddExpenseBloc extends Bloc<AddExpenseEvent, AddExpenseState> {
     on<AddExpenseEv>((event, emit) async {
       emit(AddExpenseLoading());
       try {
-        await expenseRepository.addExpense(event.request);
-        emit(AddExpenseSuccess());
+        HttpResponse response = await expenseRepository.addExpense(event.request);
+        if (response.code == 0) {
+          ExpenseResponse expense = ExpenseResponse.fromMap(response.data[0]);
+          emit(AddExpenseSuccess(expense: expense));
+        } else {
+          emit(AddExpenseFailure(message: response.message));
+        }
       } catch (e) {
         log("Failed to create expense");
-        emit(AddExpenseFailure());
+        emit(AddExpenseFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

@@ -22,4 +22,14 @@ class HttpResponse {
         data: response['data'] != null ? response['data'] : []
     );
   }
+
+  static HttpResponse toError(String? message) {
+    return HttpResponse(
+        code: 1,
+        status: '',
+        statusCode: 1,
+        message: message != null ? message : '',
+        data: []
+    );
+  }
 }

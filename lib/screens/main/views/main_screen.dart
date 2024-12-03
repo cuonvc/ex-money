@@ -207,7 +207,7 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: cPrimary,
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () async {
-              ExpenseCreateRequest? newExpense = await showDialog<ExpenseCreateRequest>(
+              ExpenseResponse? newExpense = await showDialog(
                   context: context,
                   builder: (BuildContext ctx) {
                     return MultiBlocProvider(
@@ -225,7 +225,7 @@ class _MainScreenState extends State<MainScreen> {
               );
 
               // if (newExpense != null) {
-              //   context.read<GetExpenseBloc>().add(GetExpenseEv(newExpense.walletId));
+                Navigator.pushNamed(context, NavigatePath.homePath);
               // }
             },
           ),
