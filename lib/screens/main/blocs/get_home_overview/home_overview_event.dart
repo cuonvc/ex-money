@@ -12,7 +12,4 @@ class HomeOverViewEv extends HomeOverViewEvent {
   int? month;
 
   HomeOverViewEv(this.month);
-
-  @override
-  List<Object?> get props => [response];
 }

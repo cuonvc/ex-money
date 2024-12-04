@@ -33,17 +33,14 @@ class _CategoryListState extends State<CategoryList> {
         child: BlocBuilder<GetCategoryBloc, GetCategoryState>(
           builder: (context, state) {
             if (state is GetCategoryFailure) {
-              return const Center(child: Text("Fail to get categories"),);
+              return Center(child: Text(state.message),);
             } else if (state is GetCategoryLoading) {
               return const Center(child: CircularProgressIndicator(),);
+            } else if (state is GetCategorySuccess) {
+              List<ExpenseCategoryResponse> list = state.data;
+              return ListView(children: _buildCategoryList(list),);
             } else {
-              List data = state.props;
-              if(data.isNotEmpty) {
-                final List<ExpenseCategoryResponse> list = ExpenseCategoryResponse.fromList(data[0]);
-                return ListView(children: _buildCategoryList(list),);
-              } else {
-                return Center();
-              }
+              return Center(child: Text("Ops! Có lỗi xảy ra"),);
             }
           },
         ),

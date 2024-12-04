@@ -11,15 +11,33 @@ class GetExpenseEditResourceBloc extends Bloc<GetExpenseEditResourceEvent, GetEx
 
   final ExpenseRepository expenseRepository;
 
+  // GetExpenseEditResourceBloc(this.expenseRepository) : super(GetExpenseEditResourceInitial()) {
+  //   on<GetExpenseEditResourceEv>((event, emit) async {
+  //     emit(GetExpenseEditResourceLoading());
+  //     try {
+  //       List data = await expenseRepository.getExpenseEditResource(event.walletId);
+  //       emit(GetExpenseEditResourceSuccess(data));
+  //     } catch (e) {
+  //       log("Get expense resource for edit failure: $e");
+  //       emit(GetExpenseEditResourceFailure());
+  //     }
+  //   });
+  // }
+
   GetExpenseEditResourceBloc(this.expenseRepository) : super(GetExpenseEditResourceInitial()) {
     on<GetExpenseEditResourceEv>((event, emit) async {
       emit(GetExpenseEditResourceLoading());
       try {
-        List data = await expenseRepository.getExpenseEditResource(event.walletId);
-        emit(GetExpenseEditResourceSuccess(data));
+        HttpResponse response = await expenseRepository.getExpenseEditResource(event.walletId);
+        if (response.code == 0) {
+          ExpenseEditResource resource = ExpenseEditResource.fromMap(response.data[0]);
+          emit(GetExpenseEditResourceSuccess(resource));
+        } else {
+          emit(GetExpenseEditResourceFailure(response.message));
+        }
       } catch (e) {
         log("Get expense resource for edit failure: $e");
-        emit(GetExpenseEditResourceFailure());
+        emit(GetExpenseEditResourceFailure(e.toString()));
       }
     });
   }

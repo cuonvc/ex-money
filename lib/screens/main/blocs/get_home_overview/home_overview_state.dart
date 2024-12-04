@@ -7,11 +7,13 @@ sealed class HomeOverviewState extends Equatable {
 
 final class HomeOverviewInitial extends HomeOverviewState {}
 final class HomeOverviewLoading extends HomeOverviewState {}
-final class HomeOverviewFailure extends HomeOverviewState {}
-final class HomeOverviewSuccess extends HomeOverviewState {
-  final List data;
-  const HomeOverviewSuccess(this.data);
+final class HomeOverviewFailure extends HomeOverviewState {
+  final String message;
 
-  @override
-  List<Object?> get props => data;
+  const HomeOverviewFailure(this.message);
+}
+final class HomeOverviewSuccess extends HomeOverviewState {
+  final HomeOverviewResponse data;
+
+  const HomeOverviewSuccess(this.data);
 }

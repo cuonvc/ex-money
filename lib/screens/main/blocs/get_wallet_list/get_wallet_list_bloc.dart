@@ -15,11 +15,15 @@ class GetWalletListBloc extends Bloc<GetWalletListEvent, GetWalletListState> {
     on<GetWalletListEv>((event, emit) async {
       emit(GetWalletListLoading());
       try {
-        List data = await walletRepository.getWalletList();
-        emit(GetWalletListSuccess(data));
+        HttpResponse response = await walletRepository.getWalletList();
+        if (response.code == 0) {
+          List dataList = response.data[0];
+          List<WalletResponse> list = dataList.map((wallet) => WalletResponse.fromMap(wallet)).toList();
+          emit(GetWalletListSuccess(list));
+        }
       } catch (e) {
         log("Get home overview failed: $e");
-        emit(GetWalletListFailure());
+        emit(GetWalletListFailure(e.toString()));
       }
     });
   }

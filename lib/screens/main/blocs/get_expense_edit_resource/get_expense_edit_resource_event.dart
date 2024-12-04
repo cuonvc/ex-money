@@ -12,7 +12,4 @@ class GetExpenseEditResourceEv extends GetExpenseEditResourceEvent {
   num? walletId;
 
   GetExpenseEditResourceEv(this.walletId);
-
-  @override
-  List<Object?> get props => [expenseEditResource];
 }

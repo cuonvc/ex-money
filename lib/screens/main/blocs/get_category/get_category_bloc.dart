@@ -15,11 +15,16 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
     on<GetCategoryEv>((event, emit) async {
       emit(GetCategoryLoading());
       try {
-        List data = await categoryRepository.getCategoryList(event.walletId);
-        emit(GetCategorySuccess(data));
+        HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
+        if (response.code == 0) {
+          List<ExpenseCategoryResponse> data = ExpenseCategoryResponse.fromList(response.data[0]);
+          emit(GetCategorySuccess(data));
+        } else {
+          emit(GetCategoryFailure(response.message));
+        }
       } catch (e) {
         log("Get category failed - $e");
-        emit(GetCategoryFailure());
+        emit(GetCategoryFailure(e.toString()));
       }
     });
   }

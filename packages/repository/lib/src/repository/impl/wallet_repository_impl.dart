@@ -14,18 +14,10 @@ class WalletRepositoryImpl implements WalletRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await walletController.getWalletList()).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-
-      if(response.code == 0) {
-        log("Get wallet list success");
-        return response.data;
-      } else {
-        log("Get wallet list failed");
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 

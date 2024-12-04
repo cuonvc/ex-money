@@ -9,11 +9,13 @@ sealed class GetWalletListState extends Equatable {
 
 final class GetWalletListInitial extends GetWalletListState {}
 final class GetWalletListLoading extends GetWalletListState {}
-final class GetWalletListFailure extends GetWalletListState {}
-final class GetWalletListSuccess extends GetWalletListState {
-  final List data;
-  const GetWalletListSuccess(this.data);
+final class GetWalletListFailure extends GetWalletListState {
+  final String message;
 
-  @override
-  List<Object?> get props => data;
+  const GetWalletListFailure(this.message);
+}
+final class GetWalletListSuccess extends GetWalletListState {
+  final List<WalletResponse> walletList;
+
+  const GetWalletListSuccess(this.walletList);
 }

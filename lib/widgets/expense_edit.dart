@@ -100,13 +100,17 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                     SizedBox(
                         child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
                           builder: (context, state) {
-                            if (state.props.isNotEmpty) {
-                              List data = state.props;
-                              ExpenseEditResource resource = ExpenseEditResource.fromMap(data[0]);
+                            if (state is GetExpenseEditResourceLoading) {
+                              return const CircularProgressIndicator();
+                            } else if (state is GetExpenseEditResourceFailure) {
+                              // showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+                              return Center(child: Text("Ops!\n${state.message}"),);
+                            } else if (state is GetExpenseEditResourceSuccess) {
+                              ExpenseEditResource resource = state.resource;
                               num walletId = resource.walletId;
                               String walletName = resource.walletName;
                               walletIdController.text = walletId.toString();
-                              var categories = ExpenseCategoryResponse.fromList(resource.categories);
+                              var categories = ExpenseCategoryResponse.fromList(resource.categories); //dung de show popular cateogry
                               List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
                               return Column(
                                 children: [
@@ -122,7 +126,8 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                                 ],
                               );
                             } else {
-                              return Center();
+                              // showDialogResponse(context, false, "Có lỗi xảy ra", "Ops!");
+                              return const Center(child: Text("Ops!\nCó lỗi xảy ra"),);
                             }
                           },
                         )
@@ -269,14 +274,16 @@ class _ExpenseEditState extends State<ExpenseEdit> {
         GestureDetector(
           onTap: () async {
             // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
-            ExpenseCategoryResponse selected = await Navigator.push(
+            ExpenseCategoryResponse? selected = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CategoryList(walletId: walletId,))
             );
-            setState (() {
-              categorySelected = selected;
-              categoryIdController.text = selected.id.toString();
-            });
+            if (selected != null) {
+              setState (() {
+                categorySelected = selected;
+                categoryIdController.text = selected.id.toString();
+              });
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

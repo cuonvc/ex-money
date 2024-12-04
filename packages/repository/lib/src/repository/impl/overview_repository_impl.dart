@@ -14,18 +14,10 @@ class OverviewRepositoryImpl implements OverviewRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await overviewController.getHomeOverviewController(month)).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-
-      if(response.code == 0) {
-        log("Get home overview  success");
-        return response.data;
-      } else {
-        log("Get home overview failed");
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 }

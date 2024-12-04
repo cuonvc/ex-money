@@ -225,7 +225,7 @@ class _MainScreenState extends State<MainScreen> {
               );
 
               // if (newExpense != null) {
-                Navigator.pushNamed(context, NavigatePath.homePath);
+              //   Navigator.pushNamed(context, NavigatePath.homePath);
               // }
             },
           ),

@@ -5,14 +5,28 @@ sealed class GetExpenseEditResourceState extends Equatable {
   List<Object?> get props => [];
 }
 
+// final class GetExpenseEditResourceInitial extends GetExpenseEditResourceState {}
+// final class GetExpenseEditResourceLoading extends GetExpenseEditResourceState {}
+// final class GetExpenseEditResourceFailure extends GetExpenseEditResourceState {}
+// final class GetExpenseEditResourceSuccess extends GetExpenseEditResourceState {
+//   final List data;
+//
+//   const GetExpenseEditResourceSuccess(this.data);
+//
+//   @override
+//   List<Object?> get props => data;
+// }
+
+
 final class GetExpenseEditResourceInitial extends GetExpenseEditResourceState {}
 final class GetExpenseEditResourceLoading extends GetExpenseEditResourceState {}
-final class GetExpenseEditResourceFailure extends GetExpenseEditResourceState {}
+final class GetExpenseEditResourceFailure extends GetExpenseEditResourceState {
+  final String message;
+
+  const GetExpenseEditResourceFailure(this.message);
+}
 final class GetExpenseEditResourceSuccess extends GetExpenseEditResourceState {
-  final List data;
+  final ExpenseEditResource resource;
 
-  const GetExpenseEditResourceSuccess(this.data);
-
-  @override
-  List<Object?> get props => data;
+  const GetExpenseEditResourceSuccess(this.resource);
 }

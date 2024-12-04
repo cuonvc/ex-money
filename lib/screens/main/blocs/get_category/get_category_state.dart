@@ -7,11 +7,13 @@ sealed class GetCategoryState extends Equatable {
 
 final class GetCategoryInitial extends GetCategoryState {}
 final class GetCategoryLoading extends GetCategoryState {}
-final class GetCategoryFailure extends GetCategoryState {}
-final class GetCategorySuccess extends GetCategoryState {
-  final List data;
-  const GetCategorySuccess(this.data);
+final class GetCategoryFailure extends GetCategoryState {
+  final String message;
 
-  @override
-  List<Object?> get props => data;
+  const GetCategoryFailure(this.message);
+}
+final class GetCategorySuccess extends GetCategoryState {
+  final List<ExpenseCategoryResponse> data;
+
+  const GetCategorySuccess(this.data);
 }

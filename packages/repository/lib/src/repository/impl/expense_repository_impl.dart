@@ -15,17 +15,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await expenseController.getExpenseList(walletId)).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-      if(response.code == 0) {
-        log("Get expenses success");
-        return response.data;
-      } else {
-        log("Get expenses failed");
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense error - $e");
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 
@@ -34,17 +27,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await expenseController.getExpenseResourceForEdit(walletId)).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-      if(response.code == 0) {
-        log("Get expense resource success");
-        return response.data;
-      } else {
-        log(response.message);
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense resource error - $e");
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 

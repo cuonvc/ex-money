@@ -14,17 +14,10 @@ class CategoryRepositoryImpl extends CategoryRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await categoryController.getCategoryList(walletId)).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-      if(response.code == 0) {
-        log("Get category success");
-        return response.data;
-      } else {
-        log("Get category failed: ${response.message}");
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get category error - $e");
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 
