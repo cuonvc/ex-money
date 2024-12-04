@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense/get_expense_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +36,7 @@ class _CategoryListState extends State<CategoryList> {
             if (state is GetCategoryFailure) {
               return Center(child: Text(state.message),);
             } else if (state is GetCategoryLoading) {
-              return const Center(child: CircularProgressIndicator(),);
+              return const Center(child: Loading(),);
             } else if (state is GetCategorySuccess) {
               List<ExpenseCategoryResponse> list = state.data;
               return ListView(children: _buildCategoryList(list),);

@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:repository/repository.dart';
 
 
@@ -30,7 +32,9 @@ class _HomeState extends State<HomeScreen> {
             // showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
             return const Center(child: Text(""),);
           } else if (state is HomeOverviewLoading) {
-            return const Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: Loading()
+            );
           } else if (state is HomeOverviewSuccess) {
             final HomeOverviewResponse response = state.data;
             List<ExpenseResponse> expenseList = response.ownerExpenses;

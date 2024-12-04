@@ -8,6 +8,7 @@ import 'package:ex_money/screens/main/views/wallet_list/widgets/wallet_info.dart
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/expense_list.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
       child: BlocBuilder<GetWalletListBloc, GetWalletListState>(
         builder: (context, state) {
           if (state is GetWalletListLoading) {
-            return const Center(child: CircularProgressIndicator(),);
+            return const Center(child: Loading(),);
           } else if (state is GetWalletListSuccess) {
             walletList = state.walletList;
             walletCount = walletList.length;

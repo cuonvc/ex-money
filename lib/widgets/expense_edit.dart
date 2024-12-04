@@ -7,6 +7,7 @@ import 'package:ex_money/screens/main/views/category/category_list.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -101,7 +102,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                         child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
                           builder: (context, state) {
                             if (state is GetExpenseEditResourceLoading) {
-                              return const CircularProgressIndicator();
+                              return Loading();
                             } else if (state is GetExpenseEditResourceFailure) {
                               // showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
                               return Center(child: Text("Ops!\n${state.message}"),);
