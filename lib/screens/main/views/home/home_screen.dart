@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
-import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeState extends State<HomeScreen> {
 
   GlobalKey comparePrevMonthKey = GlobalKey();
+  GlobalKey selectMonthKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class _HomeState extends State<HomeScreen> {
                           children: [
                             DecoratedBox(
                               child: Icon(
-                                Icons.person, size: 46, color: cPrimary,),
+                                Icons.person, size: 34, color: cPrimary,),
                               decoration: BoxDecoration(
                                 border: Border.all(color: cPrimary, width: 4),
                                 borderRadius: BorderRadius.circular(50),
@@ -60,14 +61,14 @@ class _HomeState extends State<HomeScreen> {
                                 const Text(
                                   "Chào buổi tối",
                                   style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 10,
                                       color: cText
                                   ),
                                 ),
                                 Text(
                                   response.user.name,
                                   style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: cText
                                   ),
@@ -85,7 +86,7 @@ class _HomeState extends State<HomeScreen> {
                   //---- end header
                   const SizedBox(height: 16,),
 
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -95,21 +96,34 @@ class _HomeState extends State<HomeScreen> {
                           color: cText,
                         ),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Tháng này",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: cTextDisable
-                            ),
+                      GestureDetector(
+                        onTap: () async {
+                          int selectedMonth = await showMonthSelect(context, response.currentMonth);
+                          log("Selected month: $selectedMonth");
+                          if (context.mounted) {
+                            context.read<HomeOverviewBloc>().add(HomeOverViewEv(selectedMonth));
+                          }
+                        },
+                        child: Container(
+                          key: selectMonthKey,
+                          child: Row(
+                            children: [
+                              Text(
+                                "Tháng ${response.currentMonth}",
+                                // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: cTextDisable
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                color: cTextDisable,
+                                size: 14,
+                              )
+                            ],
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down_sharp,
-                            color: cTextDisable,
-                            size: 14,
-                          )
-                        ],
+                        ),
                       )
                     ],
                   ),
@@ -187,6 +201,65 @@ class _HomeState extends State<HomeScreen> {
           }
         },
       ),
+    );
+  }
+
+  Future<int> showMonthSelect(BuildContext context, num oldSelectedMonth) async {
+    RenderBox box = selectMonthKey.currentContext?.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero);
+    Size size = box.size;
+
+    return await showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return Stack(
+            children: [
+              Positioned(
+                top: position.dy,
+                right: ConstantSize.hozPadScreen, // Center the bubble horizontally around the icon
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width / 4,
+                    height: 300,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 5,
+                        )
+                      ],
+                    ),
+                    child: ListView.builder(
+                      itemCount: 12,
+                      itemBuilder: (ctx, idx) {
+                        idx++;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context, idx);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: idx == oldSelectedMonth ? cMediumPrimary : Colors.transparent,
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Text("Tháng $idx", style: TextStyle(color: idx == oldSelectedMonth ? Colors.white : cTextDisable),),
+                          ),
+                        );
+                      }
+                    )
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
     );
   }
 

@@ -1,12 +1,14 @@
 import 'package:repository/repository.dart';
 
 class HomeOverviewResponse {
+  num currentMonth;
   UserResponse user;
   num totalExpenseAmount = 0; //just for you
   num moreThanLastMonth = 0;
   List<ExpenseResponse> ownerExpenses = [];
 
   HomeOverviewResponse({
+    required this.currentMonth,
     required this.user,
     required this.totalExpenseAmount,
     required this.moreThanLastMonth,
@@ -22,6 +24,7 @@ class HomeOverviewResponse {
     UserResponse user = UserResponse.fromMap(data['user']);
 
     return HomeOverviewResponse(
+      currentMonth: data['currentMonth'],
       user: user,
       totalExpenseAmount: data['totalExpenseAmount'],
       moreThanLastMonth: data['moreThanLastMonth'],
