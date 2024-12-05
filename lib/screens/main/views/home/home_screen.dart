@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
+import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
@@ -103,7 +104,6 @@ class _HomeState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () async {
                           int selectedMonth = await showMonthSelect(context, response.currentMonth);
-                          log("Selected month: $selectedMonth");
                           if (context.mounted) {
                             context.read<HomeOverviewBloc>().add(HomeOverViewEv(selectedMonth));
                           }
@@ -113,7 +113,7 @@ class _HomeState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               Text(
-                                "Tháng ${response.currentMonth}",
+                                "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
                                 // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
                                 style: TextStyle(
                                     fontSize: 14,
@@ -211,7 +211,6 @@ class _HomeState extends State<HomeScreen> {
   Future<int> showMonthSelect(BuildContext context, num oldSelectedMonth) async {
     RenderBox box = selectMonthKey.currentContext?.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
-    Size size = box.size;
 
     return await showDialog(
         context: context,
@@ -253,7 +252,7 @@ class _HomeState extends State<HomeScreen> {
                               color: idx == oldSelectedMonth ? cMediumPrimary : Colors.transparent,
                               borderRadius: BorderRadius.circular(5)
                             ),
-                            child: Text("Tháng $idx", style: TextStyle(color: idx == oldSelectedMonth ? Colors.white : cTextDisable),),
+                            child: Text("Tháng ${getCurrentMonth(idx)}", style: TextStyle(color: idx == oldSelectedMonth ? Colors.white : cTextDisable),),
                           ),
                         );
                       }

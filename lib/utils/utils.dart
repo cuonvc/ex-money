@@ -23,6 +23,10 @@ String getDateTimeToRequest(String dateTime) {
   return dateTime.substring(0, 19);
 }
 
+String getCurrentMonth(int month) {
+  return DateTime.now().month == month ? "Này" : month.toString();
+}
+
 String getAmountFormated(int amount) {
   var formatter = NumberFormat.decimalPattern('vi_VN');
   return formatter.format(amount);
