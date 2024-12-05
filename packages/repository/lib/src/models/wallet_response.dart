@@ -6,7 +6,7 @@ class WalletResponse {
   late num id;
   late String status;
   late num ownerUserId;
-  late List<String> members;
+  late List<UserResponse> members;
   late String name;
   late String? description;
   late num totalIncome;
@@ -44,7 +44,7 @@ class WalletResponse {
     List rawMembers = map['members'];
     List rawExpenses = map['expenses'];
     List<ExpenseResponse> expenses = rawExpenses.map((expense) => ExpenseResponse.fromMap(expense)).toList();
-    List<String> members = rawMembers.toList().cast<String>();
+    List<UserResponse> members = rawMembers.map((user) => UserResponse.fromMap(user)).toList();
 
     return WalletResponse(
       id: map['id'],

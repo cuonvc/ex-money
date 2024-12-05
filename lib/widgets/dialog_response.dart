@@ -7,7 +7,7 @@ void showDialogResponse(BuildContext context, bool isSuccess, String title, Stri
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(title, style: const TextStyle(fontSize: 16),)
+              Flexible(child: Text(title, style: const TextStyle(fontSize: 16),))
             ],
           ),
           content: Text(content),
