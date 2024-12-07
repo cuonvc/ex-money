@@ -223,7 +223,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                       //expenses tab
                       Visibility(
                         visible: expenseTab,
-                        child: Expanded(child: ExpenseList(walletList[currentWalletIndex].expenses),),
+                        child: Expanded(child: ExpenseList(walletList[currentWalletIndex].expenses, new ScrollController()),),
                       ),
                       //member tab
                       Visibility(

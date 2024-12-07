@@ -1,13 +1,10 @@
-import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:repository/repository.dart';
 
 
@@ -22,6 +19,42 @@ class _HomeState extends State<HomeScreen> {
 
   GlobalKey comparePrevMonthKey = GlobalKey();
   GlobalKey selectMonthKey = GlobalKey();
+
+  final ScrollController _homeScrollController = ScrollController();
+  final ScrollController _expenseScrollController = ScrollController();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listener to the child ScrollController
+    _expenseScrollController.addListener(() {
+      double currentPosition = _expenseScrollController.position.pixels;
+      double minPosition = _expenseScrollController.position.minScrollExtent;
+      if (currentPosition == minPosition) {
+        _homeScrollController.animateTo(
+          _homeScrollController.position.minScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else if (currentPosition > minPosition) { // > 0
+        _homeScrollController.animateTo(
+          _homeScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _homeScrollController.dispose();
+    _expenseScrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,157 +79,166 @@ class _HomeState extends State<HomeScreen> {
                 children: [
                   const SizedBox(height: 20,),
                   //header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                  Expanded(
+                    child: ListView(
+                      controller: _homeScrollController,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            DecoratedBox(
-                              child: Icon(
-                                Icons.person, size: 34, color: cPrimary,),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: cPrimary, width: 4),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
+                            Row(
+                                children: [
+                                  DecoratedBox(
+                                    child: Icon(
+                                      Icons.person, size: 34, color: cPrimary,),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: cPrimary, width: 4),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Chào buổi tối",
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: cText
+                                        ),
+                                      ),
+                                      Text(
+                                        response.user.name,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: cText
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ]
                             ),
-                            const SizedBox(width: 14,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Chào buổi tối",
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: cText
-                                  ),
-                                ),
-                                Text(
-                                  response.user.name,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: cText
-                                  ),
-                                ),
-                              ],
+                            const Icon(
+                              Icons.notifications_outlined,
+                              size: 28,
                             )
-                          ]
-                      ),
-                      const Icon(
-                        Icons.notifications_outlined,
-                        size: 28,
-                      )
-                    ],
-                  ),
-                  //---- end header
-                  const SizedBox(height: 16,),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Đã chi tiêu",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: cText,
+                          ],
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          int selectedMonth = await showMonthSelect(context, response.currentMonth);
-                          if (context.mounted) {
-                            context.read<HomeOverviewBloc>().add(HomeOverViewEv(selectedMonth));
-                          }
-                        },
-                        child: Container(
-                          key: selectMonthKey,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
-                                // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: cTextDisable
+                        //---- end header
+                        const SizedBox(height: 16,),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Đã chi tiêu",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: cText,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                int selectedMonth = await showMonthSelect(context, response.currentMonth);
+                                if (context.mounted) {
+                                  context.read<HomeOverviewBloc>().add(HomeOverViewEv(selectedMonth));
+                                }
+                              },
+                              child: Container(
+                                key: selectMonthKey,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
+                                      // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: cTextDisable
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down_sharp,
+                                      color: cTextDisable,
+                                      size: 14,
+                                    )
+                                  ],
                                 ),
                               ),
-                              Icon(
-                                Icons.keyboard_arrow_down_sharp,
-                                color: cTextDisable,
-                                size: 14,
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
 
-                  const SizedBox(height: 6,),
+                        const SizedBox(height: 6,),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            response.totalExpenseAmount.toString(),
-                            style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
-                                color: cPrimary
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  response.totalExpenseAmount.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w700,
+                                      color: cPrimary
+                                  ),
+                                ),
+                                const Text(" VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
+                              ],
                             ),
-                          ),
-                          const Text(" VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showBubbleComparePrevMonth(context, -150000);
-                        },
-                        child: Container(
-                          key: comparePrevMonthKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,),
-                                  Text(
-                                    " ${response.moreThanLastMonth}",
-                                    style: const TextStyle(fontSize: 12, color: Colors.red),
-                                  ),
-                                ],
+                            GestureDetector(
+                              onTap: () {
+                                showBubbleComparePrevMonth(context, -150000);
+                              },
+                              child: Container(
+                                key: comparePrevMonthKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,),
+                                        Text(
+                                          " ${response.moreThanLastMonth}",
+                                          style: const TextStyle(fontSize: 12, color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                    const Row(
+                                      children: [
+                                        Text(
+                                          "So với tháng trước ",
+                                          style: TextStyle(color: cTextDisable, fontSize: 12),
+                                        ),
+                                        Icon(Icons.info_outline, size: 12,)
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                              const Row(
-                                children: [
-                                  Text(
-                                    "So với tháng trước ",
-                                    style: TextStyle(color: cTextDisable, fontSize: 12),
-                                  ),
-                                  Icon(Icons.info_outline, size: 12,)
-                                ],
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
+                        //demo
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width,
+                            height: 150,
+                            child: Image.asset('assets/images/test/test_stats_home.png')
+                        ),
 
-                  //demo
-                  SizedBox(
-                      width: MediaQuery.sizeOf(context).width,
-                      height: 150,
-                      child: Image.asset('assets/images/test/test_stats_home.png')
-                  ),
+                        const SizedBox(height: 10,),
 
-                  const SizedBox(height: 10,),
-
-                  Expanded(child: ExpenseList(expenseList))
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height - 40,
+                            child: ExpenseList(expenseList, _expenseScrollController)
+                        ),
+                      ],
+                    ),
+                  )
                 ]
             );
           } else {

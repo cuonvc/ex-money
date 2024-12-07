@@ -72,7 +72,7 @@ class _MemberTabState extends State<MemberTab> {
                 child: const Row(
                   children: [
                     Icon(Icons.add, color: cPrimary,),
-                    Text("Add member", style: TextStyle(color: cPrimary),)
+                    Text("Thêm thành viên", style: TextStyle(color: cPrimary),)
                   ],
                 ),
               ),

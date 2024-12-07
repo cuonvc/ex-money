@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:repository/repository.dart';
 
 class ExpenseList extends StatelessWidget {
+  final ScrollController expenseScrollController;
   final List<ExpenseResponse> expenseList;
-  const ExpenseList(this.expenseList, {super.key});
+  const ExpenseList(this.expenseList, this.expenseScrollController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class ExpenseList extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.only(top: 10),
             child: ListView.builder(
+              controller: expenseScrollController,
               itemCount: expenseList.length,
               itemBuilder: (ctx, int i) {
                 ExpenseResponse expense = expenseList[i];
