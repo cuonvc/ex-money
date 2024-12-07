@@ -1,15 +1,12 @@
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
-import 'package:ex_money/screens/main/blocs/wallet_change_user/wallet_change_user_bloc.dart';
-import 'package:ex_money/screens/main/views/wallet_list/add_user_to_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/wallet_info.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/widgets/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
@@ -29,10 +26,50 @@ class _WalletListScreenState extends State<WalletListScreen> {
   bool informationTab = false;
   List<WalletResponse> walletList = [];
   int currentWalletIndex = 0;
+  late double cardHeight = 0;
+  double statsHeight = 120;
   WalletResponse currentWallet = WalletResponse.empty();
+
+  final ScrollController _walletScrollController = ScrollController();
+  final ScrollController _expenseScrollController = ScrollController();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listener to the child ScrollController
+    _expenseScrollController.addListener(() {
+      double currentPosition = _expenseScrollController.position.pixels;
+      double minPosition = _expenseScrollController.position.minScrollExtent;
+      if (currentPosition == minPosition) {
+        _walletScrollController.animateTo(
+          _walletScrollController.position.minScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else if (currentPosition > minPosition) { // > 0
+        _walletScrollController.animateTo(
+          _walletScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _walletScrollController.dispose();
+    _expenseScrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    double fullHeight = MediaQuery.sizeOf(context).height;
+    cardHeight = fullHeight / 5;
     return BlocProvider(
       create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv()),
       child: BlocBuilder<GetWalletListBloc, GetWalletListState>(
@@ -81,15 +118,12 @@ class _WalletListScreenState extends State<WalletListScreen> {
                     scrollDirection: Axis.horizontal,
                     controller: PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1),
                     onPageChanged: (int index) {
-                      log("Current wallet: ${currentWallet.id}");
                       setState(() {
                         currentWalletIndex = index;
                         currentWallet = walletList[index];
                       });
                     },
                     itemBuilder: (context, idx) {
-                      double fullHeight = MediaQuery.sizeOf(context).height;
-                      double heightCard = fullHeight / 5;
                       // currentWallet = walletList[currentWalletIndex];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +133,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             margin: EdgeInsets.symmetric(horizontal: walletCount >= 2 ? 6 : 0),
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                             // width: fullWidth,
-                            height: heightCard,
+                            height: cardHeight,
                             decoration: BoxDecoration(
                                 color: cBlurPrimary,
                                 borderRadius: const BorderRadius.all(Radius.circular(18)),
@@ -175,65 +209,73 @@ class _WalletListScreenState extends State<WalletListScreen> {
                 ),
 
                 //khi pageView bên trên kéo qua lại, Bloc sẽ reload data dưới này, không call lại API
-                //demo
-                SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 120,
-                    child: Image.asset('assets/images/test/test_stats_wallet.png')
-                ),
-
                 Expanded(
-                  child: Column(
+                  child: ListView(
+                    controller: _walletScrollController,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                expenseTab = true;
-                                accountTab = false;
-                                informationTab = false;
-                              });
-                            },
-                            child: tabTitle("GD gần đây", expenseTab),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                expenseTab = false;
-                                accountTab = true;
-                                informationTab = false;
-                              });
-                            },
-                            child: tabTitle("Thành viên", accountTab),
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  expenseTab = false;
-                                  accountTab = false;
-                                  informationTab = true;
-                                });
-                              },
-                              child: tabTitle("Thông tin ví", informationTab)
-                          ),
-                        ],
+                      //demo
+                      SizedBox(
+                          width: MediaQuery.sizeOf(context).width,
+                          height: statsHeight,
+                          child: Image.asset('assets/images/test/test_stats_wallet.png')
                       ),
-                      //expenses tab
-                      Visibility(
-                        visible: expenseTab,
-                        child: Expanded(child: ExpenseList(walletList[currentWalletIndex].expenses, new ScrollController()),),
-                      ),
-                      //member tab
-                      Visibility(
-                        visible: accountTab,
-                        child: Expanded(child: MemberTab(wallet: currentWallet, key: ValueKey(currentWallet),),),
-                      ),
-                      //wallet info tab
-                      Visibility(
-                        visible: informationTab,
-                        child: WalletInfo(),
+
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height - cardHeight - statsHeight - 20,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      expenseTab = true;
+                                      accountTab = false;
+                                      informationTab = false;
+                                    });
+                                  },
+                                  child: tabTitle("GD gần đây", expenseTab),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      expenseTab = false;
+                                      accountTab = true;
+                                      informationTab = false;
+                                    });
+                                  },
+                                  child: tabTitle("Thành viên", accountTab),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        expenseTab = false;
+                                        accountTab = false;
+                                        informationTab = true;
+                                      });
+                                    },
+                                    child: tabTitle("Thông tin ví", informationTab)
+                                ),
+                              ],
+                            ),
+                            //expenses tab
+                            Visibility(
+                              visible: expenseTab,
+                              child: Expanded(child: ExpenseList(walletList[currentWalletIndex].expenses, _expenseScrollController),),
+                            ),
+                            //member tab
+                            Visibility(
+                              visible: accountTab,
+                              child: Expanded(child: MemberTab(wallet: currentWallet, key: ValueKey(currentWallet),),),
+                            ),
+                            //wallet info tab
+                            Visibility(
+                              visible: informationTab,
+                              child: WalletInfo(),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
