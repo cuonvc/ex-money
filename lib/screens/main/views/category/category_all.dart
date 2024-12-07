@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
-import 'package:ex_money/screens/main/blocs/get_expense/get_expense_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
-class CategoryList extends StatefulWidget {
+class CategoryAll extends StatefulWidget {
   num? walletId;
-  CategoryList({super.key, this.walletId});
+  CategoryAll({super.key, this.walletId});
 
   @override
-  State<CategoryList> createState() => _CategoryListState();
+  State<CategoryAll> createState() => _CategoryAllState();
 }
 
-class _CategoryListState extends State<CategoryList> {
+class _CategoryAllState extends State<CategoryAll> {
   @override
   Widget build(BuildContext context) {
 

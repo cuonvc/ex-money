@@ -1,7 +1,8 @@
 import 'package:ex_money/screens/auth/views/auth_selection.dart';
 import 'package:ex_money/screens/auth/views/sign_in.dart';
 import 'package:ex_money/screens/auth/views/sign_up.dart';
-import 'package:ex_money/screens/main/views/category/category_list.dart';
+import 'package:ex_money/screens/main/views/category/category_all.dart';
+import 'package:ex_money/screens/main/views/expense/expense_all.dart';
 import 'package:ex_money/screens/main/views/expense_detail/expense_detail.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/main_screen.dart';
@@ -39,8 +40,9 @@ class AppView extends StatelessWidget {
         NavigatePath.signInPath: (context) => const SignIn(),
         NavigatePath.signUpPath: (context) => const SignUp(),
         NavigatePath.homePath: (context) => const MainScreen(),
+        NavigatePath.expenseAll: (context) => const ExpenseAll(),
         NavigatePath.expenseDetailPath: (context) => const ExpenseDetail(),
-        NavigatePath.categoryListPath: (context) => CategoryList()
+        NavigatePath.categoryListPath: (context) => CategoryAll()
       },
     );
   }

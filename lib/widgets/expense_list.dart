@@ -6,7 +6,14 @@ import 'package:repository/repository.dart';
 class ExpenseList extends StatelessWidget {
   final ScrollController expenseScrollController;
   final List<ExpenseResponse> expenseList;
-  const ExpenseList(this.expenseList, this.expenseScrollController, {super.key});
+  final bool selectAllBtn;
+
+  const ExpenseList(
+      this.expenseList,
+      this.selectAllBtn,
+      this.expenseScrollController,
+      {super.key}
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -14,23 +21,28 @@ class ExpenseList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Row(
+        selectAllBtn ? Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  "Tất cả giao dịch",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: cTextDisable,
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, NavigatePath.expenseAll);
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    "Tất cả giao dịch",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: cTextDisable,
+                    ),
                   ),
-                ),
-                Icon(Icons.arrow_forward_ios_outlined, size: 10, color: cTextDisable,)
-              ],
+                  Icon(Icons.arrow_forward_ios_outlined, size: 10, color: cTextDisable,)
+                ],
+              ),
             )
           ],
-        ),
+        ) : const SizedBox(height: 0,),
         Expanded(
           child: Container(
             padding: const EdgeInsets.only(top: 10),

@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
-import 'package:ex_money/screens/main/views/category/category_list.dart';
+import 'package:ex_money/screens/main/views/category/category_all.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
@@ -277,7 +277,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
             ExpenseCategoryResponse? selected = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CategoryList(walletId: walletId,))
+                MaterialPageRoute(builder: (context) => CategoryAll(walletId: walletId,))
             );
             if (selected != null) {
               setState (() {

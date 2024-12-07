@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                                       size: screenIndex == _statsIndex ? 22 : 20,
                                     ),
                                     Text(
-                                      "Biểu đồ",
+                                      "Phân tích",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: screenIndex == _statsIndex ? selectedTab : unselectedTab

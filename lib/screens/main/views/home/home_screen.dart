@@ -234,7 +234,7 @@ class _HomeState extends State<HomeScreen> {
 
                         SizedBox(
                             height: MediaQuery.of(context).size.height - 40,
-                            child: ExpenseList(expenseList, _expenseScrollController)
+                            child: ExpenseList(expenseList, true, _expenseScrollController)
                         ),
                       ],
                     ),
