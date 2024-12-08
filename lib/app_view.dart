@@ -34,7 +34,7 @@ class AppView extends StatelessWidget {
       //     outline: Colors.grey,
       //   )
       // ),
-      home: MainScreen(),
+      home: AuthSelection(),
       routes: {
         '/auth/selection': (context) => const AuthSelection(),
         NavigatePath.signInPath: (context) => const SignIn(),

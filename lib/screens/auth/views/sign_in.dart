@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/widgets/base_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -79,9 +80,22 @@ class _SignInState extends State<SignIn> {
                             ],
                           ),
                           const SizedBox(height: 18,),
-                          credInputFiled(emailInput, TextInputType.emailAddress, false, Icons.person, "Nhập địa chỉ email"),
+                          BaseTextField(
+                            controller: emailInput,
+                            inputType: TextInputType.emailAddress,
+                            icon: Icons.person,
+                            hintText: "Nhập địa chỉ email",
+                            passwordField: false,
+                          ),
                           const SizedBox(height: 18,),
-                          credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
+                          BaseTextField(
+                            controller: passwordInput,
+                            inputType: TextInputType.visiblePassword,
+                            icon: Icons.key,
+                            hintText: "Nhập mật khẩu",
+                            passwordField: true,
+                          ),
+                          // credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
                           const SizedBox(height: 16,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -154,47 +168,8 @@ class _SignInState extends State<SignIn> {
                 ),
               ],
             )
+          ),
         ),
-      ),
-    ),
-);
-  }
-
-  TextFormField credInputFiled(TextEditingController controller, TextInputType inputType, bool passwordField, IconData icon, String hintText) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: inputType,
-      obscureText: passwordField ? passwordVisible : false,
-      cursorColor: Colors.black,
-      decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: cLineText, width: 1),
-              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(width: 1, color: cLineText),
-              borderRadius: BorderRadius.circular(ConstantSize.borderButton)
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
-          prefixIcon: Icon(
-            icon,
-            size: 26,
-          ),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-              fontWeight: FontWeight.w400
-          ),
-          // filled: true,
-          fillColor: Colors.white,
-          suffixIcon: passwordField ?
-          IconButton(
-            onPressed: () {
-              setState(() {
-                passwordVisible = !passwordVisible;
-              });
-            },
-            icon: Icon(passwordVisible ? Icons.visibility : Icons.visibility_off),
-          ) : null
       ),
     );
   }

@@ -66,7 +66,13 @@ class _AddUserToWalletState extends State<AddUserToWallet> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: baseInputTextField(controller, TextInputType.emailAddress, null, "Nhập email người dùng"),
+                  child: BaseTextField(
+                    controller: controller,
+                    inputType: TextInputType.emailAddress,
+                    icon: null,
+                    hintText: "Nhập email người dùng",
+                    passwordField: false,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
