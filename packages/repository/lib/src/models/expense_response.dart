@@ -9,8 +9,6 @@ class ExpenseResponse {
   late String? type;
   late num walletId;
   late String walletName;
-  late num userId;
-  late String userName;
   late num categoryId;
   late String categoryName;
   late String createdAt;
@@ -29,8 +27,6 @@ class ExpenseResponse {
     required this.type,
     required this.walletId,
     required this.walletName,
-    required this.userId,
-    required this.userName,
     required this.categoryId,
     required this.categoryName,
     required this.createdAt,
@@ -51,8 +47,6 @@ class ExpenseResponse {
         type: data['type'],
         walletId: data['walletId'],
         walletName: data['walletName'],
-        userId: data['userId'],
-        userName: data['userName'],
         categoryId: data['categoryId'],
         categoryName: data['categoryName'],
         createdAt: data['createdAt'],

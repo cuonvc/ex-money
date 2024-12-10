@@ -8,6 +8,6 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoadingAnimationWidget.threeArchedCircle(color: cPrimary, size: 54);
+    return LoadingAnimationWidget.waveDots(color: cPrimary, size: 54);
   }
 }

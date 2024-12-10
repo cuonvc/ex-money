@@ -11,10 +11,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   final expenseController = ExpenseController();
 
   @override
-  Future<dynamic> getExpenseList(num? walletId) async {
+  Future<dynamic> getExpenseList(num? walletId, String? keyword, num? categoryId, num? createdById) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await expenseController.getExpenseList(walletId)).bodyBytes));
+          utf8.decode((await expenseController.getExpenseList(walletId, keyword, categoryId, categoryId)).bodyBytes));
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense error - $e");
@@ -42,6 +42,18 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Add expense resource error - $e");
+      return HttpResponse.toError(e.toString());
+    }
+  }
+
+  @override
+  Future getExpenseFilterResource(num? walletId) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await expenseController.getExpenseResourceForFilter(walletId)).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log("Get expense resource error - $e");
       return HttpResponse.toError(e.toString());
     }
   }

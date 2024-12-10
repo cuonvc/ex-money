@@ -7,9 +7,13 @@ import '../utils/constant.dart';
 
 class ExpenseController {
 
-  Future<dynamic> getExpenseList(num? walletId) async {
+  Future<dynamic> getExpenseList(num? walletId, String? keyword, num? categoryId, num? createdById) async {
+    String wallet = walletId == null ? "" : walletId.toString();
+    keyword = keyword == null ? "" : keyword;
+    String category = categoryId == null ? "" : categoryId.toString();
+    String createdBy = createdById == null ? "" : createdById.toString();
     return http.get(
-        Uri.parse('$domain/api/expense?wallet_id=$walletId&locale=vi'),
+        Uri.parse('$domain/api/expense?wallet_id=$wallet&keyword=$keyword&category_id=$category&created_by=$createdBy&locale=vi'),
         headers: {
           // 'Accept-Language': 'vi', //required
           'Authorization': 'Bearer $accessTokenTest'
@@ -21,6 +25,16 @@ class ExpenseController {
     String id = walletId == null ? "" : walletId.toString();
     return http.get(
         Uri.parse('$domain/api/expense/edit_resource?wallet_id=$id&locale=vi'),
+        headers: {
+          'Authorization': 'Bearer $accessTokenTest'
+        }
+    );
+  }
+
+  Future<dynamic> getExpenseResourceForFilter(num? walletId) async {
+    String id = walletId == null ? "" : walletId.toString();
+    return http.get(
+        Uri.parse('$domain/api/expense/filter_resource?wallet_id=$id&locale=vi'),
         headers: {
           'Authorization': 'Bearer $accessTokenTest'
         }

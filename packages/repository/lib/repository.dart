@@ -20,6 +20,7 @@ export 'src/models/wallet_response.dart';
 export 'src/models/home_overview_response.dart';
 export 'src/models/expense_category_response.dart';
 export 'src/models/expense_edit_resource.dart';
+export 'src/models/expense_filter_resource.dart';
 export 'src/entities/sign_in_entity.dart';
 export 'src/models/expense_create_request.dart';
 export 'src/utils/http_response.dart';

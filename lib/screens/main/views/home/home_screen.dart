@@ -59,7 +59,7 @@ class _HomeState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(123)), //get default the current month
+      create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(null)), //get default the current month
       child: BlocBuilder<HomeOverviewBloc, HomeOverviewState>(
         builder: (context, state) {
           if (state is HomeOverviewFailure) {
