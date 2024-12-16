@@ -130,19 +130,19 @@ class _WalletListScreenState extends State<WalletListScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: walletCount >= 2 ? 6 : 0),
+                            margin: EdgeInsets.symmetric(horizontal: walletCount >= 2 ? 6 : 0, vertical: 10),
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                             // width: fullWidth,
                             height: cardHeight,
                             decoration: BoxDecoration(
-                                color: cBlurPrimary,
+                                color: Colors.white,
                                 borderRadius: const BorderRadius.all(Radius.circular(18)),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.3),
                                     spreadRadius: 2,
-                                    blurRadius: 3,
-                                    offset: const Offset(3, 3), // changes position of shadow
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3), // changes position of shadow
                                   ),
                                 ]
                             ),

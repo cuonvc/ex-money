@@ -1,15 +1,11 @@
-import 'dart:developer';
-
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_remove.dart';
-import 'package:ex_money/widgets/dialog_confirm.dart';
-import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
 import '../../../../../utils/constant.dart';
 import '../../../blocs/wallet_change_user/wallet_change_user_bloc.dart';
-import '../add_user_to_wallet.dart';
+import 'add_user_to_wallet.dart';
 
 class MemberTab extends StatefulWidget {
   final WalletResponse wallet;
