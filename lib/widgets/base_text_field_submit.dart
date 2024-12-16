@@ -64,6 +64,9 @@ class _BaseTextFieldSubmitState extends State<BaseTextFieldSubmit> {
 
       keyboardType: inputType,
       cursorColor: Colors.black,
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: cLineText, width: 1),

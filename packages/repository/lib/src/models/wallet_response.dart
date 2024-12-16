@@ -41,10 +41,19 @@ class WalletResponse {
 
   static WalletResponse fromMap(Map<String, dynamic> map) {
 
-    List rawMembers = map['members'];
-    List rawExpenses = map['expenses'];
-    List<ExpenseResponse> expenses = rawExpenses.map((expense) => ExpenseResponse.fromMap(expense)).toList();
-    List<UserResponse> members = rawMembers.map((user) => UserResponse.fromMap(user)).toList();
+    var membersVal = map['members'];
+    var expensesVal = map['expenses'];
+
+    List<ExpenseResponse> expenses = [];
+    List<UserResponse> members = [];
+    if (expensesVal != null) {
+      List rawExpenses = expensesVal;
+      expenses = rawExpenses.map((expense) => ExpenseResponse.fromMap(expense)).toList();
+    }
+    if (membersVal != null) {
+      List rawMembers = membersVal;
+      members = rawMembers.map((user) => UserResponse.fromMap(user)).toList();
+    }
 
     return WalletResponse(
       id: map['id'],

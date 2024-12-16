@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
+import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/wallet_info.dart';
 import 'package:ex_money/utils/constant.dart';
@@ -32,6 +34,8 @@ class _WalletListScreenState extends State<WalletListScreen> {
 
   final ScrollController _walletScrollController = ScrollController();
   final ScrollController _expenseScrollController = ScrollController();
+
+  PageController pageController = PageController(initialPage: 0);
 
 
   @override
@@ -79,6 +83,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
           } else if (state is GetWalletListSuccess) {
             walletList = state.walletList;
             walletCount = walletList.length;
+            pageController = PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1);
             //init screen
             if (currentWallet.id == 0) {
               currentWallet = walletList[0];
@@ -94,12 +99,24 @@ class _WalletListScreenState extends State<WalletListScreen> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
+                      onTap: () async {
+                        WalletResponse? newWallet = await showModalBottomSheet(
                             context: context,
-                            builder: (context) => BaseBottomSheet(),
-                            isScrollControlled: false
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext context) {
+                              return BlocProvider(
+                                create: (ctx) => CreateWalletBloc(WalletRepositoryImpl()),
+                                child: const CreateWallet()
+                              );
+                            },
+                            isScrollControlled: true
                         );
+                        setState(() {
+                          if (newWallet != null) {
+                            walletCount++;
+                            pageController.animateToPage(walletCount - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                          }
+                        });
                       },
                       child: const Row(
                         children: [
@@ -116,7 +133,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                   child: PageView.builder(
                     itemCount: walletCount,
                     scrollDirection: Axis.horizontal,
-                    controller: PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1),
+                    controller: pageController,
                     onPageChanged: (int index) {
                       setState(() {
                         currentWalletIndex = index;

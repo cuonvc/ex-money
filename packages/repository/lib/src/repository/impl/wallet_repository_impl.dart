@@ -7,7 +7,19 @@ import 'package:repository/src/utils/http_response.dart';
 
 class WalletRepositoryImpl implements WalletRepository {
 
-  final walletController = Walletcontroller();
+  final walletController = WalletController();
+
+  @override
+  Future<dynamic> createWallet(String name, String description) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await walletController.createWallet(name, description)).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log('Error cached - ${e.toString()}');
+      return HttpResponse.toError(e.toString());
+    }
+  }
 
   @override
   Future<dynamic> getWalletList() async {

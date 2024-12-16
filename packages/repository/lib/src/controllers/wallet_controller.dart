@@ -1,8 +1,27 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import '../../repository.dart';
 
-class Walletcontroller {
+class WalletController {
+
+  Future<dynamic> createWallet(String name, String description) async {
+    Map requestBody = {
+      'name': name,
+      'description': description
+    };
+
+    return http.post(
+      Uri.parse('$domain/api/wallet?locale=vi'),
+      headers: {
+        'Authorization': 'Bearer $accessTokenTest',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(requestBody)
+    );
+  }
+
   Future<dynamic> getWalletList() async {
     return http.get(
         Uri.parse('$domain/api/wallet/list?locale=vi'),

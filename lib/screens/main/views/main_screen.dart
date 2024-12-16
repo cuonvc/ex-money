@@ -39,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: cBackground,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: Stack(
             children: [
               Padding(
