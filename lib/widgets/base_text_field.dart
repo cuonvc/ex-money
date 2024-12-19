@@ -6,7 +6,7 @@ class BaseTextField extends StatefulWidget {
   final TextEditingController controller;
   final TextInputType inputType;
   final IconData? icon;
-  final String hintText;
+  final String? hintText;
   final bool passwordField;
 
   const BaseTextField({

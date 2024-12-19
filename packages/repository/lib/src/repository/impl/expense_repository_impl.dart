@@ -47,6 +47,18 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
+  Future updateExpense(num id, ExpenseUpdateRequest request) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await expenseController.updateExpense(id, request)).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log("Update expense resource error - $e");
+      return HttpResponse.toError(e.toString());
+    }
+  }
+
+  @override
   Future getExpenseFilterResource(num? walletId) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(

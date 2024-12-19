@@ -4,7 +4,7 @@ import '../utils/constant.dart';
 
 class BaseDescriptionField extends StatefulWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String? hintText;
   final int? minLine;
   final int? maxLine;
 

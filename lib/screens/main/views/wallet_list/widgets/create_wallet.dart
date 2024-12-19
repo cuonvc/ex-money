@@ -23,7 +23,6 @@ class _CreateWalletState extends State<CreateWallet> {
 
   @override
   Widget build(BuildContext context) {
-    double heightRoot = MediaQuery.sizeOf(context).height * (0.9);
     return BlocListener<CreateWalletBloc, CreateWalletState>(
       listener: (context, state) {
         if (state is CreateWalletLoading) {

@@ -19,6 +19,10 @@ String dateTimeFormatedFromStr(String dateTime, bool getTime) {
   return dateTimeFormated(input, getTime);
 }
 
+DateTime dateTimeFromString(String dateTime) {
+  return DateTime.parse(dateTime);
+}
+
 String getDateTimeToRequest(String dateTime) {
   return dateTime.substring(0, 19);
 }

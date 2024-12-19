@@ -51,4 +51,15 @@ class ExpenseController {
       body: json.encode(ExpenseCreateRequest.toMap(request))
     );
   }
+
+  Future<dynamic> updateExpense(num id, ExpenseUpdateRequest request) async {
+    return http.put(
+        Uri.parse('$domain/api/expense/$id?locale=vi'),
+        headers: {
+          'Authorization': 'Bearer $accessTokenTest',
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(ExpenseUpdateRequest.toMap(request))
+    );
+  }
 }
