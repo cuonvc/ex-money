@@ -98,7 +98,7 @@ class _ExpenseListState extends State<ExpenseList> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.asset("assets/images/category/${expenseList[i].categoryIconImage}.png", scale: 4,),
+                            Image.asset("assets/images/category/${expenseList[i].categoryIconImage}.png", scale: 4.5,),
                             const SizedBox(width: 16,),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

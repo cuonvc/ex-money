@@ -98,7 +98,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                   ),
                 ),
                 const SizedBox(width: 8), // Space between arrow and main icon
-                Image.asset("assets/images/category/${widget.category.iconImage}.png", scale: 4,),
+                Image.asset("assets/images/category/${widget.category.iconImage}.png", scale: 4.5,),
               ],
             ),
             title: Text(widget.category.name),
@@ -119,7 +119,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               children: widget.category.children
                   .map((subcategory) =>
                   ListTile(
-                    leading: Image.asset("assets/images/category/${subcategory.iconImage}.png", scale: 4,),
+                    leading: Image.asset("assets/images/category/${subcategory.iconImage}.png", scale: 4.5,),
                     title: Text(subcategory.name),
                     trailing: IconButton(
                       icon: Icon(Icons.edit_note_outlined, color: cPrimary),
