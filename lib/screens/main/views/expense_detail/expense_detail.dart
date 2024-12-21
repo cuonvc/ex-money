@@ -108,6 +108,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
           });
         } else if (state is UpdateExpenseSuccess) {
           setState(() {
+            isLoading = false;
             response = state.response;
           });
           showDialogResponse(context, true, "Chỉnh sửa chi tiêu", state.message);
@@ -207,7 +208,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                   descriptionController.clear();
                 });
               },
-              child: !isEditing ? buttonView(true, "Sửa", null) : buttonView(false, "Hủy", null),
+              child: isLoading ? buttonLoading(false, null) : (!isEditing ? buttonView(true, "Sửa", null) : buttonView(false, "Hủy", null)),
             ),
             Visibility(
               visible: isEditing,

@@ -1,4 +1,5 @@
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 Widget buttonView(bool isPrimary, String text, Color? textColor) {
@@ -30,10 +31,8 @@ Widget buttonLoading(bool isPrimary, Color? loadingColor) {
       border: Border.all(color: Colors.transparent),
       borderRadius: BorderRadius.circular(ConstantSize.borderButton),
     ),
-    child: Center(
-      child: CircularProgressIndicator(
-        color: loadingColor,
-      )
+    child: const Center(
+      child: Loading()
     ),
   );
 }
