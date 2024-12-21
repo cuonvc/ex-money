@@ -6,6 +6,7 @@ import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.da
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/wallet_info.dart';
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/widgets/loading.dart';
@@ -170,7 +171,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${currentWallet.balance} VND",
+                                      "${toAmountFormat(currentWallet.balance)} VND",
                                       style: const TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w900
@@ -189,7 +190,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                               color: Colors.green,
                                             ),
                                             const SizedBox(width: 6,),
-                                            Text("Hạn mức ${currentWallet.totalIncome}")
+                                            Text("Hạn mức ${toAmountFormat(currentWallet.totalIncome)}")
                                           ],
                                         ),
                                         Row(
@@ -201,7 +202,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                               size: 24,
                                             ),
                                             const SizedBox(width: 6,),
-                                            Text("Đã chi ${currentWallet.totalExpense}")
+                                            Text("Đã chi ${toAmountFormat(currentWallet.totalExpense)}")
                                           ],
                                         ),
                                       ],

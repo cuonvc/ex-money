@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 String dateTimeFormated(DateTime dateTime, bool getTime) {
@@ -42,4 +44,36 @@ num numberFromString(String input) {
   } catch (e) {
     return 0;
   }
+}
+
+String toAmountVNFormat(num amount) {
+  return NumberFormat.currency(
+    locale: 'vi_VN',
+    symbol: "VNĐ"
+  ).format(amount);
+}
+
+String toAmountFormat(dynamic amount) {
+  if (amount is num) {
+    return NumberFormat.currency(
+        locale: 'vi_VN',
+        symbol: ''
+    ).format(amount).trim();
+  } else if (amount is String) {
+    return NumberFormat.currency(
+        locale: 'vi_VN',
+        symbol: ''
+    ).format(num.parse(amount.replaceAll('.', '').replaceAll(',', '').trim())).trim();
+  } else {
+    log("=============> Error toAmountFormat");
+    return "";
+  }
+}
+
+num fromAmountFormatted(String value) {
+  value = value.replaceAll('VNĐ', '')
+      .replaceAll('.', '')
+      .replaceAll(',', '')
+      .trim();
+  return numberFromString(value);
 }

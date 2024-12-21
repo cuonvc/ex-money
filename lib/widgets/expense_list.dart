@@ -98,12 +98,9 @@ class _ExpenseListState extends State<ExpenseList> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(
-                              Icons.pets,
-                              color: Colors.amber,
-                              size: 30,
-                            ),
-                            const SizedBox(width: 10,),
+                            // Image.asset("assets/images/category/food_black_white_32px.png"),
+                            Image.asset("assets/images/category/food_32px.png"),
+                            const SizedBox(width: 16,),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -130,7 +127,7 @@ class _ExpenseListState extends State<ExpenseList> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${expense.amount}",
+                              "${toAmountFormat(expense.amount)} đ",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold
                               ),

@@ -180,14 +180,14 @@ class _HomeState extends State<HomeScreen> {
                               textBaseline: TextBaseline.alphabetic,
                               children: [
                                 Text(
-                                  response.totalExpenseAmount.toString(),
+                                  toAmountFormat(response.totalExpenseAmount),
                                   style: const TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.w700,
                                       color: cPrimary
                                   ),
                                 ),
-                                const Text(" VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
+                                const Text("VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
                               ],
                             ),
                             GestureDetector(
@@ -203,7 +203,7 @@ class _HomeState extends State<HomeScreen> {
                                       children: [
                                         const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,),
                                         Text(
-                                          " ${response.moreThanLastMonth}",
+                                          " ${toAmountFormat(response.moreThanLastMonth)}",
                                           style: const TextStyle(fontSize: 12, color: Colors.red),
                                         ),
                                       ],
@@ -316,11 +316,11 @@ class _HomeState extends State<HomeScreen> {
     String content = "";
     if (amount < 0) {
       amount = amount.abs();
-      content = "Từ đầu tháng tới nay, bạn đang chi tiêu ít hơn $amount so với ngày này tháng trước";
+      content = "Từ đầu tháng tới nay, bạn đang chi tiêu ít hơn ${toAmountFormat(amount)} so với ngày này tháng trước";
     } else if (amount == 0) {
       content = "Từ đầu tháng tới nay, bạn đang chi tiêu bằng ngày này tháng trước";
     } else {
-      content = "Từ đầu tháng tới nay, bạn đang chi tiêu nhiều hơn $amount so với ngày này tháng trước";
+      content = "Từ đầu tháng tới nay, bạn đang chi tiêu nhiều hơn ${toAmountFormat(amount)} so với ngày này tháng trước";
     }
     showDialog(
         context: context,

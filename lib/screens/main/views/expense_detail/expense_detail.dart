@@ -37,6 +37,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     categoryIdController = TextEditingController(text: "");
     categoryNameController = TextEditingController(text: "");
     amountController = TextEditingController();
+    amountController.addListener(_onAmountChange);
     descriptionController = TextEditingController(text: "");
     selectedDateTime = DateTime.now();
   }
@@ -51,6 +52,26 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     descriptionController.clear();
   }
 
+  void _onAmountChange() {
+    String input = amountController.text; // Remove all non-numeric characters
+    if (input.isEmpty) {
+      amountController.value = TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+      return;
+    }
+
+    // Parse the cleaned-up input and format it as currency
+    String formatted = toAmountFormat(input);
+
+    // Update the TextField's value while preserving the cursor position
+    amountController.value = TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final detail = widget.detail as ExpenseResponse;
@@ -63,7 +84,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     }
 
     if (amountController.text.isEmpty) {
-      amountController.text = detail.amount.toString();
+      amountController.text = toAmountFormat(detail.amount);
     }
 
     if (categoryIdController.text.isEmpty) {
@@ -200,16 +221,11 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                     // log("New description: ${descriptionController.text}");
                     ExpenseUpdateRequest req = ExpenseUpdateRequest(
                         description: descriptionController.text,
-                        amount: numberFromString(amountController.text),
+                        amount: fromAmountFormatted(amountController.text),
                         entryDate: getDateTimeToRequest(selectedDateTime.toString()),
                         categoryId: numberFromString(categoryIdController.text)
                     );
                     context.read<UpdateExpenseBloc>().add(UpdateExpenseEv(id: detail.id, request: req));
-                    // detail.entryDate = req.entryDate;
-                    // detail.amount = req.amount;
-                    // detail.description = req.description;
-                    // detail.categoryId = req.categoryId;
-                    // detail.categoryName = req.
                     setState(() {
                       isEditing = false;
                     });
@@ -323,7 +339,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
       children: [
         Visibility(
           visible: !isEditing,
-          child: Text(amountController.text, style: valueFormat()),
+          child: Text(toAmountFormat(amountController.text), style: valueFormat()),
         ),
         const SizedBox(width: 6,),
         Visibility(
@@ -349,7 +365,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                     borderRadius: BorderRadius.circular(ConstantSize.borderButton)
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                hintText: detail.amount.toString(),
+                hintText: toAmountFormat(detail.amount),
                 hintStyle: const TextStyle(
                     color: cTextDisable,
                     fontSize: 16,
