@@ -3,6 +3,7 @@ class ExpenseResponse {
   late String status;
   late String? description;
   late num amount;
+  late String categoryIconImage;
   late String? currencyUnit;
   late String entryDate;
   late String entryType;
@@ -21,6 +22,7 @@ class ExpenseResponse {
     required this.status,
     required this.description,
     required this.amount,
+    required this.categoryIconImage,
     required this.currencyUnit,
     required this.entryDate,
     required this.entryType,
@@ -41,6 +43,7 @@ class ExpenseResponse {
         status: data['status'],
         description: data['description'],
         amount: data['amount'],
+        categoryIconImage: data['categoryIconImage'],
         currencyUnit: data['currencyUnit'],
         entryDate: data['entryDate'],
         entryType: data['entryType'],

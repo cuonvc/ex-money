@@ -37,7 +37,7 @@ class ExpenseCategoryResponse {
       name: '',
       description: '',
       color: '',
-      iconImage: '',
+      iconImage: 'other',
       status: '',
       type: '',
       children: [],

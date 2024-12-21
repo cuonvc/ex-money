@@ -1,7 +1,6 @@
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
@@ -99,7 +98,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                   ),
                 ),
                 const SizedBox(width: 8), // Space between arrow and main icon
-                Icon(Icons.fastfood, size: 28,),
+                Image.asset("assets/images/category/${widget.category.iconImage}.png", scale: 4,),
               ],
             ),
             title: Text(widget.category.name),
@@ -120,7 +119,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               children: widget.category.children
                   .map((subcategory) =>
                   ListTile(
-                    leading: Icon(Icons.emoji_food_beverage_rounded, size: 28,),
+                    leading: Image.asset("assets/images/category/${subcategory.iconImage}.png", scale: 4,),
                     title: Text(subcategory.name),
                     trailing: IconButton(
                       icon: Icon(Icons.edit_note_outlined, color: cPrimary),
