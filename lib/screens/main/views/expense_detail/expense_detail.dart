@@ -113,6 +113,9 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
           });
           showDialogResponse(context, true, "Chỉnh sửa chi tiêu", state.message);
         } else if (state is UpdateExpenseFailure) {
+          setState(() {
+            isLoading = false;
+          });
           showDialogResponse(context, false, "Chỉnh sửa chi tiêu", state.message);
         }
       },
