@@ -120,9 +120,9 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: cBackground,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: cBackground,
           leading: ModalRoute.of(context)!.canPop
               ? IconButton(onPressed: () => Navigator.pop(context, response), icon: const Icon(Icons.arrow_back_ios_new))
               : null,
