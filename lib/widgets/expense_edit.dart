@@ -19,7 +19,8 @@ import 'package:repository/repository.dart';
 import '../utils/constant.dart';
 
 class ExpenseEdit extends StatefulWidget {
-  const ExpenseEdit({super.key});
+  final ExpenseEditResource resource;
+  const ExpenseEdit({super.key, required this.resource});
 
   @override
   State<ExpenseEdit> createState() => _ExpenseEditState();
@@ -52,6 +53,14 @@ class _ExpenseEditState extends State<ExpenseEdit> {
 
   @override
   Widget build(BuildContext context) {
+
+    ExpenseEditResource resource = widget.resource;
+    num walletId = resource.walletId;
+    String walletName = resource.walletName;
+    walletIdController.text = walletId.toString();
+    var categories = ExpenseCategoryResponse.fromList(resource.categories); //dung de show popular cateogry
+    List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
+
     return BlocListener<AddExpenseBloc, AddExpenseState>(
       listener: (context, state) {
         if(state is AddExpenseLoading) {
@@ -90,77 +99,52 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             ),
           ],
         ),
-        content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              final screenHeight = MediaQuery.of(context).size.height;
-              return SizedBox(
-                height: screenHeight / 2,
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                        child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
-                          builder: (context, state) {
-                            if (state is GetExpenseEditResourceLoading) {
-                              return Loading();
-                            } else if (state is GetExpenseEditResourceFailure) {
-                              // showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
-                              return Center(child: Text("Ops!\n${state.message}"),);
-                            } else if (state is GetExpenseEditResourceSuccess) {
-                              ExpenseEditResource resource = state.resource;
-                              num walletId = resource.walletId;
-                              String walletName = resource.walletName;
-                              walletIdController.text = walletId.toString();
-                              var categories = ExpenseCategoryResponse.fromList(resource.categories); //dung de show popular cateogry
-                              List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
-                              return Column(
-                                children: [
-                                  typeAmount(),
-                                  selectWallet(walletName, otherWalletMap),
-                                  const SizedBox(height: 20,),
-                                  selectCategory(walletId),
-                                  const SizedBox(height: 10,),
-                                  noteInput(),
-                                  // const SizedBox(height: 10,), //??
-                                  selectDateTime(),
-                                  const SizedBox(height: 10,),
-                                ],
-                              );
-                            } else {
-                              // showDialogResponse(context, false, "Có lỗi xảy ra", "Ops!");
-                              return const Center(child: Text("Ops!\nCó lỗi xảy ra"),);
-                            }
-                          },
-                        )
-                    ),
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width,
-                      child: TextButton(
-                        child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
-                        onPressed: () {
-                          String rawAmount = amountController.text;
-                          ExpenseCreateRequest request = ExpenseCreateRequest(
-                            description: noteController.text,
-                            amount: rawAmount.isNotEmpty
-                                ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
-                                : 0,
-                            entryType: ExpenseConstant.entry_type_expense, //tạm
-                            entryDate: getDateTimeToRequest(selectedDateTime.toString()),
-                            type: ExpenseConstant.type_manual, //tạm
-                            walletId: numberFromString(walletIdController.text),
-                            categoryId: numberFromString(categoryIdController.text),
-
-                          );
-                          context.read<AddExpenseBloc>().add(AddExpenseEv(request));
-                        },
-                      ),
-                    ),
+                    typeAmount(),
+                    selectWallet(walletName, otherWalletMap),
+                    const SizedBox(height: 20,),
+                    selectCategory(walletId),
+                    const SizedBox(height: 10,),
+                    noteInput(),
+                    // const SizedBox(height: 10,), //??
+                    selectDateTime(),
+                    const SizedBox(height: 10,),
                   ],
                 ),
-              );
-            }
-        ),
-      ),
+              ),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                child: TextButton(
+                  child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
+                  onPressed: () {
+                    String rawAmount = amountController.text;
+                    ExpenseCreateRequest request = ExpenseCreateRequest(
+                      description: noteController.text,
+                      amount: rawAmount.isNotEmpty
+                          ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
+                          : 0,
+                      entryType: ExpenseConstant.entry_type_expense, //tạm
+                      entryDate: getDateTimeToRequest(selectedDateTime.toString()),
+                      type: ExpenseConstant.type_manual, //tạm
+                      walletId: numberFromString(walletIdController.text),
+                      categoryId: numberFromString(categoryIdController.text),
+
+                    );
+                    context.read<AddExpenseBloc>().add(AddExpenseEv(request));
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
+      )
     );
   }
 

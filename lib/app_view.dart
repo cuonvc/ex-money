@@ -5,7 +5,6 @@ import 'package:ex_money/screens/main/views/category/category_all.dart';
 import 'package:ex_money/screens/main/views/category_detail/category_detail.dart';
 import 'package:ex_money/screens/main/views/expense/expense_all.dart';
 import 'package:ex_money/screens/main/views/expense_detail/expense_detail.dart';
-import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/main_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/material.dart';
