@@ -7,6 +7,7 @@ import 'package:ex_money/screens/main/views/category/category_all.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:ex_money/widgets/dialog_warning.dart';
 import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,11 @@ class _ExpenseEditState extends State<ExpenseEdit> {
   late ExpenseCreateRequest expenseRequest;
   late DateTime selectedDateTime;
 
+  ExpenseEditResource? dataSrc;
+  String walletNameDisp = "";
+  List<ExpenseCategoryResponse> categories = []; //dung de show popular cateogry
+  List<Map<dynamic, dynamic>> otherWalletMap = [];
+
   TextEditingController amountController = TextEditingController();
   TextEditingController walletIdController = TextEditingController();
   TextEditingController categoryIdController = TextEditingController();
@@ -54,12 +60,16 @@ class _ExpenseEditState extends State<ExpenseEdit> {
   @override
   Widget build(BuildContext context) {
 
-    ExpenseEditResource resource = widget.resource;
-    num walletId = resource.walletId;
-    String walletName = resource.walletName;
-    walletIdController.text = walletId.toString();
-    var categories = ExpenseCategoryResponse.fromList(resource.categories); //dung de show popular cateogry
-    List<Map<dynamic, dynamic>> otherWalletMap = resource.otherWalletMap;
+    dataSrc ??= widget.resource;
+    if (walletIdController.text.isEmpty) {
+      walletIdController.text = dataSrc!.walletId.toString();
+    }
+    if (walletNameDisp.isEmpty) {
+      walletNameDisp = dataSrc!.walletName;
+    }
+
+    var categories = ExpenseCategoryResponse.fromList(dataSrc!.categories); //dung de show popular cateogry
+    otherWalletMap = dataSrc!.otherWalletMap;
 
     return BlocListener<AddExpenseBloc, AddExpenseState>(
       listener: (context, state) {
@@ -108,9 +118,9 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                 child: Column(
                   children: [
                     typeAmount(),
-                    selectWallet(walletName, otherWalletMap),
+                    selectWallet(),
                     const SizedBox(height: 20,),
-                    selectCategory(walletId),
+                    selectCategory(walletIdController.text),
                     const SizedBox(height: 10,),
                     noteInput(),
                     // const SizedBox(height: 10,), //??
@@ -137,7 +147,14 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                       categoryId: numberFromString(categoryIdController.text),
 
                     );
-                    context.read<AddExpenseBloc>().add(AddExpenseEv(request));
+
+                    if (amountController.text.isEmpty) {
+                      showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa nhập số tiền");
+                    } else if (categoryIdController.text.isEmpty || categoryIdController.text.compareTo("0") == 0) {
+                      showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa chọn danh mục");
+                    } else {
+                      context.read<AddExpenseBloc>().add(AddExpenseEv(request));
+                    }
                   },
                 ),
               ),
@@ -176,7 +193,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Column selectWallet(String walletName, List<Map<dynamic, dynamic>> otherWalletMap) {
+  Column selectWallet() {
     return Column(
       children: [
         Row(
@@ -197,7 +214,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                       },
                       child: Row(
                         children: [
-                          Text(walletName, style: selectedStyle(),),
+                          Text(walletNameDisp, style: selectedStyle(),),
                           iconStyle(isShowWalletList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                         ],
                       )
@@ -220,13 +237,18 @@ class _ExpenseEditState extends State<ExpenseEdit> {
               itemCount: otherWalletMap.length,
               itemBuilder: (context, index) {
                 Map<dynamic, dynamic> walletMap = otherWalletMap[index];
+                String id = walletMap.keys.first;
                 String name = walletMap.values.first;
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       isShowWalletList = false;
+                      categoryIdController.clear();
+                      categorySelected = ExpenseCategoryResponse.empty();
+                      walletIdController.text = id;
+                      walletNameDisp = name;
                     });
-                    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(numberFromString(walletMap.keys.first)));
+                    // context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(numberFromString(walletMap.keys.first)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
@@ -241,7 +263,8 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Row selectCategory(num walletId) {
+  Row selectCategory(String walletId) {
+    num id = numberFromString(walletId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -261,7 +284,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
             ExpenseCategoryResponse? selected = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CategoryAll(walletId: walletId,))
+                MaterialPageRoute(builder: (context) => CategoryAll(walletId: id,))
             );
             if (selected != null) {
               setState (() {

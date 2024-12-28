@@ -11,8 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
 class CategoryAll extends StatefulWidget {
-  num? walletId;
-  CategoryAll({super.key, this.walletId});
+  final num? walletId;
+  const CategoryAll({super.key, required this.walletId});
 
   @override
   State<CategoryAll> createState() => _CategoryAllState();
@@ -145,7 +145,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               IconButton(
                 icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
                 onPressed: () async {
-                  ExpenseCategoryResponse expUpdated = await Navigator.push(
+                  ExpenseCategoryResponse? expUpdated = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext ctx) => BlocProvider(
@@ -154,6 +154,10 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                         )
                     ),
                   );
+
+                  if (expUpdated != null) {
+                    //...
+                  }
                 },
               ),
             ],
