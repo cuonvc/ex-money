@@ -33,7 +33,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      cursorColor: Colors.black,
+      cursorColor: cLineText,
       obscureText: widget.passwordField ? passwordVisible : false,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(

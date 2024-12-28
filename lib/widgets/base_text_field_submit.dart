@@ -63,7 +63,7 @@ class _BaseTextFieldSubmitState extends State<BaseTextFieldSubmit> {
       },
 
       keyboardType: inputType,
-      cursorColor: Colors.black,
+      cursorColor: cLineText,
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },

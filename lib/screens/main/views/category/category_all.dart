@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
+import 'package:ex_money/screens/main/blocs/save_category/save_category_bloc.dart';
+import 'package:ex_money/screens/main/views/category_detail/category_detail.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_text_field_submit.dart';
 import 'package:ex_money/widgets/loading.dart';
@@ -142,8 +144,16 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               ),
               IconButton(
                 icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
-                onPressed: () {
-                  // Add your edit action here
+                onPressed: () async {
+                  ExpenseCategoryResponse expUpdated = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext ctx) => BlocProvider(
+                          create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                          child: CategoryDetail(category: widget.category,),
+                        )
+                    ),
+                  );
                 },
               ),
             ],

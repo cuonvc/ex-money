@@ -40,7 +40,7 @@ class MemberRemove extends StatelessWidget {
           // }
           return GestureDetector(
             onTap: () async {
-              bool confirmed = await showDialogConfirm(context, "Xóa thành viên", "Bạn chắc chắn muốn xóa tài khoản này khỏi ví?");
+              bool confirmed = await showDialogConfirm(context, "Xóa thành viên", "Bạn chắc chắn muốn xóa tài khoản này khỏi ví?", null, "Xóa");
               if (confirmed) {
                 context.read<WalletChangeUserBloc>().add(
                     WalletChangeUserEv(

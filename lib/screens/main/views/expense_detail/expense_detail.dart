@@ -358,7 +358,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               onTapOutside: (PointerDownEvent event) {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              cursorColor: Colors.black,
+              cursorColor: cLineText,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: cLineText, width: 1),

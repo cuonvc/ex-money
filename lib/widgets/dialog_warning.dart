@@ -2,8 +2,8 @@ import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<bool> showDialogConfirm(BuildContext context, String title, String content, String? cancelText, String? approveText) async {
-  bool? result = await showDialog(
+void showDialogWarningSingle(BuildContext context, String title, String content) {
+  showDialog(
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
@@ -24,18 +24,10 @@ Future<bool> showDialogConfirm(BuildContext context, String title, String conten
                 onPressed: () {
                   Navigator.pop(context, false);
                 },
-                child: Text(cancelText ?? "Hủy", style: const TextStyle(color: cPrimary),)
+                child: const Text("OK", style: TextStyle(color: cPrimary),)
             ),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: Text(approveText ?? "OK", style: const TextStyle(color: cDisableBtn),)
-            )
           ],
         );
       }
   );
-
-  return result ?? false;
 }

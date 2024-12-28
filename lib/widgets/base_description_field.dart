@@ -30,7 +30,7 @@ class _BaseDescriptionFieldState extends State<BaseDescriptionField> {
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      cursorColor: Colors.black,
+      cursorColor: cLineText,
       minLines: widget.minLine ?? 4,
       maxLines: widget.maxLine ?? 6,
       decoration: InputDecoration(

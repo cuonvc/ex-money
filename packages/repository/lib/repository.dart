@@ -24,4 +24,5 @@ export 'src/models/expense_filter_resource.dart';
 export 'src/entities/sign_in_entity.dart';
 export 'src/models/expense_create_request.dart';
 export 'src/models/expense_update_request.dart';
+export 'src/models/expense_category_request.dart';
 export 'src/utils/http_response.dart';

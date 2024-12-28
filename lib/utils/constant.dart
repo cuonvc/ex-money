@@ -25,9 +25,17 @@ class NavigatePath {
   static String expenseAll = "/expense/all";
   static String expenseDetailPath = "/expense/detail";
   static String categoryListPath = "/category/list";
+  static String categoryDetailPath = "category/detail";
 }
 
 class WalletUserChange {
   static String wallet_user_change_add = "ADD";
   static String wallet_user_change_remove = "REMOVE";
+}
+
+class CategorySaveType {
+  static Map<String, String> category_save_type = {
+    "WALLET": "Ví",
+    "ACCOUNT": "Tài khoản"
+  };
 }
