@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:ex_money/utils/constant.dart';
 import 'package:repository/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,12 +15,15 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
   final CategoryRepository categoryRepository;
 
   GetCategoryBloc(this.categoryRepository) : super(GetCategoryInitial()) {
+
     on<GetCategoryEv>((event, emit) async {
       final prefs= await SharedPreferencesWithCache.create(
         cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
       );
+      final partOfPrefKey = "${CachedPrefKey.categoryListPref}${event.walletId}";
+
       try {
-        final Object? listCategory = prefs.get("categories");
+        final Object? listCategory = prefs.get(partOfPrefKey);
         if (listCategory == null) {
           emit(GetCategoryLoading());
           HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
@@ -28,7 +32,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
             emit(GetCategorySuccess(data));
 
             List<Map<String, dynamic>> json = ExpenseCategoryResponse.listToMap(data);
-            await prefs.setString("categories", jsonEncode(json));
+            await prefs.setString(partOfPrefKey, jsonEncode(json));
           } else {
             emit(GetCategoryFailure(response.message));
           }

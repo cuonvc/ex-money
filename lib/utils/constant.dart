@@ -39,3 +39,7 @@ class CategorySaveType {
     "ACCOUNT": "Tài khoản"
   };
 }
+
+class CachedPrefKey {
+  static String categoryListPref = "category_list_"; // _waletId
+}
