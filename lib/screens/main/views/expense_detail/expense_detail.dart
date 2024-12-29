@@ -3,11 +3,14 @@ import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/base_description_field.dart';
 import 'package:ex_money/widgets/button_view.dart';
+import 'package:ex_money/widgets/dialog_confirm.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:ex_money/widgets/dialog_warning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
+import '../../blocs/delete_expense/delete_expense_bloc.dart';
 import '../category/category_all.dart';
 
 class ExpenseDetail extends StatefulWidget {
@@ -100,25 +103,49 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     }
 
 
-    return BlocListener<UpdateExpenseBloc, UpdateExpenseState>(
-      listener: (context, state) {
-        if (state is UpdateExpenseLoading) {
-          setState(() {
-            isLoading = true;
-          });
-        } else if (state is UpdateExpenseSuccess) {
-          setState(() {
-            isLoading = false;
-            response = state.response;
-          });
-          showDialogResponse(context, true, "Chỉnh sửa chi tiêu", state.message);
-        } else if (state is UpdateExpenseFailure) {
-          setState(() {
-            isLoading = false;
-          });
-          showDialogResponse(context, false, "Chỉnh sửa chi tiêu", state.message);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UpdateExpenseBloc, UpdateExpenseState>(
+          listener: (context, state) {
+            if (state is UpdateExpenseLoading) {
+              setState(() {
+                isLoading = true;
+              });
+            } else if (state is UpdateExpenseSuccess) {
+              setState(() {
+                isLoading = false;
+                response = state.response;
+              });
+              showDialogResponse(context, true, "Chỉnh sửa chi tiêu", state.message);
+            } else if (state is UpdateExpenseFailure) {
+              setState(() {
+                isLoading = false;
+              });
+              showDialogResponse(context, false, "Chỉnh sửa chi tiêu", state.message);
+            }
+          },
+        ),
+        BlocListener<DeleteExpenseBloc, DeleteExpenseState>(
+          listener: (context, state) async {
+            if (state is DeleteExpenseLoading) {
+              setState(() {
+                isLoading = true;
+              });
+            } else if (state is DeleteExpenseSuccess) {
+              setState(() {
+                isLoading = false;
+              });
+              await showDialogResponse(context, true, "Xóa chi tiêu", state.message);
+              Navigator.pop(context, null);
+            } else if (state is DeleteExpenseFailure) {
+              setState(() {
+                isLoading = false;
+              });
+              showDialogResponse(context, false, "Xóa chi tiêu", state.message);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: cBackground,
         appBar: AppBar(
@@ -240,15 +267,22 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
             )
           ],
         ),
-      ),
-        bottomSheet: Visibility(
-        visible: !isEditing,
-        child: Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen, vertical: 20),
-          child: buttonView(false, "Xóa", Colors.red),
         ),
-      ),
+        bottomSheet: Visibility(
+          visible: !isEditing,
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen, vertical: 20),
+            child: GestureDetector(
+              onTap: () async {
+                bool isDelete = await showDialogConfirm(context, "Xóa chi tiêu", "Bạn có chắc chắn xóa chi tiêu này?", null, "Xóa");
+                if (isDelete) {
+                  context.read<DeleteExpenseBloc>().add(DeleteExpenseEv(detail.id));
+                }
+              }, child: buttonView(false, "Xóa", Colors.red)
+            ),
+          ),
+        ),
       ),
     );
   }

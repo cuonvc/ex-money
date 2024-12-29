@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/blocs/delete_expense/delete_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/update_expense/update_expense_bloc.dart';
 import 'package:ex_money/screens/main/views/expense_detail/expense_detail.dart';
 import 'package:ex_money/utils/constant.dart';
@@ -63,17 +64,28 @@ class _ExpenseListState extends State<ExpenseList> {
                 ExpenseResponse expense = expenseList[i];
                 return GestureDetector(
                   onTap: () async {
-                    ExpenseResponse expUpdated = await Navigator.push(
+                    ExpenseResponse? expUpdated = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext ctx) => BlocProvider(
-                            create: (ctx) => UpdateExpenseBloc(ExpenseRepositoryImpl()),
+                          builder: (BuildContext ctx) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (ctx) => UpdateExpenseBloc(ExpenseRepositoryImpl()),
+                              ),
+                              BlocProvider(
+                                create: (context) => DeleteExpenseBloc(ExpenseRepositoryImpl()),
+                              ),
+                            ],
                             child: ExpenseDetail(detail: expense,),
                           )
                       ),
                     );
                     setState(() {
-                      expenseList[i] = expUpdated;
+                      if (expUpdated == null) {
+                        expenseList.removeAt(i);
+                      } else {
+                        expenseList[i] = expUpdated;
+                      }
                     });
                     // Navigator.pushNamed(ctx, NavigatePath.expenseDetailPath, arguments: expense);
                   },

@@ -62,4 +62,14 @@ class ExpenseController {
         body: json.encode(ExpenseUpdateRequest.toMap(request))
     );
   }
+
+  Future<dynamic> deleteExpense(num id) async {
+    return http.delete(
+        Uri.parse('$domain/api/expense/$id?locale=vi'),
+        headers: {
+          'Authorization': 'Bearer $accessTokenTest',
+          'Content-Type': 'application/json'
+        }
+    );
+  }
 }

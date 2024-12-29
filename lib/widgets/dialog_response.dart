@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void showDialogResponse(BuildContext context, bool isSuccess, String title, String content) {
-  showDialog(
+Future<void> showDialogResponse(BuildContext context, bool isSuccess, String title, String content) {
+  return showDialog(
       context: context, builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
