@@ -57,11 +57,11 @@ class _MainScreenState extends State<MainScreen> {
             padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
             child: IndexedStack(
               index: screenIndex,
-                children: [
+                children: const [
                   HomeScreen(),
-                  const StatsScreen(),
-                  const WalletListScreen(),
-                  const NoteScreen(),
+                  StatsScreen(),
+                  WalletListScreen(),
+                  NoteScreen(),
                 ]
             ),
           ),
@@ -76,9 +76,17 @@ class _MainScreenState extends State<MainScreen> {
             child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
               builder: (context, state) {
                 if(state is GetExpenseEditResourceLoading) {
-                  return const Center(child: Loading(),);
+                  return FloatingActionButton(
+                    backgroundColor: cPrimary,
+                    onPressed: () {},
+                    child: const Icon(Icons.add, color: Colors.white),
+                  );
                 } else if (state is GetExpenseEditResourceFailure) {
-                  return const Center();
+                  return FloatingActionButton(
+                    backgroundColor: cPrimary,
+                    onPressed: () {},
+                    child: const Icon(Icons.add, color: Colors.white),
+                  );
                 } else if (state is GetExpenseEditResourceSuccess) {
                   ExpenseEditResource resource = state.resource;
                   return FloatingActionButton(
