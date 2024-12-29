@@ -50,6 +50,40 @@ class ExpenseCategoryResponse {
     );
   }
 
+  static listToMap(List<ExpenseCategoryResponse> list) {
+    List<Map<String, dynamic>> json = [];
+    if (list.isNotEmpty) {
+      json = list.map((category) => toMap(category)).toList();
+    }
+    return json;
+  }
+
+  static Map<String, dynamic> toMap(ExpenseCategoryResponse obj) {
+
+    List<ExpenseCategoryResponse> children = obj.children;
+    List<Map<String, dynamic>> childrenMapData = [];
+    if (children.isNotEmpty) {
+      childrenMapData = children.map((child) => toMap(child)).toList();
+    }
+
+    return {
+      'id': obj.id,
+      'name': obj.name,
+      'description': obj.description,
+      'color': obj.color,
+      'iconImage': obj.iconImage,
+      'status': obj.status,
+      'type': obj.type,
+      'children': childrenMapData,
+      'refId': obj.refId,
+      'saveType': obj.saveType,
+      'createdAt': obj.createdAt,
+      'createdBy': obj.createdBy,
+      'updatedAt': obj.updatedAt,
+      'updatedBy': obj.updatedBy,
+    };
+  }
+
   static fromList(List categories) {
     List<ExpenseCategoryResponse> response = [];
     if (categories.isNotEmpty) {

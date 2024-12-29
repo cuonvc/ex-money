@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:repository/repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'get_category_event.dart';
 part 'get_category_state.dart';
@@ -13,14 +15,28 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
 
   GetCategoryBloc(this.categoryRepository) : super(GetCategoryInitial()) {
     on<GetCategoryEv>((event, emit) async {
-      emit(GetCategoryLoading());
+      final prefs= await SharedPreferencesWithCache.create(
+        cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
+      );
       try {
-        HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
-        if (response.code == 0) {
-          List<ExpenseCategoryResponse> data = ExpenseCategoryResponse.fromList(response.data[0]);
-          emit(GetCategorySuccess(data));
+        final Object? listCategory = prefs.get("categories");
+        if (listCategory == null) {
+          emit(GetCategoryLoading());
+          HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
+          if (response.code == 0) {
+            List<ExpenseCategoryResponse> data = ExpenseCategoryResponse.fromList(response.data[0]);
+            emit(GetCategorySuccess(data));
+
+            List<Map<String, dynamic>> json = ExpenseCategoryResponse.listToMap(data);
+            await prefs.setString("categories", jsonEncode(json));
+          } else {
+            emit(GetCategoryFailure(response.message));
+          }
         } else {
-          emit(GetCategoryFailure(response.message));
+          log("Trigger get data from disk");
+          List fromDisk = jsonDecode(listCategory.toString());
+          List<ExpenseCategoryResponse> dataFromDisk = ExpenseCategoryResponse.fromList(fromDisk);
+          emit(GetCategorySuccess(dataFromDisk));
         }
       } catch (e) {
         log("Get category failed - $e");
