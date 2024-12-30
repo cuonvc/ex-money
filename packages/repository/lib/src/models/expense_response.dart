@@ -58,4 +58,26 @@ class ExpenseResponse {
         updatedBy: data['updatedBy']
     );
   }
+
+  static Map<String, dynamic> toMap(ExpenseResponse data) {
+    return {
+      'id': data.id,
+      'status': data.status,
+      'description': data.description,
+      'amount': data.amount,
+      'categoryIconImage': data.categoryIconImage,
+      'currencyUnit': data.currencyUnit,
+      'entryDate': data.entryDate,
+      'entryType': data.entryType,
+      'type': data.type,
+      'walletId': data.walletId,
+      'walletName': data.walletName,
+      'categoryId': data.categoryId,
+      'categoryName': data.categoryName,
+      'createdAt': data.createdAt,
+      'createdBy': data.createdBy,
+      'updatedAt': data.updatedAt,
+      'updatedBy': data.updatedBy
+    };
+  }
 }

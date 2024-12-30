@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<HomeOverviewBloc>(
-          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(null)),
+          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, isReload: false)),
         ),
         BlocProvider<GetWalletListBloc>(
           create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv()),

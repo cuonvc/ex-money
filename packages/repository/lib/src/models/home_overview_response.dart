@@ -31,4 +31,18 @@ class HomeOverviewResponse {
       ownerExpenses: responseList
     );
   }
+
+  static Map<String, dynamic> toMap(HomeOverviewResponse data) {
+
+    List<ExpenseResponse> list = data.ownerExpenses;
+    List<Map<String, dynamic>> listMap = list.map((ex) => ExpenseResponse.toMap(ex)).toList();
+
+    return {
+      'currentMonth': data.currentMonth,
+      'user': UserResponse.toMap(data.user),
+      'totalExpenseAmount': data.totalExpenseAmount,
+      'moreThanLastMonth': data.moreThanLastMonth,
+      'ownerExpenses': listMap
+    };
+  }
 }

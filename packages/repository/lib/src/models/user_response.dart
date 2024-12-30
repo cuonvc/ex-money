@@ -34,4 +34,18 @@ class UserResponse {
       deviceToken: map['deviceToken']
     );
   }
+
+  static Map<String, dynamic> toMap(UserResponse data) {
+    return {
+      'id': data.id,
+      'name': data.name,
+      'email': data.email,
+      'avatarUrl': data.avatarUrl,
+      'role': data.role,
+      'createdAt': data.createdAt,
+      'modifiedAt': data.modifiedAt,
+      'status': data.status,
+      'deviceToken': data.deviceToken
+    };
+  }
 }

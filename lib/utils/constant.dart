@@ -41,5 +41,9 @@ class CategorySaveType {
 }
 
 class CachedPrefKey {
+  static String homeOverviewPref = "home_overview";
+  static String walletListPref = "wallet_list";
   static String categoryListPref = "category_list_"; // _waletId
+  static String expenseEditResourcePref = "expense_edit_resource";
+  static String expenseFilterResourcePref = "expense_filter_resource";
 }
