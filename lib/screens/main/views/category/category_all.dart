@@ -38,7 +38,7 @@ class _CategoryAllState extends State<CategoryAll> {
         ],
       ),
       body: BlocProvider(
-        create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(data)),
+        create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: data, isReload: false)),
         child: BlocBuilder<GetCategoryBloc, GetCategoryState>(
           builder: (context, state) {
             if (state is GetCategoryFailure) {

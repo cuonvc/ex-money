@@ -6,6 +6,7 @@ import 'package:ex_money/screens/main/views/category_detail/category_detail.dart
 import 'package:ex_money/screens/main/views/expense/expense_all.dart';
 import 'package:ex_money/screens/main/views/expense_detail/expense_detail.dart';
 import 'package:ex_money/screens/main/views/main_screen.dart';
+import 'package:ex_money/screens/main/views/splash_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -34,7 +35,7 @@ class AppView extends StatelessWidget {
       //     outline: Colors.grey,
       //   )
       // ),
-      home: MainScreen(),
+      home: const SplashScreen(),
       routes: {
         '/auth/selection': (context) => const AuthSelection(),
         NavigatePath.signInPath: (context) => const SignIn(),

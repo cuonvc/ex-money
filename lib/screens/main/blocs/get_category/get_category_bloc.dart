@@ -21,10 +21,11 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
         cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
       );
       final partOfPrefKey = "${CachedPrefKey.categoryListPref}${event.walletId}";
+      final isReload = event.isReload;
 
       try {
         final Object? listCategory = prefs.get(partOfPrefKey);
-        if (listCategory == null) {
+        if (listCategory == null || isReload) {
           emit(GetCategoryLoading());
           HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
           if (response.code == 0) {

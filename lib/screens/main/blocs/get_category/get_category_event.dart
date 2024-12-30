@@ -9,9 +9,13 @@ sealed class GetCategoryEvent extends Equatable {
 
 class GetCategoryEv extends GetCategoryEvent {
   ExpenseCategoryResponse? category;
-  num? walletId;
+  final num? walletId;
+  final bool isReload;
 
-  GetCategoryEv(this.walletId);
+  GetCategoryEv({
+    required this.walletId,
+    required this.isReload
+  });
 
   @override
   List<Object?> get props => [category];

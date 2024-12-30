@@ -3,7 +3,6 @@ import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
 import 'package:ex_money/screens/main/views/wallet_list/wallet_list_screen.dart';
 import 'package:ex_money/widgets/expense_edit.dart';
-import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
