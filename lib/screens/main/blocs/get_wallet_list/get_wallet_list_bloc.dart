@@ -44,7 +44,7 @@ class GetWalletListBloc extends Bloc<GetWalletListEvent, GetWalletListState> {
           emit(GetWalletListSuccess(dataFromDisk));
         }
       } catch (e) {
-        log("Get home overview failed: $e");
+        log("Get wallet list failed: $e");
         emit(GetWalletListFailure(e.toString()));
       }
     });

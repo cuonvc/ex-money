@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
           create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: false)),
         ),
         BlocProvider<GetExpenseEditResourceBloc>(
-          create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),
+          create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(walletId: null, isReload: false)),
         ),
       ],
       child: Scaffold(

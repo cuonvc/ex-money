@@ -10,6 +10,10 @@ sealed class GetExpenseEditResourceEvent extends Equatable {
 class GetExpenseEditResourceEv extends GetExpenseEditResourceEvent {
   ExpenseEditResource? expenseEditResource;
   num? walletId;
+  bool isReload;
 
-  GetExpenseEditResourceEv(this.walletId);
+  GetExpenseEditResourceEv({
+    required this.walletId,
+    required this.isReload
+  });
 }

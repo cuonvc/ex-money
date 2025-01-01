@@ -27,4 +27,13 @@ class ExpenseEditResource {
       categories: data['categories'],
     );
   }
+
+  static Map<String, dynamic> toMap(ExpenseEditResource data) {
+    return {
+      'walletId': data.walletId,
+      'walletName': data.walletName,
+      'otherWalletMap': data.otherWalletMap,
+      'categories': data.categories,
+    };
+  }
 }
