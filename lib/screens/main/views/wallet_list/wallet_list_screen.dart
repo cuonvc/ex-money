@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
@@ -80,7 +82,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
     return BlocBuilder<GetWalletListBloc, GetWalletListState>(
       builder: (context, state) {
         if (state is GetWalletListLoading) {
-          return const Center(child: Loading(),);
+          return const Center(child: Loading(loadingColor: null,),);
         } else if (state is GetWalletListSuccess) {
           walletList = state.walletList;
           walletCount = walletList.length;
@@ -93,6 +95,8 @@ class _WalletListScreenState extends State<WalletListScreen> {
             onRefresh: () async {
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
               context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+              context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+              context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
             },
             child: Column(
               children: [
@@ -117,6 +121,12 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             },
                             isScrollControlled: true
                         );
+                        if (newWallet != null) {
+                          context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
+                          context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+                          context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+                          context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+                        }
                         setState(() {
                           if (newWallet != null) {
                             walletCount++;

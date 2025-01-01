@@ -13,7 +13,7 @@ class ExpenseListData extends StatelessWidget {
     return BlocBuilder<GetExpenseBloc, GetExpenseState>(
         builder: (context, state) {
           if (state is GetExpenseLoading) {
-            return const Center(child: Loading(),);
+            return const Center(child: Loading(loadingColor: null,),);
           } else if (state is GetExpenseSuccess) {
             List<ExpenseResponse> expenseList = state.data;
             return ExpenseList(expenseList, false, ScrollController());

@@ -1,4 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_description_field.dart';
 import 'package:ex_money/widgets/base_text_field.dart';

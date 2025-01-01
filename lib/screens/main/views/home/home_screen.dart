@@ -1,3 +1,5 @@
+import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
@@ -68,7 +70,7 @@ class _HomeState extends State<HomeScreen> {
           return const Center(child: Text(""),);
         } else if (state is HomeOverviewLoading) {
           return const Center(
-            child: Loading()
+            child: Loading(loadingColor: null,)
           );
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
@@ -83,6 +85,8 @@ class _HomeState extends State<HomeScreen> {
             onRefresh: () async {
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
               context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+              context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+              context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
             },
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

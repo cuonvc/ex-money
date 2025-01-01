@@ -50,7 +50,7 @@ class _CategoryAllState extends State<CategoryAll> {
             if (state is GetCategoryFailure) {
               return Center(child: Text(state.message),);
             } else if (state is GetCategoryLoading) {
-              return const Center(child: Loading(),);
+              return const Center(child: Loading(loadingColor: null,),);
             } else if (state is GetCategorySuccess) {
               List<ExpenseCategoryResponse> list = state.data;
               walletNameList = state.walletListInfo;

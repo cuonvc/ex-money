@@ -31,8 +31,8 @@ Widget buttonLoading(bool isPrimary, Color? loadingColor) {
       border: Border.all(color: Colors.transparent),
       borderRadius: BorderRadius.circular(ConstantSize.borderButton),
     ),
-    child: const Center(
-      child: Loading()
+    child: Center(
+      child: Loading(loadingColor: loadingColor,)
     ),
   );
 }

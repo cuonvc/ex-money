@@ -80,7 +80,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
       body: BlocBuilder<GetExpenseFilterResourceBloc, GetExpenseFilterResourceState>(
         builder: (context, state) {
           if (state is GetExpenseFilterResourceLoading) {
-            return const Center(child: Loading(),);
+            return const Center(child: Loading(loadingColor: null,),);
           } else if (state is GetExpenseFilterResourceSuccess) {
             ExpenseFilterResource resource = state.resource;
             walletSelected = resource.walletId;
