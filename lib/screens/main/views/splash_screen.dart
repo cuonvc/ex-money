@@ -74,7 +74,10 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ],
         child: Scaffold(
-          body: Center(child: Text("WELCOME EXMONEY"),),
+          backgroundColor: Colors.white,
+          body: Center(
+              child: Image.asset('assets/images/logo/1.png')
+          ),
         ),
       ),
     );

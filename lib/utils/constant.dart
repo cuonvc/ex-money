@@ -19,6 +19,7 @@ class ConstantSize {
 }
 
 class NavigatePath {
+  static String authSelectionPath = "/auth/selection";
   static String signInPath = "/auth/sign_in";
   static String signUpPath = "/auth/sign_up";
   static String homePath = "/home";
