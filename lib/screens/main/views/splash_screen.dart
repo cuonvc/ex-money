@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
           create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(walletId: null, isReload: true)),
         ),
         BlocProvider(
-          create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(null)),
+          create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true)),
         ),
       ],
       child: MultiBlocListener(

@@ -26,7 +26,7 @@ class _ExpenseAllState extends State<ExpenseAll> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(null)),
+          create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: false, isCache: false)),
         ),
         BlocProvider(
           create: (context) => GetExpenseBloc(ExpenseRepositoryImpl())..add(GetExpenseEv(null, null, null, null)),
@@ -185,7 +185,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                     filterByWalletVisible = false;
                     walletSelected = numberFromString(walletMap.keys.first);
                   });
-                  context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(numberFromString(walletMap.keys.first)));
+                  context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: numberFromString(walletMap.keys.first), isReload: true, isCache: false));
                   context.read<GetExpenseBloc>().add(GetExpenseEv(walletSelected, searchTxtController.text, categorySelected, memberSelected));
                 },
                 child: Padding(

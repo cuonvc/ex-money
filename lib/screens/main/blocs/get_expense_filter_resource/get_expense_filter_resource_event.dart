@@ -10,6 +10,12 @@ sealed class GetExpenseFilterResourceEvent extends Equatable {
 class GetExpenseFilterResourceEv extends GetExpenseFilterResourceEvent {
   ExpenseFilterResource? resource;
   num? walletId;
+  bool isReload;
+  bool isCache;
 
-  GetExpenseFilterResourceEv(this.walletId);
+  GetExpenseFilterResourceEv({
+    required this.walletId,
+    required this.isReload,
+    required this.isCache
+  });
 }
