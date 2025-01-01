@@ -9,6 +9,11 @@ sealed class GetWalletListEvent extends Equatable {
 
 class GetWalletListEv extends GetWalletListEvent {
   late List<WalletResponse?> wallets;
+  final bool isReload;
+
+  GetWalletListEv({
+    required this.isReload
+  });
 
   @override
   List<Object?> get props => wallets;

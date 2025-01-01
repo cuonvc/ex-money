@@ -92,7 +92,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
-              context.read<GetWalletListBloc>().add(GetWalletListEv());
+              context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
             },
             child: Column(
               children: [

@@ -82,7 +82,7 @@ class _HomeState extends State<HomeScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
-              context.read<GetWalletListBloc>().add(GetWalletListEv());
+              context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
             },
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

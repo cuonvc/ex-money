@@ -41,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, isReload: false)),
         ),
         BlocProvider<GetWalletListBloc>(
-          create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv()),
+          create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: false)),
         ),
         BlocProvider<GetExpenseEditResourceBloc>(
           create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(null)),

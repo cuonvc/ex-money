@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, isReload: true)),
         ),
         BlocProvider(
-          create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv()),
+          create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: true)),
         ),
         BlocProvider(
           create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: null, isReload: true)),
