@@ -214,17 +214,22 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                       child: Row(
                         children: [
                           Text(walletNameDisp, style: selectedStyle(),),
-                          iconStyle(isShowWalletList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
+                          AnimatedRotation(
+                              turns: isShowWalletList ? 0.75 : 0.5,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.grey,
+                                size: 26,
+                              )
+                          )
+                          // iconStyle(isShowWalletList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                         ],
                       )
                   )
                 ],
               ),
             ),
-            Visibility(
-              child: Text("Mặc định", style: hintStyle(),),
-              visible: false,
-            )
           ],
         ),
         Visibility(
@@ -250,7 +255,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                     // context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(numberFromString(walletMap.keys.first)));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+                    padding: const EdgeInsets.only(left: 30, top: 6, bottom: 6),
                     child: Text(name, style: const TextStyle(color: cTextDisable, fontSize: 14),),
                   ),
                 );
