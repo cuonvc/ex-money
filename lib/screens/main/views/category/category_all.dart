@@ -34,6 +34,9 @@ class _CategoryAllState extends State<CategoryAll> {
       backgroundColor: cBackground,
       appBar: AppBar(
         backgroundColor: cBackground,
+        leading: ModalRoute.of(context)!.canPop
+            ? IconButton(onPressed: () => Navigator.pop(context, null), icon: const Icon(Icons.arrow_back_ios_new))
+            : null,
         centerTitle: true,
         title: const Text("Tất cả danh mục", style: TextStyle(fontSize: 18),),
         actions: const [
