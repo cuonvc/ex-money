@@ -19,6 +19,9 @@ class CategoryAll extends StatefulWidget {
 }
 
 class _CategoryAllState extends State<CategoryAll> {
+
+  List<Map<dynamic, dynamic>> walletNameList = [];
+
   @override
   Widget build(BuildContext context) {
 
@@ -47,6 +50,7 @@ class _CategoryAllState extends State<CategoryAll> {
               return const Center(child: Loading(),);
             } else if (state is GetCategorySuccess) {
               List<ExpenseCategoryResponse> list = state.data;
+              walletNameList = state.walletListInfo;
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
                 child: Column(
@@ -84,7 +88,7 @@ class _CategoryAllState extends State<CategoryAll> {
         borderRadius: BorderRadius.circular(10),
         color: cGreyBackground,
       ),
-      child: ParentCategoryTile(category: category)
+      child: ParentCategoryTile(category: category, walletNameList: walletNameList,)
     );
   }
 
@@ -95,8 +99,9 @@ class _CategoryAllState extends State<CategoryAll> {
 
 class ParentCategoryTile extends StatefulWidget {
   final ExpenseCategoryResponse category;
+  final List<Map<dynamic, dynamic>> walletNameList;
 
-  const ParentCategoryTile({super.key, required this.category});
+  const ParentCategoryTile({super.key, required this.category, required this.walletNameList});
 
   @override
   _ParentCategoryTileState createState() => _ParentCategoryTileState();
@@ -150,7 +155,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                     MaterialPageRoute(
                         builder: (BuildContext ctx) => BlocProvider(
                           create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
-                          child: CategoryDetail(category: widget.category,),
+                          child: CategoryDetail(category: widget.category, walletNameList: widget.walletNameList,),
                         )
                     ),
                   );

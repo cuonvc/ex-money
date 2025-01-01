@@ -14,6 +14,7 @@ final class GetCategoryFailure extends GetCategoryState {
 }
 final class GetCategorySuccess extends GetCategoryState {
   final List<ExpenseCategoryResponse> data;
+  final List<Map<dynamic, dynamic>> walletListInfo;
 
-  const GetCategorySuccess(this.data);
+  const GetCategorySuccess(this.data, this.walletListInfo);
 }

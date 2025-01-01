@@ -44,7 +44,7 @@ class AppView extends StatelessWidget {
         NavigatePath.expenseAll: (context) => const ExpenseAll(),
         NavigatePath.expenseDetailPath: (context) => const ExpenseDetail(detail: null,),
         NavigatePath.categoryListPath: (context) => const CategoryAll(walletId: null,),
-        NavigatePath.categoryDetailPath: (context) => CategoryDetail(category: null,)
+        NavigatePath.categoryDetailPath: (context) => CategoryDetail(category: null, walletNameList: const [],)
       },
     );
   }

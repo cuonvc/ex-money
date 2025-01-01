@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/save_category/save_category_bloc.dart';
+import 'package:ex_money/screens/main/views/category_detail/category_icon_selection.dart';
 import 'package:ex_money/utils/constant.dart';
+import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_confirm.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
@@ -14,9 +16,11 @@ import '../../../../widgets/dialog_warning.dart';
 
 class CategoryDetail extends StatefulWidget {
   ExpenseCategoryResponse? category;
+  List<Map<dynamic, dynamic>> walletNameList;
   CategoryDetail({
     super.key,
-    required this.category
+    required this.category,
+    required this.walletNameList
   });
 
   @override
@@ -38,10 +42,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   String saveType = "";
   String? refId = "";
+  String iconImage = "";
 
   @override
   Widget build(BuildContext context) {
     final category = widget.category as ExpenseCategoryResponse;
+    final walletNameList = widget.walletNameList;
 
     detail ??= category;
 
@@ -51,6 +57,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
     if (descriptionController.text.isEmpty) {
       descriptionController.text = detail!.description;
+    }
+
+    if (iconImage.isEmpty) {
+      iconImage = category.iconImage ?? "other";
     }
 
     return BlocListener<SaveCategoryBloc, SaveCategoryState>(
@@ -78,6 +88,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
           backgroundColor: cBackground,
           title: const Text("Chi tiết danh mục", style: TextStyle(fontSize: 18),),
           centerTitle: true,
+          leading: ModalRoute.of(context)!.canPop
+              ? IconButton(onPressed: () => Navigator.pop(context, null), icon: const Icon(Icons.arrow_back_ios_new))
+              : null,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
@@ -88,14 +101,27 @@ class _CategoryDetailState extends State<CategoryDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset("assets/images/category/${widget.category?.iconImage ?? "other"}.png", scale: 4.5,),
-                      const SizedBox(width: 10,),
-                      const Text("Thay đổi icon", style: TextStyle(color: cPrimary),),
-                      const SizedBox(width: 4,),
-                      const Icon(Icons.edit, size: 16, color: cPrimary,)
-                    ],
+                  GestureDetector(
+                    onTap: () async {
+                      String iconSelected = await showDialog(
+                          context: context,
+                          builder: (BuildContext ctx) {
+                            return CategoryIconSelection(icon: iconImage,);
+                          }
+                      );
+                      setState(() {
+                        iconImage = iconSelected;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset("assets/images/category/$iconImage.png", scale: 4.5,),
+                        const SizedBox(width: 10,),
+                        const Text("Thay đổi icon", style: TextStyle(color: cPrimary),),
+                        const SizedBox(width: 4,),
+                        const Icon(Icons.edit, size: 16, color: cPrimary,)
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -158,37 +184,38 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 ),
               ),
               // ===================> expand of wallet list
+              const SizedBox(height: 10,),
               Visibility(
                 visible: isWalletListExpand && !isSaveTypeExpand && saveType.compareTo(saveByWallet.key) == 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextButton(
-                            onPressed: () => {
-                              setState(() {
-                                dropDownText = "Ví 1"; //đoạn này tên ví 1
-                                refId = "wallet_id_1"; //đoạn này id ví 1
-                                isWalletListExpand = false;
-                              })
-                            },
-                            child: Text("Ví 1", style: baseStype())
-                        ),
-                        TextButton(
-                            onPressed: () => {
-                              setState(() {
-                                dropDownText = "Ví 2"; //đoạn này tên ví 2
-                                refId = "wallet_id_2"; //đoạn này id ví 2
-                                isWalletListExpand = false;
-                              })
-                            },
-                            child: Text("Ví 2", style: baseStype())
-                        ),
-                      ],
-                    ),
-                  ],
+                child: SizedBox(
+                  height: walletNameList.length * 28,
+                  width: MediaQuery.sizeOf(context).width - ConstantSize.hozPadScreen * 2,
+                  child: ListView.builder(
+                    itemCount: walletNameList.length,
+                    itemBuilder: (ctx, idx) {
+                      Map<dynamic, dynamic> walletMap = walletNameList[idx];
+                      String id = walletMap.keys.first;
+                      String name = walletMap.values.first;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                              onTap: () => {
+                                setState(() {
+                                  dropDownText = name; //đoạn này tên ví 1
+                                  refId = id; //đoạn này id ví 1
+                                  isWalletListExpand = false;
+                                })
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Text(name, style: baseStype(),
+                              ))
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20,),
@@ -226,6 +253,14 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 ],
               ),
               const SizedBox(height: 10,),
+              Row(
+                children: [
+                  const Text("Danh mục cha:"),
+                  const SizedBox(width: 10,),
+                  const Text("Đang update ...")
+                ],
+              ),
+              const SizedBox(height: 10,),
               SizedBox(
                 width: (MediaQuery.sizeOf(context).width - 2 * ConstantSize.hozPadScreen),
                 child: TextFormField(
@@ -260,10 +295,11 @@ class _CategoryDetailState extends State<CategoryDetail> {
               const SizedBox(height: 30,),
               GestureDetector(
                 onTap: () {
+                  log("Icon selected - $iconImage");
                   log("Name - ${nameController.text}");
                   log("Description - ${descriptionController.text}");
-                  log("save type - ${saveType}");
-                  log("ref id - ${refId}");
+                  log("save type - $saveType");
+                  log("ref id - $refId");
                   //save type = WALLET ->  phải check ví đã select chưa
                   if (saveType.compareTo(saveByWallet.key) == 0 && !refId!.isNotEmpty) {
                     showDialogWarningSingle(context, "Chưa chọn ví", "Bạn phải chọn tới một ví nếu lưu theo ví");
@@ -271,9 +307,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
                     showDialogWarningSingle(context, "Lưu theo", "Lưu theo ví hoặc tài khoản?");
                   }
                   // ExpenseCategoryRequest req = ExpenseCategoryRequest(
+                  //   iconImage: iconImage,
                   //   name: nameController.text,
                   //   description: descriptionController.text,
-                  //
+                  //   saveType: saveType,
+                  //   refId: refId == null ? null : numberFromString(refId!),
+                  //   parentId:
                   // );
                   // context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: detail.id, request: req));
                 },
