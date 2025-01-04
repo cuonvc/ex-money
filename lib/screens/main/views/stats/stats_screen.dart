@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/views/stats/line_chart.dart';
 import 'package:flutter/cupertino.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -10,8 +11,6 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Stats screen"),
-    );
+    return LineChartDemo();
   }
 }

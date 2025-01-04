@@ -1,6 +1,7 @@
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
+import 'package:ex_money/screens/main/views/stats/line_chart.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
@@ -238,11 +239,13 @@ class _HomeState extends State<HomeScreen> {
                             )
                           ],
                         ),
-                        //demo
+                        const SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            height: 150,
-                            child: Image.asset('assets/images/test/test_stats_home.png')
+                            height: 180,
+                            child: const LineChartDemo()
                         ),
 
                         const SizedBox(height: 10,),
