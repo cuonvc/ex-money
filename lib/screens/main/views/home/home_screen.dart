@@ -1,7 +1,7 @@
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
-import 'package:ex_money/screens/main/views/stats/line_chart.dart';
+import 'package:ex_money/screens/main/views/stats/stats_line_chart.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
@@ -105,12 +105,12 @@ class _HomeState extends State<HomeScreen> {
                             Row(
                                 children: [
                                   DecoratedBox(
-                                    child: Icon(
-                                      Icons.person, size: 34, color: cPrimary,),
                                     decoration: BoxDecoration(
                                       border: Border.all(color: cPrimary, width: 4),
                                       borderRadius: BorderRadius.circular(50),
                                     ),
+                                    child: const Icon(
+                                      Icons.person, size: 34, color: cPrimary,),
                                   ),
                                   const SizedBox(width: 14,),
                                   Column(
@@ -147,7 +147,7 @@ class _HomeState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Đã chi tiêu",
                               style: TextStyle(
                                 fontSize: 14,
@@ -168,12 +168,12 @@ class _HomeState extends State<HomeScreen> {
                                     Text(
                                       "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
                                       // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 14,
                                           color: cTextDisable
                                       ),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       Icons.keyboard_arrow_down_sharp,
                                       color: cTextDisable,
                                       size: 14,
@@ -244,8 +244,8 @@ class _HomeState extends State<HomeScreen> {
                         ),
                         SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            height: 180,
-                            child: const LineChartDemo()
+                            height: 150,
+                            child: const StatsLineChart()
                         ),
 
                         const SizedBox(height: 10,),

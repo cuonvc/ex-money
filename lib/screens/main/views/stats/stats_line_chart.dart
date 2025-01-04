@@ -1,19 +1,17 @@
 import 'dart:math';
-import 'dart:developer' as log;
 
 import 'package:ex_money/utils/constant.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LineChartDemo extends StatefulWidget {
-  const LineChartDemo({super.key});
+class StatsLineChart extends StatefulWidget {
+  const StatsLineChart({super.key});
 
   @override
-  State<LineChartDemo> createState() => _LineChartStateDemo();
+  State<StatsLineChart> createState() => _StatsLineChartState();
 }
 
-class _LineChartStateDemo extends State<LineChartDemo> {
+class _StatsLineChartState extends State<StatsLineChart> {
   List<Color> gradientColors = [
     cPrimary,
     cPrimary,
@@ -78,7 +76,7 @@ class _LineChartStateDemo extends State<LineChartDemo> {
     const style = TextStyle(
       color: cTextDisable,
       fontWeight: FontWeight.bold,
-      fontSize: 12,
+      fontSize: 10,
     );
     Widget text;
     switch (value.toInt()) {
@@ -101,7 +99,7 @@ class _LineChartStateDemo extends State<LineChartDemo> {
         text = const Text('Th7', style: style);
         break;
       case 8:
-        text = const Text('CN      ', style: style);
+        text = const Text('CN  ', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -116,7 +114,7 @@ class _LineChartStateDemo extends State<LineChartDemo> {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
-      fontSize: 12,
+      fontSize: 10,
       fontWeight: FontWeight.bold,
       color: cTextDisable
     );
@@ -152,7 +150,7 @@ class _LineChartStateDemo extends State<LineChartDemo> {
       titlesData: FlTitlesData(
         show: true,
         rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          sideTitles: SideTitles(showTitles: true, reservedSize: 6),
         ),
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
