@@ -42,7 +42,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
         Padding(
           padding: const EdgeInsets.only(top: 30),
           child: LineChart(
-            showAvg ? mainData() : avgData(),
+            !showAvg ? mainData() : avgData(),
           ),
         ),
         Positioned(
