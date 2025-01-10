@@ -244,8 +244,8 @@ class _HomeState extends State<HomeScreen> {
                         ),
                         SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            height: 150,
-                            child: const StatsLineChart()
+                            height: 200,
+                            child: StatsLineChart(weekList: response.weeks,)
                         ),
 
                         const SizedBox(height: 10,),

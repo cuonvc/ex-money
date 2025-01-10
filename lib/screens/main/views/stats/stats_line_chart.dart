@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:ex_money/utils/constant.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:repository/repository.dart';
 
 class StatsLineChart extends StatefulWidget {
-  const StatsLineChart({super.key});
+  final List<WeekMapAmount> weekList;
+  const StatsLineChart({super.key, required this.weekList});
 
   @override
   State<StatsLineChart> createState() => _StatsLineChartState();
@@ -19,19 +21,19 @@ class _StatsLineChartState extends State<StatsLineChart> {
 
   bool showAvg = false;
 
-  static Map<double, double> dayMapAmount = {
-    2: 50,
-    3: 0,
-    4: 50,
-    5: 0,
-    6: 80 + 20 + 116,
-    7: 50 + 47,
-    8: 0
-  };
+  List<WeekMapAmount> weeks = [];
+  double totalAmount = 0;
+  double maxWeek = 0; //Giai đoạn (tuần) tiêu nhiều tiền nhất trong tháng
+  double avg = 0;
 
-  static double totalAmount = dayMapAmount.values.reduce((a, b) => a + b);
-  static double maxDay = dayMapAmount.values.reduce((day1, day2) => max(day1, day2)); //số tiền đã tiêu từ đầu tuần tới giờ
-  static double avgDay = totalAmount / dayMapAmount.length;
+  @override
+  void initState() {
+    super.initState();
+    weeks = widget.weekList;
+    totalAmount = weeks.map((w) => w.amount).reduce((amt1, amt2) => amt1 + amt2);
+    maxWeek = weeks.map((w) => w.amount).reduce(max);
+    avg = totalAmount / weeks.length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
         Padding(
           padding: const EdgeInsets.only(top: 30),
           child: LineChart(
-            showAvg ? avgData() : mainData(),
+            showAvg ? mainData() : avgData(),
           ),
         ),
         Positioned(
@@ -56,8 +58,8 @@ class _StatsLineChartState extends State<StatsLineChart> {
                 Text(
                   !showAvg ? 'Trung bình' : 'Quay lại',
                   style: const TextStyle(
-                    fontSize: 12,
-                    color: cTextDisable
+                      fontSize: 12,
+                      color: cTextDisable
                   ),
                 ),
                 const SizedBox(width: 4,),
@@ -79,27 +81,22 @@ class _StatsLineChartState extends State<StatsLineChart> {
       fontSize: 10,
     );
     Widget text;
+    text = Text(value.toString(), style: style,);
     switch (value.toInt()) {
-      case 2:
-        text = const Text('Th2', style: style);
+      case 01:
+        text = const Text('Tuần 1', style: style);
         break;
-      case 3:
-        text = const Text('Th3', style: style);
+      case 02:
+        text = const Text('Tuần 2', style: style);
         break;
-      case 4:
-        text = const Text('Th4', style: style);
+      case 03:
+        text = const Text('Tuần 3', style: style);
         break;
-      case 5:
-        text = const Text('Th5', style: style);
+      case 04:
+        text = const Text('Tuần 4', style: style);
         break;
-      case 6:
-        text = const Text('Th6', style: style);
-        break;
-      case 7:
-        text = const Text('Th7', style: style);
-        break;
-      case 8:
-        text = const Text('CN  ', style: style);
+      case 05:
+        text = const Text('Tuần 5', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -118,13 +115,13 @@ class _StatsLineChartState extends State<StatsLineChart> {
       fontWeight: FontWeight.bold,
       color: cTextDisable
     );
-    String text;
+    String text = '';
     switch (value.toInt()) {
-      case 10:
-        text = '10K';
-        break;
       case 50:
         text = '50K';
+        break;
+      case 100:
+        text = '100K';
         break;
       case 200:
         text = '200K';
@@ -135,8 +132,12 @@ class _StatsLineChartState extends State<StatsLineChart> {
       case 1000:
         text = '1Tr';
         break;
+      case 10000:
+        text = '10Tr';
+        break;
       default:
-        return Container();
+        text = '';
+        break;
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
@@ -175,14 +176,14 @@ class _StatsLineChartState extends State<StatsLineChart> {
       borderData: FlBorderData(
         show: false,
       ),
-      minX: 2,
-      maxX: 8,
+      minX: 1,
+      maxX: 5, //tối đa 1 tháng có 5 tuần
       minY: 0,
-      maxY: maxDay,
+      maxY: maxWeek.toDouble(),
       lineBarsData: [
         LineChartBarData(
-          spots: dayMapAmount.entries.map((entry) => mapData(entry)).toList(),
-          isCurved: false,
+          spots: weeks.map((w) => mapData(w.week, w.amount)).toList(),
+          isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
@@ -201,53 +202,47 @@ class _StatsLineChartState extends State<StatsLineChart> {
 
   LineChartData avgData() {
     return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
       gridData: const FlGridData(
         show: false,
       ),
       titlesData: FlTitlesData(
         show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: true, reservedSize: 6),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
             interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
             interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 30,
           ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
         ),
       ),
       borderData: FlBorderData(
         show: false,
       ),
-      minX: 2,
-      maxX: 8,
+      minX: 1,
+      maxX: 5, //tối đa 1 tháng có 5 tuần
       minY: 0,
-      maxY: maxDay,
+      maxY: maxWeek.toDouble(),
       lineBarsData: [
         LineChartBarData(
-          spots: dayMapAmount.entries.map((entry) => mapData(MapEntry(entry.key, avgDay))).toList(),
+          spots: weeks.map((w) => mapData(w.week, avg)).toList(),
           isCurved: true,
           gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
+            colors: gradientColors,
           ),
           barWidth: 5,
           isStrokeCapRound: true,
@@ -262,7 +257,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
     );
   }
 
-  FlSpot mapData(MapEntry<double, double> map) {
-    return FlSpot(map.key, map.value);
+  FlSpot mapData(int week, double amount) {
+    return FlSpot(week.toDouble(), amount); //1 đơn vị amount = 1 case (switch)
   }
 }

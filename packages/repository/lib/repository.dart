@@ -18,6 +18,7 @@ export 'src/models/user_response.dart';
 export 'src/models/expense_response.dart';
 export 'src/models/wallet_response.dart';
 export 'src/models/home_overview_response.dart';
+export 'src/models/week_map_amount.dart';
 export 'src/models/expense_category_response.dart';
 export 'src/models/expense_edit_resource.dart';
 export 'src/models/expense_filter_resource.dart';

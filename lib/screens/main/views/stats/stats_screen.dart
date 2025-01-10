@@ -11,6 +11,6 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
-    return StatsLineChart();
+    return Center();
   }
 }

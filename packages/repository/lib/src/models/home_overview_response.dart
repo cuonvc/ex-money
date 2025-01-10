@@ -1,4 +1,5 @@
 import 'package:repository/repository.dart';
+import 'package:repository/src/models/week_map_amount.dart';
 
 class HomeOverviewResponse {
   num currentMonth;
@@ -6,13 +7,15 @@ class HomeOverviewResponse {
   num totalExpenseAmount = 0; //just for you
   num moreThanLastMonth = 0;
   List<ExpenseResponse> ownerExpenses = [];
+  List<WeekMapAmount> weeks;
 
   HomeOverviewResponse({
     required this.currentMonth,
     required this.user,
     required this.totalExpenseAmount,
     required this.moreThanLastMonth,
-    required this.ownerExpenses
+    required this.ownerExpenses,
+    required this.weeks
   });
 
   static HomeOverviewResponse fromMap(Map<String, dynamic> data) {
@@ -23,12 +26,16 @@ class HomeOverviewResponse {
 
     UserResponse user = UserResponse.fromMap(data['user']);
 
+    List rawWeeks = data['weekMapAmount'];
+    List<WeekMapAmount> weeks = rawWeeks.map((w) => WeekMapAmount.fromMap(w)).toList();
+    
     return HomeOverviewResponse(
-      currentMonth: data['currentMonth'],
-      user: user,
-      totalExpenseAmount: data['totalExpenseAmount'],
-      moreThanLastMonth: data['moreThanLastMonth'],
-      ownerExpenses: responseList
+        currentMonth: data['currentMonth'],
+        user: user,
+        totalExpenseAmount: data['totalExpenseAmount'],
+        moreThanLastMonth: data['moreThanLastMonth'],
+        ownerExpenses: responseList,
+        weeks: weeks
     );
   }
 
@@ -42,7 +49,8 @@ class HomeOverviewResponse {
       'user': UserResponse.toMap(data.user),
       'totalExpenseAmount': data.totalExpenseAmount,
       'moreThanLastMonth': data.moreThanLastMonth,
-      'ownerExpenses': listMap
+      'ownerExpenses': listMap,
+      'weekMapAmount': data.weeks.map((w) => WeekMapAmount.toMap(w)).toList()
     };
   }
 }
