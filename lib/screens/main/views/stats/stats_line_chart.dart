@@ -193,7 +193,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
             show: true,
           ),
           belowBarData: BarAreaData(
-            show: false,
+            show: true,
           ),
         ),
       ],
