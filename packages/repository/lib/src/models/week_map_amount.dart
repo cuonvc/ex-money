@@ -1,6 +1,6 @@
 class WeekMapAmount {
-  int week;
-  double amount;
+  num week;
+  num amount;
 
   WeekMapAmount({
     required this.week,
@@ -15,9 +15,11 @@ class WeekMapAmount {
   }
 
   static WeekMapAmount fromMap(Map<dynamic, dynamic> map) {
+    num w = map['week'];
+    num a = map['amount'];
     return WeekMapAmount(
-      week: map['week'],
-      amount: map['amount']
+      week: w,
+      amount: a
     );
   }
 }

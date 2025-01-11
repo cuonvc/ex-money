@@ -26,12 +26,12 @@ class HomeOverviewBloc extends Bloc<HomeOverViewEvent, HomeOverviewState> {
         final Object? dataCached = prefs.get(partOfPrefKey);
         if (dataCached == null || isReload) {
           emit(HomeOverviewLoading());
-          HttpResponse response = await overviewRepository.getHomeOverview(event.month);
+          HttpResponse response = await overviewRepository.getHomeOverview(event.month, event.year);
           if (response.code == 0) {
             HomeOverviewResponse data = HomeOverviewResponse.fromMap(response.data[0]);
             emit(HomeOverviewSuccess(data));
 
-            if (event.month == null) { //chỉ cache tháng hiện tại
+            if (event.month == null || event.year == null) { //chỉ cache tháng hiện tại
               Map<String, dynamic> json = HomeOverviewResponse.toMap(data);
               await prefs.setString(partOfPrefKey, jsonEncode(json));
             }

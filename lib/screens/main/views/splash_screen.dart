@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, isReload: true)),
+          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, year: null, isReload: true)),
         ),
         BlocProvider(
           create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: true)),

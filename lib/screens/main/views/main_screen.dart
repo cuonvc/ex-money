@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
@@ -38,13 +39,16 @@ class _MainScreenState extends State<MainScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<HomeOverviewBloc>(
-          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, isReload: false)),
+          create: (context) => HomeOverviewBloc(OverviewRepositoryImpl())..add(HomeOverViewEv(month: null, year: null, isReload: false)),
         ),
         BlocProvider<GetWalletListBloc>(
           create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: false)),
         ),
         BlocProvider<GetExpenseEditResourceBloc>(
           create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(walletId: null, isReload: false)),
+        ),
+        BlocProvider<GetExpenseFilterResourceBloc>(
+          create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: false, isCache: false)),
         ),
       ],
       child: Scaffold(

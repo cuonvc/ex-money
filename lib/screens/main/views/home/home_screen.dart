@@ -84,7 +84,7 @@ class _HomeState extends State<HomeScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
+              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
               context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
               context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
               context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
@@ -158,7 +158,7 @@ class _HomeState extends State<HomeScreen> {
                               onTap: () async {
                                 int selectedMonth = await showMonthSelect(context, response.currentMonth);
                                 if (context.mounted) {
-                                  context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: selectedMonth, isReload: true));
+                                  context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: selectedMonth, year: null, isReload: true));
                                 }
                               },
                               child: Container(

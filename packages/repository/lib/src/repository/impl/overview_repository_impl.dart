@@ -10,10 +10,10 @@ class OverviewRepositoryImpl implements OverviewRepository {
   final overviewController = OverviewController();
 
   @override
-  Future<dynamic> getHomeOverview(int? month) async {
+  Future<dynamic> getHomeOverview(int? month, int? year) async {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await overviewController.getHomeOverviewController(month)).bodyBytes));
+          utf8.decode((await overviewController.getHomeOverviewController(month, year)).bodyBytes));
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');

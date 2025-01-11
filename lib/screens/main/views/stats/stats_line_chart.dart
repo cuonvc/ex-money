@@ -30,8 +30,8 @@ class _StatsLineChartState extends State<StatsLineChart> {
   void initState() {
     super.initState();
     weeks = widget.weekList;
-    totalAmount = weeks.map((w) => w.amount).reduce((amt1, amt2) => amt1 + amt2);
-    maxWeek = weeks.map((w) => w.amount).reduce(max);
+    totalAmount = weeks.map((w) => w.amount.toDouble()).reduce((amt1, amt2) => amt1 + amt2);
+    maxWeek = weeks.map((w) => w.amount.toDouble()).reduce(max);
     avg = totalAmount / weeks.length;
   }
 
@@ -40,7 +40,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 30, right: 20),
           child: LineChart(
             !showAvg ? mainData() : avgData(),
           ),
@@ -116,28 +116,34 @@ class _StatsLineChartState extends State<StatsLineChart> {
       color: cTextDisable
     );
     String text = '';
-    switch (value.toInt()) {
-      case 50:
-        text = '50K';
-        break;
-      case 100:
-        text = '100K';
-        break;
-      case 200:
-        text = '200K';
-        break;
-      case 500:
-        text = '500K';
-        break;
-      case 1000:
-        text = '1Tr';
-        break;
-      case 10000:
-        text = '10Tr';
-        break;
-      default:
-        text = '';
-        break;
+    // int val = value.toInt();
+    // if (val < 1000) {
+    //   text = "${val}K";
+    // } else if (val >= 1000) {
+    //   text = "${val}Tr";
+    // }
+    final double maxVal = maxWeek;
+
+    if (value == 50) {
+     text = '50K';
+    } else if (value == 100) {
+     text = '100K';
+    } else if (value == 200) {
+     text = '200K';
+    } else if (value == 500) {
+     text = '500K';
+    } else if (value == 1000) {
+     text = '1Tr';
+    } else if (value == 10000) {
+     text = '10Tr';
+    } else if (value == maxVal) {
+      if (value < 1000) {
+        text = "${value}K";
+      } else if (value >= 1000) {
+        text = "${(value/1000).toStringAsFixed(1)}Tr";
+      }
+    } else {
+      text = '';
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
@@ -151,7 +157,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
       titlesData: FlTitlesData(
         show: true,
         rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: true, reservedSize: 6),
+          sideTitles: SideTitles(showTitles: false),
         ),
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
@@ -187,7 +193,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
           gradient: LinearGradient(
             colors: gradientColors,
           ),
-          barWidth: 5,
+          barWidth: 4,
           isStrokeCapRound: true,
           dotData: const FlDotData(
             show: true,
@@ -257,7 +263,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
     );
   }
 
-  FlSpot mapData(int week, double amount) {
-    return FlSpot(week.toDouble(), amount); //1 đơn vị amount = 1 case (switch)
+  FlSpot mapData(num week, num amount) {
+    return FlSpot(week.toDouble(), amount.toDouble()); //1 đơn vị amount = 1 case (switch)
   }
 }

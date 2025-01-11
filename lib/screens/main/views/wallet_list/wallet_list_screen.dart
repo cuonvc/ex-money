@@ -93,7 +93,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
           }
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
+              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
               context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
               context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
               context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
@@ -122,7 +122,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             isScrollControlled: true
                         );
                         if (newWallet != null) {
-                          context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, isReload: true));
+                          context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
                           context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
                           context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
                           context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));

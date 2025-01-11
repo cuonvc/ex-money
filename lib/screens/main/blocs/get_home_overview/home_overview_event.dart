@@ -10,10 +10,12 @@ sealed class HomeOverViewEvent extends Equatable {
 class HomeOverViewEv extends HomeOverViewEvent {
   HomeOverviewResponse? response;
   int? month;
+  int? year;
   bool isReload;
 
   HomeOverViewEv({
     required this.month,
+    required this.year,
     required this.isReload
   });
 }
