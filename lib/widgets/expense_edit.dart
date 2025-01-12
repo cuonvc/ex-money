@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
@@ -106,57 +105,62 @@ class _ExpenseEditState extends State<ExpenseEdit> {
               ),
             ],
           ),
-          content: SizedBox(
-            height: rootHeight,
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: rootHeight - (isKeyboardVisible ? 100 : 60),
-                  child: ListView(
-                    children: [
-                      typeAmount(),
-                      selectWallet(),
-                      const SizedBox(height: 20,),
-                      selectCategory(walletIdController.text),
-                      const SizedBox(height: 10,),
-                      noteInput(),
-                      selectDateTime(),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: !isKeyboardVisible,
-                  child: SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: TextButton(
-                      child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
-                      onPressed: () {
-                        String rawAmount = amountController.text;
-                        ExpenseCreateRequest request = ExpenseCreateRequest(
-                          description: noteController.text,
-                          amount: rawAmount.isNotEmpty
-                              ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
-                              : 0,
-                          entryType: ExpenseConstant.entry_type_expense, //tạm
-                          entryDate: getDateTimeToRequest(selectedDateTime.toString()),
-                          type: ExpenseConstant.type_manual, //tạm
-                          walletId: numberFromString(walletIdController.text),
-                          categoryId: numberFromString(categoryIdController.text),
-
-                        );
-
-                        if (amountController.text.isEmpty) {
-                          showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa nhập số tiền");
-                        } else if (categoryIdController.text.isEmpty || categoryIdController.text.compareTo("0") == 0) {
-                          showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa chọn danh mục");
-                        } else {
-                          context.read<AddExpenseBloc>().add(AddExpenseEv(request));
-                        }
-                      },
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: rootHeight,
+              minHeight: 100
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: rootHeight - (isKeyboardVisible ? 100 : 60),
+                    child: Column(
+                      children: [
+                        typeAmount(),
+                        selectWallet(),
+                        const SizedBox(height: 20,),
+                        selectCategory(walletIdController.text),
+                        const SizedBox(height: 10,),
+                        noteInput(),
+                        selectDateTime(),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Visibility(
+                    visible: !isKeyboardVisible,
+                    child: SizedBox(
+                      width: MediaQuery.sizeOf(context).width,
+                      child: TextButton(
+                        child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
+                        onPressed: () {
+                          String rawAmount = amountController.text;
+                          ExpenseCreateRequest request = ExpenseCreateRequest(
+                            description: noteController.text,
+                            amount: rawAmount.isNotEmpty
+                                ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
+                                : 0,
+                            entryType: ExpenseConstant.entry_type_expense, //tạm
+                            entryDate: getDateTimeToRequest(selectedDateTime.toString()),
+                            type: ExpenseConstant.type_manual, //tạm
+                            walletId: numberFromString(walletIdController.text),
+                            categoryId: numberFromString(categoryIdController.text),
+
+                          );
+
+                          if (amountController.text.isEmpty) {
+                            showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa nhập số tiền");
+                          } else if (categoryIdController.text.isEmpty || categoryIdController.text.compareTo("0") == 0) {
+                            showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa chọn danh mục");
+                          } else {
+                            context.read<AddExpenseBloc>().add(AddExpenseEv(request));
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         ),
