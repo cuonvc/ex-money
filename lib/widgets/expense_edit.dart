@@ -84,6 +84,9 @@ class _ExpenseEditState extends State<ExpenseEdit> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16)
+          ),
           backgroundColor: Colors.white,
           title: Stack(
             children: [
