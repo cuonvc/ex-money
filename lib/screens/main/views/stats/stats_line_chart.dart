@@ -24,6 +24,11 @@ class _StatsLineChartState extends State<StatsLineChart> {
   List<WeekMapAmount> weeks = [];
   double totalAmount = 0;
   double maxWeek = 0; //Giai đoạn (tuần) tiêu nhiều tiền nhất trong tháng
+  double amtWeek1 = 0;
+  double amtWeek2 = 0;
+  double amtWeek3 = 0;
+  double amtWeek4 = 0;
+  double amtWeek5 = 0;
   double avg = 0;
 
   @override
@@ -32,6 +37,11 @@ class _StatsLineChartState extends State<StatsLineChart> {
     weeks = widget.weekList;
     totalAmount = weeks.map((w) => w.amount.toDouble()).reduce((amt1, amt2) => amt1 + amt2);
     maxWeek = weeks.map((w) => w.amount.toDouble()).reduce(max);
+    amtWeek1 = weeks[0].amount.toDouble();
+    amtWeek2 = weeks[1].amount.toDouble();
+    amtWeek3 = weeks[2].amount.toDouble();
+    amtWeek4 = weeks[3].amount.toDouble();
+    amtWeek5 = weeks[4].amount.toDouble();
     avg = totalAmount / weeks.length;
   }
 
@@ -116,34 +126,30 @@ class _StatsLineChartState extends State<StatsLineChart> {
       color: cTextDisable
     );
     String text = '';
-    // int val = value.toInt();
-    // if (val < 1000) {
-    //   text = "${val}K";
-    // } else if (val >= 1000) {
-    //   text = "${val}Tr";
-    // }
-    final double maxVal = maxWeek;
+    double dispAmount = 0;
 
-    if (value == 50) {
-     text = '50K';
-    } else if (value == 100) {
-     text = '100K';
-    } else if (value == 200) {
-     text = '200K';
-    } else if (value == 500) {
-     text = '500K';
-    } else if (value == 1000) {
-     text = '1Tr';
-    } else if (value == 10000) {
-     text = '10Tr';
-    } else if (value == maxVal) {
-      if (value < 1000) {
-        text = "${value}K";
-      } else if (value >= 1000) {
-        text = "${(value/1000).toStringAsFixed(1)}Tr";
-      }
+    if (value == amtWeek1) {
+      dispAmount = amtWeek1;
+    } else if (value == amtWeek2) {
+      dispAmount = amtWeek2;
+    } else if (value == amtWeek3) {
+      dispAmount = amtWeek3;
+    } else if (value == amtWeek4) {
+      dispAmount = amtWeek4;
+    } else if (value == amtWeek5) {
+      dispAmount = amtWeek5;
+    } else if (value == maxWeek) {
+      dispAmount = maxWeek;
     } else {
+      return const SizedBox();
+    }
+
+    if (dispAmount == 0) {
       text = '';
+    } else if (dispAmount < 1000) {
+      text = "${dispAmount}K";
+    } else if (dispAmount >= 1000) {
+      text = "${(dispAmount/1000).toStringAsFixed(1)}Tr";
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
