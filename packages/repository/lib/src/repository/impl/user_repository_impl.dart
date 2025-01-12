@@ -14,18 +14,10 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await authController.handleSignIn(signModel)).bodyBytes));
-      HttpResponse response = HttpResponse.toObject(mapResponse);
-
-      if(response.code == 0) {
-        log("Login success");
-        return response.data;
-      } else {
-        log("Login failed");
-        return null;
-      }
+      return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      rethrow;
+      return HttpResponse.toError(e.toString());
     }
   }
 }

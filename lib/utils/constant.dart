@@ -42,6 +42,7 @@ class CategorySaveType {
 }
 
 class CachedPrefKey {
+  static String signInRespPref = "sign_in_resp";
   static String homeOverviewPref = "home_overview";
   static String walletListPref = "wallet_list";
   static String categoryListPref = "category_list_"; // _waletId

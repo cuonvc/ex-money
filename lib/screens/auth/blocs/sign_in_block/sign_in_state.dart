@@ -6,12 +6,20 @@ sealed class SignInState extends Equatable {
 }
 
 final class SignInInitial extends SignInState {}
-final class SignInFailure extends SignInState {}
+final class SignInFailure extends SignInState {
+  final int statusCode;
+  final String message;
+
+  const SignInFailure({
+    required this.statusCode,
+    required this.message
+  });
+}
 final class SignInLoading extends SignInState {}
 final class SignInSuccess extends SignInState {
-  final List data;
-  const SignInSuccess(this.data);
+  final SignInResponse response;
 
-  @override
-  List<Object?> get props => data;
+  const SignInSuccess({
+    required this.response
+  });
 }

@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
         log("Current initiated: $initiated");
       });
       if (initiated == totalInit) {
-        Navigator.pushNamed(context, NavigatePath.homePath); //or auth selection
+        Navigator.pushNamed(context, NavigatePath.authSelectionPath); //or auth selection
       }
     } else if (state is HomeOverviewFailure || state is GetWalletListFailure || state is GetCategoryFailure
         || state is GetExpenseEditResourceFailure || state is GetExpenseFilterResourceFailure) {
