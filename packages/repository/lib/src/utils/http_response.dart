@@ -23,11 +23,11 @@ class HttpResponse {
     );
   }
 
-  static HttpResponse toError(String? message) {
+  static HttpResponse toError(String? message, int? statusCode) {
     return HttpResponse(
         code: 1,
         status: '',
-        statusCode: 1,
+        statusCode: statusCode ?? 1,
         message: message != null ? message : '',
         data: []
     );

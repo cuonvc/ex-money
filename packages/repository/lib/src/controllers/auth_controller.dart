@@ -16,4 +16,10 @@ class AuthController {
         body: jsonEncode(signInModel.toMap())
     );
   }
+
+  Future<dynamic> renewAccessToken(String refreshToken) async {
+    return http.get(
+        Uri.parse('$domain/api/auth/token/renew?refresh_token=$refreshToken'),
+    );
+  }
 }
