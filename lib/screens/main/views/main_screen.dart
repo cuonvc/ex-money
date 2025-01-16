@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
@@ -51,195 +53,200 @@ class _MainScreenState extends State<MainScreen> {
           create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: false, isCache: false)),
         ),
       ],
-      child: Scaffold(
-        backgroundColor: cBackground,
-        extendBody: true,
-        body: SafeArea(
-          maintainBottomViewPadding: true,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-            child: IndexedStack(
-              index: screenIndex,
-                children: const [
-                  HomeScreen(),
-                  StatsScreen(),
-                  WalletListScreen(),
-                  NoteScreen(),
-                ]
+      child: WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: cBackground,
+          extendBody: true,
+          body: SafeArea(
+            maintainBottomViewPadding: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+              child: IndexedStack(
+                index: screenIndex,
+                  children: const [
+                    HomeScreen(),
+                    StatsScreen(),
+                    WalletListScreen(),
+                    NoteScreen(),
+                  ]
+              ),
             ),
           ),
-        ),
 
-        floatingActionButtonLocation: CustomFABLocation(offsetY: 2),
-        floatingActionButton: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: SizedBox(
-            width: 45,
-            height: 45,
-            child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
-              builder: (context, state) {
-                if(state is GetExpenseEditResourceLoading) {
-                  return FloatingActionButton(
-                    backgroundColor: cPrimary,
-                    onPressed: () {},
-                    child: const Icon(Icons.add, color: Colors.white),
-                  );
-                } else if (state is GetExpenseEditResourceFailure) {
-                  return FloatingActionButton(
-                    backgroundColor: cPrimary,
-                    onPressed: () {},
-                    child: const Icon(Icons.add, color: Colors.white),
-                  );
-                } else if (state is GetExpenseEditResourceSuccess) {
-                  ExpenseEditResource resource = state.resource;
-                  return FloatingActionButton(
-                    backgroundColor: cPrimary,
-                    child: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () async {
-                      ExpenseResponse? newExpense = await showDialog(
-                          context: context,
-                          builder: (BuildContext ctx) {
-                            return  BlocProvider(
-                              create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
-                              child: ExpenseEdit(resource: resource),
-                            );
-                          }
-                      );
-                    },
-                  );
-                } else {
-                  return const Center();
-                }
-              },
+          floatingActionButtonLocation: CustomFABLocation(offsetY: 2),
+          floatingActionButton: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: SizedBox(
+              width: 45,
+              height: 45,
+              child: BlocBuilder<GetExpenseEditResourceBloc, GetExpenseEditResourceState>(
+                builder: (context, state) {
+                  if(state is GetExpenseEditResourceLoading) {
+                    return FloatingActionButton(
+                      backgroundColor: cPrimary,
+                      onPressed: () {},
+                      child: const Icon(Icons.add, color: Colors.white),
+                    );
+                  } else if (state is GetExpenseEditResourceFailure) {
+                    return FloatingActionButton(
+                      backgroundColor: cPrimary,
+                      onPressed: () {},
+                      child: const Icon(Icons.add, color: Colors.white),
+                    );
+                  } else if (state is GetExpenseEditResourceSuccess) {
+                    ExpenseEditResource resource = state.resource;
+                    return FloatingActionButton(
+                      backgroundColor: cPrimary,
+                      child: const Icon(Icons.add, color: Colors.white),
+                      onPressed: () async {
+                        ExpenseResponse? newExpense = await showDialog(
+                            context: context,
+                            builder: (BuildContext ctx) {
+                              return  BlocProvider(
+                                create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
+                                child: ExpenseEdit(resource: resource),
+                              );
+                            }
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center();
+                  }
+                },
+              ),
             ),
           ),
-        ),
 
-        bottomNavigationBar: BottomAppBar(
-            color: Colors.white,
-            shadowColor: Colors.black,
-            shape: const CircularNotchedRectangle(),
-            height: 70,
-            notchMargin: 6,
-            clipBehavior: Clip.antiAlias,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget> [
-                Flexible(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          screenIndex = _homeIndex;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.home,
-                            color: screenIndex == _homeIndex ? selectedTab : unselectedTab,
-                            size: screenIndex == _homeIndex ? 22 : 20,
-                          ),
-                          Text(
-                            "Tổng quan",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: screenIndex == _homeIndex ? selectedTab : unselectedTab
+          bottomNavigationBar: BottomAppBar(
+              color: Colors.white,
+              shadowColor: Colors.black,
+              shape: const CircularNotchedRectangle(),
+              height: 70,
+              notchMargin: 6,
+              clipBehavior: Clip.antiAlias,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget> [
+                  Flexible(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            screenIndex = _homeIndex;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: screenIndex == _homeIndex ? selectedTab : unselectedTab,
+                              size: screenIndex == _homeIndex ? 22 : 20,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Tổng quan",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: screenIndex == _homeIndex ? selectedTab : unselectedTab
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          screenIndex = _statsIndex;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.query_stats,
-                            color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
-                            size: screenIndex == _statsIndex ? 22 : 20,
-                          ),
-                          Text(
-                            "Phân tích",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: screenIndex == _statsIndex ? selectedTab : unselectedTab
+                  Flexible(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            screenIndex = _statsIndex;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.query_stats,
+                              color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
+                              size: screenIndex == _statsIndex ? 22 : 20,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Phân tích",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: screenIndex == _statsIndex ? selectedTab : unselectedTab
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          screenIndex = _walletIndex;
-                        });
+                  Flexible(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            screenIndex = _walletIndex;
+                          });
 
-                      },
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.wallet,
-                            color: screenIndex == _walletIndex ? selectedTab : unselectedTab,
-                            size: screenIndex == _walletIndex ? 22 : 20,
-                          ),
-                          Text(
-                            "Quản lý ví",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: screenIndex == _walletIndex ? selectedTab : unselectedTab
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.wallet,
+                              color: screenIndex == _walletIndex ? selectedTab : unselectedTab,
+                              size: screenIndex == _walletIndex ? 22 : 20,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Quản lý ví",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: screenIndex == _walletIndex ? selectedTab : unselectedTab
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          screenIndex = _noteIndex;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.edit_note_sharp,
-                            color: screenIndex == _noteIndex ? selectedTab : unselectedTab,
-                            size: screenIndex == _noteIndex ? 22 : 20,
-                          ),
-                          Text(
-                            "Ghi chú",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: screenIndex == _noteIndex ? selectedTab : unselectedTab
+                  Flexible(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            screenIndex = _noteIndex;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.edit_note_sharp,
+                              color: screenIndex == _noteIndex ? selectedTab : unselectedTab,
+                              size: screenIndex == _noteIndex ? 22 : 20,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Ghi chú",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: screenIndex == _noteIndex ? selectedTab : unselectedTab
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            )
+                ],
+              )
+          ),
         ),
       ),
     );
