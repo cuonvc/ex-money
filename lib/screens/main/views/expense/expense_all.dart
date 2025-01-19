@@ -111,9 +111,17 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.filter_list),
-                            SizedBox(width: 8,),
                             Text(walletDisplay),
+                            const SizedBox(width: 2,),
+                            AnimatedRotation(
+                              turns: filterByWalletVisible ? 0.75 : 0.5,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.grey,
+                                size: 26,
+                              )
+                          )
                           ],
                         ),
                       ),
@@ -127,9 +135,17 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.filter_list),
-                            SizedBox(width: 8,),
-                            Text("Chi tiêu của bạn"),
+                            const Text("Chi tiêu của bạn"),
+                            const SizedBox(width: 2,),
+                            AnimatedRotation(
+                              turns: filterByMemberVisible ? 0.75 : 0.5,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.grey,
+                                size: 26,
+                              )
+                          )
                           ],
                         ),
                       ),
@@ -143,9 +159,17 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.filter_list),
-                            SizedBox(width: 8,),
                             Text("Danh mục"),
+                            SizedBox(width: 2,),
+                            AnimatedRotation(
+                              turns: filterByCategoryVisible ? 0.75 : 0.5,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.grey,
+                                size: 26,
+                              )
+                          )
                           ],
                         ),
                       ),

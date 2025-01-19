@@ -12,10 +12,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<dynamic> getExpenseList(num? walletId, String? keyword, num? categoryId, num? createdById) async {
     try {
-      var resp = await expenseController.getExpenseList(walletId, keyword, categoryId, categoryId);
+      var resp = await expenseController.getExpenseList(walletId, keyword, categoryId, createdById);
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
-        resp = await expenseController.getExpenseList(walletId, keyword, categoryId, categoryId);
+        resp = await expenseController.getExpenseList(walletId, keyword, categoryId, createdById);
       }
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
