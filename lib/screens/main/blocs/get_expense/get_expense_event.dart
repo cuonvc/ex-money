@@ -13,7 +13,16 @@ class GetExpenseEv extends GetExpenseEvent {
   String? keyword;
   num? categoryId;
   num? createdById;
+  String? startDate;
+  String? endDate;
 
-  GetExpenseEv(this.walletId, this.keyword, this.categoryId, this.createdById);
+  GetExpenseEv({
+    required this.walletId,
+    required this.keyword,
+    required this.categoryId,
+    required this.createdById,
+    required this.startDate,
+    required this.endDate
+  });
 }
 

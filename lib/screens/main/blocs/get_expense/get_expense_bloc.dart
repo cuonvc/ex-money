@@ -16,7 +16,7 @@ class GetExpenseBloc extends Bloc<GetExpenseEvent, GetExpenseState> {
       emit(GetExpenseLoading());
       try {
         HttpResponse response = await expenseRepository.getExpenseList(
-            event.walletId, event.keyword, event.categoryId, event.createdById
+            event.walletId, event.keyword, event.categoryId, event.createdById, event.startDate, event.endDate
         );
         if (response.code == 0) {
           List list = response.data[0];

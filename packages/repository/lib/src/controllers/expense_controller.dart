@@ -8,16 +8,18 @@ import '../utils/constant.dart';
 
 class ExpenseController {
 
-  Future<dynamic> getExpenseList(num? walletId, String? keyword, num? categoryId, num? createdById) async {
+  Future<dynamic> getExpenseList(num? walletId, String? keyword, num? categoryId, num? createdById, String? startDate, String? endDate) async {
     String wallet = walletId == null ? "" : walletId.toString();
     keyword = keyword == null ? "" : keyword;
     String category = categoryId == null ? "" : categoryId.toString();
     String createdBy = createdById == null ? "" : createdById.toString();
+    startDate = startDate == null ? "" : startDate;
+    endDate = endDate == null ? "" : endDate;
 
     Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
 
     return http.get(
-        Uri.parse('$domain/api/expense?wallet_id=$wallet&keyword=$keyword&category_id=$category&created_by=$createdBy&locale=vi'),
+        Uri.parse('$domain/api/expense?wallet_id=$wallet&keyword=$keyword&category_id=$category&created_by=$createdBy&start_time=$startDate&end_time=$endDate&locale=vi'),
         headers: {
           // 'Accept-Language': 'vi', //required
           'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}'

@@ -29,7 +29,16 @@ class _ExpenseAllState extends State<ExpenseAll> {
           create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: false, isCache: false)),
         ),
         BlocProvider(
-          create: (context) => GetExpenseBloc(ExpenseRepositoryImpl())..add(GetExpenseEv(null, null, null, null)),
+          create: (context) => GetExpenseBloc(ExpenseRepositoryImpl())..add(
+              GetExpenseEv(
+                  walletId: null,
+                  keyword: null,
+                  categoryId: null,
+                  createdById: null,
+                  startDate: null,
+                  endDate: null
+              )
+          ),
         ),
       ], child: const ExpenseAllView(),
     );
@@ -49,16 +58,28 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
   num? walletSelected;
   num? memberSelected;
   num? categorySelected;
+  String? startDate;
+  String? endDate;
 
+  late bool searchSelected;
   late bool filterByMemberVisible;
   late bool filterByCategoryVisible;
   late bool filterByWalletVisible;
 
+  late String walletDisplay;
+  late String authorDisplay;
+  late String categoryDisplay;
+
   @override
   void initState() {
+    searchSelected = false;
     filterByMemberVisible = false;
     filterByCategoryVisible = false;
     filterByWalletVisible = false;
+
+    walletDisplay = "";
+    authorDisplay = "";
+    categoryDisplay = "";
     super.initState();
   }
 
@@ -72,7 +93,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
             ? IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_new))
             : null,
         title: const Text(
-          "Tất cả chi tiêu",
+          "Tất cả giao dịch",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
@@ -89,13 +110,83 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
               padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
               child: Column(
                 children: [
-                  BaseTextFieldSubmit(
-                    controller: searchTxtController,
-                    inputType: TextInputType.text,
-                    icon: Icons.search,
-                    hintText: "Nhập danh mục, mô tả hoặc số tiền",
-                    submitBtn: true,
-                    fetchMethod: fetchSearch,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Visibility(
+                        visible: searchSelected,
+                        child: SizedBox(
+                          width: MediaQuery.sizeOf(context).width - 2 * ConstantSize.hozPadScreen,
+                          child: BaseTextFieldSubmit(
+                            controller: searchTxtController,
+                            inputType: TextInputType.text,
+                            icon: Icons.search,
+                            hintText: "Nhập danh mục, mô tả hoặc số tiền",
+                            submitBtn: true,
+                            fetchMethod: fetchSearch,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: !searchSelected,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              child: Icon(Icons.search),
+                              onTap: () {
+                                setState(() {
+                                  searchSelected = true;
+                                });
+                              },
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                DateTimeRange? picked = await showDateRangePicker(
+                                  context: context,
+                                  locale: const Locale("vi"),
+                                  initialDateRange: (startDate == null || endDate == null)
+                                      ? null
+                                      : DateTimeRange(start: dateTimeFromString(startDate!), end: dateTimeFromString(endDate!)),
+                                  firstDate: DateTime(DateTime.now().year - 5),
+                                  lastDate: DateTime.now(),
+                                );
+                                if (picked != null) {
+                                  setState(() {
+                                    startDate = getDateTimeToRequest(picked.start.toString());
+                                    endDate = getDateTimeToRequest(picked.end.toString());
+                                  });
+                                  fetchSearch("");
+                                }
+                              },
+                              child: Icon(Icons.calendar_month),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Visibility(
+                    visible: searchSelected,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          child: const Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text("Hủy", style: TextStyle(color: cTextDisable, fontWeight: FontWeight.w500),),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              searchSelected = false;
+                              searchTxtController.clear();
+                              fetchSearch;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 10,)
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10,),
                   Row(
@@ -135,8 +226,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            const Text("Chi tiêu của bạn"),
-                            const SizedBox(width: 2,),
+                            Text(authorDisplay.isEmpty ? "Chi tiêu của bạn" : authorDisplay),
                             AnimatedRotation(
                               turns: filterByMemberVisible ? 0.75 : 0.5,
                               duration: const Duration(milliseconds: 200),
@@ -145,7 +235,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                                 color: Colors.grey,
                                 size: 26,
                               )
-                          )
+                            )
                           ],
                         ),
                       ),
@@ -159,8 +249,7 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            Text("Danh mục"),
-                            SizedBox(width: 2,),
+                            Text(categoryDisplay.isEmpty ? "Danh mục" : categoryDisplay),
                             AnimatedRotation(
                               turns: filterByCategoryVisible ? 0.75 : 0.5,
                               duration: const Duration(milliseconds: 200),
@@ -208,9 +297,24 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                   setState(() {
                     filterByWalletVisible = false;
                     walletSelected = numberFromString(walletMap.keys.first);
+
+                    memberSelected = null;
+                    categorySelected = null;
+
+                    authorDisplay = "";
+                    categoryDisplay = "";
                   });
                   context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: numberFromString(walletMap.keys.first), isReload: true, isCache: false));
-                  context.read<GetExpenseBloc>().add(GetExpenseEv(walletSelected, searchTxtController.text, categorySelected, memberSelected));
+                  context.read<GetExpenseBloc>().add(
+                      GetExpenseEv(
+                          walletId: walletSelected,
+                          keyword: searchTxtController.text,
+                          categoryId: categorySelected,
+                          createdById: memberSelected,
+                          startDate: startDate,
+                          endDate: endDate
+                      )
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
@@ -238,8 +342,18 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                   setState(() {
                     filterByMemberVisible = false;
                     memberSelected = numberFromString(memberMap.keys.first);
+                    authorDisplay = memberMap.values.first;
                   });
-                  context.read<GetExpenseBloc>().add(GetExpenseEv(walletSelected, searchTxtController.text, categorySelected, memberSelected));
+                  context.read<GetExpenseBloc>().add(
+                      GetExpenseEv(
+                        walletId: walletSelected,
+                        keyword: searchTxtController.text,
+                        categoryId: categorySelected,
+                        createdById: memberSelected,
+                        startDate: startDate,
+                        endDate: endDate
+                      )
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
@@ -267,8 +381,18 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                   setState(() {
                     filterByCategoryVisible = false;
                     categorySelected = numberFromString(categoryMap.keys.first);
+                    categoryDisplay = categoryMap.values.first;
                   });
-                  context.read<GetExpenseBloc>().add(GetExpenseEv(walletSelected, searchTxtController.text, categorySelected, memberSelected));
+                  context.read<GetExpenseBloc>().add(
+                      GetExpenseEv(
+                        walletId: walletSelected,
+                        keyword: searchTxtController.text,
+                        categoryId: categorySelected,
+                        createdById: memberSelected,
+                        startDate: startDate,
+                        endDate: endDate
+                      )
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
@@ -286,7 +410,18 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
     log("Wallet: $walletSelected");
     log("Created by: $memberSelected");
     log("Category: $categorySelected");
-    context.read<GetExpenseBloc>().add(GetExpenseEv(walletSelected, keyword, categorySelected, memberSelected));
+    log("start date: $startDate");
+    log("End date: $endDate");
+    context.read<GetExpenseBloc>().add(
+        GetExpenseEv(
+          walletId: walletSelected,
+          keyword: keyword,
+          categoryId: categorySelected,
+          createdById: memberSelected,
+          startDate: startDate,
+          endDate: endDate
+        )
+    );
   }
 }
 
