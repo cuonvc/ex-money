@@ -45,4 +45,15 @@ class WalletController {
       },
     );
   }
+
+  Future<dynamic> changeExpenseLimit(String walletId, num amount) async {
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+    return http.put(
+      Uri.parse('$domain/api/wallet/expense_limit?locale=vi&wallet_id=$walletId&amount=$amount'),
+      headers: {
+        'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+        'Content-Type': 'application/json'
+      },
+    );
+  }
 }

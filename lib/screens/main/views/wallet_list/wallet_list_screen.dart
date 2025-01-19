@@ -4,9 +4,10 @@ import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dar
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
+import 'package:ex_money/screens/main/blocs/wallet_change_expense_limit/wallet_change_expense_limit_bloc.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
-import 'package:ex_money/screens/main/views/wallet_list/widgets/wallet_info.dart';
+import 'package:ex_money/screens/main/views/wallet_list/widgets/config_tab.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/base_bottom_sheet.dart';
@@ -30,7 +31,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
   late int walletCount = 0;
   bool expenseTab = true;
   bool accountTab = false;
-  bool informationTab = false;
+  bool configTab = false;
   List<WalletResponse> walletList = [];
   int currentWalletIndex = 0;
   late double cardHeight = 0;
@@ -265,7 +266,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                     setState(() {
                                       expenseTab = true;
                                       accountTab = false;
-                                      informationTab = false;
+                                      configTab = false;
                                     });
                                   },
                                   child: tabTitle("GD gần đây", expenseTab),
@@ -275,7 +276,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                     setState(() {
                                       expenseTab = false;
                                       accountTab = true;
-                                      informationTab = false;
+                                      configTab = false;
                                     });
                                   },
                                   child: tabTitle("Thành viên", accountTab),
@@ -285,10 +286,10 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                       setState(() {
                                         expenseTab = false;
                                         accountTab = false;
-                                        informationTab = true;
+                                        configTab = true;
                                       });
                                     },
-                                    child: tabTitle("Thông tin ví", informationTab)
+                                    child: tabTitle("Thiết lập", configTab)
                                 ),
                               ],
                             ),
@@ -310,8 +311,12 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             ),
                             //wallet info tab
                             Visibility(
-                              visible: informationTab,
-                              child: WalletInfo(),
+                              visible: configTab,
+                                child:  BlocProvider(
+                                    create: (ctx) => WalletChangeExpenseLimitBloc(WalletRepositoryImpl()),
+                                    child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,)
+                                )
+                              // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
                             )
                           ],
                         ),

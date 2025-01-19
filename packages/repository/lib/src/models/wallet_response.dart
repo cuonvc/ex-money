@@ -12,6 +12,7 @@ class WalletResponse {
   late num totalIncome;
   late num totalExpense;
   late num balance;
+  late num? expenseLimit;
   late List<ExpenseResponse> expenses;
   late List? otherWallets;
   late bool isDefault;
@@ -30,6 +31,7 @@ class WalletResponse {
     required this.totalIncome,
     required this.totalExpense,
     required this.balance,
+    required this.expenseLimit,
     required this.expenses,
     required this.otherWallets,
     required this.isDefault,
@@ -65,6 +67,7 @@ class WalletResponse {
       totalIncome: map['totalIncome'],
       totalExpense: map['totalExpense'],
       balance: map['balance'],
+      expenseLimit: map['expenseLimit'],
       expenses: expenses,
       otherWallets: null,
       isDefault: map['isDefault'],
@@ -86,6 +89,7 @@ class WalletResponse {
       totalIncome: 0,
       totalExpense: 0,
       balance: 0,
+      expenseLimit: null,
       expenses: [],
       otherWallets: null,
       isDefault: false,
