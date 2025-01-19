@@ -30,12 +30,13 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
           emit(const GetCategoryFailure("Có lỗi xảy ra, vui lòng mở lại app"));
         }
 
+        wallets = [];
         if (listCategory == null || isReload) {
           emit(GetCategoryLoading());
           HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
           if (response.code == 0) {
             List<ExpenseCategoryResponse> data = ExpenseCategoryResponse.fromList(response.data[0]);
-            emit(GetCategorySuccess(data, wallets!));
+            emit(GetCategorySuccess(data, wallets));
 
             List<Map<String, dynamic>> json = ExpenseCategoryResponse.listToMap(data);
             await prefs.setString(partOfPrefKey, jsonEncode(json));
