@@ -314,7 +314,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                               visible: configTab,
                                 child:  BlocProvider(
                                     create: (ctx) => WalletChangeExpenseLimitBloc(WalletRepositoryImpl()),
-                                    child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,)
+                                    child: ConfigTab(wallet: walletList[currentWalletIndex],)
                                 )
                               // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
                             )

@@ -48,4 +48,18 @@ class UserResponse {
       'deviceToken': data.deviceToken
     };
   }
+
+  static UserResponse empty() {
+    return UserResponse(
+        id: 0,
+        name: '',
+        email: '',
+        avatarUrl: '',
+        role: '',
+        createdAt: '',
+        modifiedAt: '',
+        status: '',
+        deviceToken: ''
+    );
+  }
 }

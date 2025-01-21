@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ex_money/screens/main/blocs/wallet_change_expense_limit/wallet_change_expense_limit_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
@@ -5,11 +7,12 @@ import 'package:ex_money/widgets/base_text_field.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repository/repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigTab extends StatefulWidget {
-  num walletId;
-  num? expenseLimit;
-  ConfigTab({super.key, required this.walletId, required this.expenseLimit});
+  WalletResponse wallet;
+  ConfigTab({super.key, required this.wallet});
 
   @override
   State<ConfigTab> createState() => _ConfigTabState();
@@ -19,14 +22,36 @@ class _ConfigTabState extends State<ConfigTab> {
   
   final limitAmountController = TextEditingController();
   bool isLoading = false;
+  UserResponse currentUser = UserResponse.empty();
   // late num walletId;
   // num? expenseLimitAmt;
 
   @override
   void initState() {
-    // walletId = widget.walletId;
-    // expenseLimitAmt = widget.expenseLimit;
     super.initState();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
+    final user = await getCurrentUser();
+    setState(() {
+      currentUser = user;
+    });
+  }
+
+  Future<UserResponse> getCurrentUser() async {
+    final prefs= await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
+    );
+    final partOfPrefKey = CachedPrefKey.signInRespPref;
+    try {
+      final Object? dataCached = prefs.get(partOfPrefKey);
+      List<dynamic> fromDisk = jsonDecode(dataCached.toString());
+      return UserResponse.fromMap(fromDisk[2]);
+    } catch (e) {
+      Navigator.pushNamed(context, NavigatePath.signInPath);
+      rethrow;
+    }
   }
 
   @override
@@ -43,7 +68,7 @@ class _ConfigTabState extends State<ConfigTab> {
       isLoading = false;
       Navigator.pop(context);
       setState(() {
-        widget.expenseLimit = state.amount;
+        widget.wallet.expenseLimit = state.amount;
       });
       showDialogResponse(context, true, "Thiết lập hạn mức", "Thiết lập thành công");
     }
@@ -57,55 +82,58 @@ class _ConfigTabState extends State<ConfigTab> {
           children: [
             Text("Hạn mức", style: titleStyle(),),
             const SizedBox(width: 30,),
-            GestureDetector(
-              onTap: () async {
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext ctx) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)
-                        ),
-                        title: Text("Nhập hạn mức", style: titleStyle(),),
-                        content: BaseTextField(
-                            controller: limitAmountController, 
-                            inputType: TextInputType.number, 
-                            icon: null, 
-                            hintText: widget.expenseLimit == null ? "Chưa thiết lập" : toAmountFormat(widget.expenseLimit),
-                            passwordField: false
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                context.read<WalletChangeExpenseLimitBloc>().add(
-                                  WalletChangeExpenseLimitEv(walletId: widget.walletId, amount: numberFromString(limitAmountController.text))
-                                );
-                              },
-                              child: Text("Lưu")
+            Visibility(
+              visible: currentUser.id == widget.wallet.ownerUserId,
+              child: GestureDetector(
+                onTap: () async {
+                  await showDialog(
+                      context: context,
+                      builder: (BuildContext ctx) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)
                           ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Hủy")
+                          title: Text("Nhập hạn mức", style: titleStyle(),),
+                          content: BaseTextField(
+                              controller: limitAmountController,
+                              inputType: TextInputType.number,
+                              icon: null,
+                              hintText: widget.wallet.expenseLimit == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseLimit),
+                              passwordField: false
                           ),
-                        ],
-                      );
-                    }
-                );
-              },
-              child: Row(
-                children: [
-                  Text("Chỉnh sửa", style: TextStyle(color: cPrimary, fontSize: 13),),
-                  Icon(Icons.edit_note, color: cPrimary, size: 16,)
-                ],
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Hủy")
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  context.read<WalletChangeExpenseLimitBloc>().add(
+                                      WalletChangeExpenseLimitEv(walletId: widget.wallet.id, amount: numberFromString(limitAmountController.text))
+                                  );
+                                },
+                                child: const Text("Lưu")
+                            ),
+                          ],
+                        );
+                      }
+                  );
+                },
+                child: Row(
+                  children: [
+                    Text("Chỉnh sửa", style: TextStyle(color: cPrimary, fontSize: 13),),
+                    Icon(Icons.edit_note, color: cPrimary, size: 16,)
+                  ],
+                ),
               ),
             )
           ],
         ),
         Text(
           "Hạn mức cảnh báo hiện tại: "
-              "${widget.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.expenseLimit)} VNĐ"}",
+              "${widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseLimit)} VNĐ"}",
           style: descriptionStyle(),
         )
       ],
