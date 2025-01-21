@@ -49,7 +49,7 @@ class _ConfigTabState extends State<ConfigTab> {
       List<dynamic> fromDisk = jsonDecode(dataCached.toString());
       return UserResponse.fromMap(fromDisk[2]);
     } catch (e) {
-      Navigator.pushNamed(context, NavigatePath.signInPath);
+      Navigator.pushNamed(context, NavigatePath.authSelectionPath);
       rethrow;
     }
   }
