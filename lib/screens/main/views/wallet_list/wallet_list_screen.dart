@@ -4,13 +4,12 @@ import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dar
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
-import 'package:ex_money/screens/main/blocs/wallet_change_expense_limit/wallet_change_expense_limit_bloc.dart';
+import 'package:ex_money/screens/main/blocs/wallet_setting/wallet_setting_bloc.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/config_tab.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
-import 'package:ex_money/widgets/base_bottom_sheet.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -313,7 +312,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             Visibility(
                               visible: configTab,
                                 child:  BlocProvider(
-                                    create: (ctx) => WalletChangeExpenseLimitBloc(WalletRepositoryImpl()),
+                                    create: (ctx) => WalletSettingBloc(WalletRepositoryImpl()),
                                     child: ConfigTab(wallet: walletList[currentWalletIndex],)
                                 )
                               // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
