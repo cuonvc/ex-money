@@ -10,9 +10,9 @@ class ExpenseCategoryResponse {
   late num? refId;
   late String? saveType;
   late String createdAt;
-  late String createdBy;
+  late String createdBy; //tạm thời chưa display
   late String? updatedAt;
-  late String? updatedBy;
+  late String? updatedBy; //tạm thời chưa display
 
   ExpenseCategoryResponse({
     required this.id,
@@ -96,9 +96,9 @@ class ExpenseCategoryResponse {
   }
 
   static fromMap(Map<dynamic, dynamic> data) {
-    List children = data['children'];
+    final children = data['children'];
     List<ExpenseCategoryResponse> childrenObj = [];
-    if (children.isNotEmpty) {
+    if (children != null && children is List && children.isNotEmpty) {
       childrenObj = fromList(children);
     }
 

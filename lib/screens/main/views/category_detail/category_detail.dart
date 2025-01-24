@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/save_category/save_category_bloc.dart';
@@ -10,16 +11,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../utils/utils.dart';
 import '../../../../widgets/dialog_warning.dart';
 
 class CategoryDetail extends StatefulWidget {
+  bool isCreateMode; //tạo mới thì cũng mở màn này
   ExpenseCategoryResponse? category;
-  List<Map<dynamic, dynamic>> walletNameList;
   CategoryDetail({
     super.key,
-    required this.category,
-    required this.walletNameList
+    required this.isCreateMode,
+    required this.category
   });
 
   @override
@@ -43,11 +46,40 @@ class _CategoryDetailState extends State<CategoryDetail> {
   String? refId = "";
   String iconImage = "";
 
+  List<WalletResponse> walletList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
+    final list = await getWalletList();
+    setState(() {
+      walletList = list;
+    });
+  }
+
+  Future<List<WalletResponse>> getWalletList() async {
+    final prefs= await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
+    );
+    final partOfPrefKey = CachedPrefKey.walletListPref;
+    try {
+      final Object? listCached = prefs.get(partOfPrefKey);
+      List fromDisk = jsonDecode(listCached.toString());
+      List<WalletResponse> dataFromDisk = fromDisk.map((w) => WalletResponse.fromMap(w)).toList();
+      return dataFromDisk;
+    } catch (e) {
+      Navigator.pushNamed(context, NavigatePath.authSelectionPath);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final category = widget.category as ExpenseCategoryResponse;
-    final walletNameList = widget.walletNameList;
-
     detail ??= category;
 
     if (nameController.text.isEmpty) {
@@ -85,7 +117,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
         backgroundColor: cBackground,
         appBar: AppBar(
           backgroundColor: cBackground,
-          title: const Text("Chi tiết danh mục", style: TextStyle(fontSize: 18),),
+          title: Text(widget.isCreateMode ? "Thêm mới danh mục" : "Chi tiết danh mục",
+            style: const TextStyle(fontSize: 18),
+          ),
           centerTitle: true,
           leading: ModalRoute.of(context)!.canPop
               ? IconButton(onPressed: () => Navigator.pop(context, null), icon: const Icon(Icons.arrow_back_ios_new))
@@ -122,25 +156,28 @@ class _CategoryDetailState extends State<CategoryDetail> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSaveTypeExpand = !isSaveTypeExpand;
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Text(dropDownText),
-                        AnimatedRotation(
-                            turns: isSaveTypeExpand ? 0.75 : 0.5,
-                            duration: const Duration(milliseconds: 200),
-                            child: const Icon(
-                              Icons.keyboard_arrow_left,
-                              color: Colors.grey,
-                              size: 26,
-                            )
-                        )
-                      ],
+                  Visibility(
+                    visible: widget.isCreateMode,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isSaveTypeExpand = !isSaveTypeExpand;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Text(dropDownText),
+                          AnimatedRotation(
+                              turns: isSaveTypeExpand ? 0.75 : 0.5,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.grey,
+                                size: 26,
+                              )
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -187,28 +224,26 @@ class _CategoryDetailState extends State<CategoryDetail> {
               Visibility(
                 visible: isWalletListExpand && !isSaveTypeExpand && saveType.compareTo(saveByWallet.key) == 0,
                 child: SizedBox(
-                  height: walletNameList.length * 28,
+                  height: walletList.length * 28,
                   width: MediaQuery.sizeOf(context).width - ConstantSize.hozPadScreen * 2,
                   child: ListView.builder(
-                    itemCount: walletNameList.length,
+                    itemCount: walletList.length,
                     itemBuilder: (ctx, idx) {
-                      Map<dynamic, dynamic> walletMap = walletNameList[idx];
-                      String id = walletMap.keys.first;
-                      String name = walletMap.values.first;
+                      WalletResponse wallet = walletList[idx];
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
                               onTap: () => {
                                 setState(() {
-                                  dropDownText = name; //đoạn này tên ví 1
-                                  refId = id; //đoạn này id ví 1
+                                  dropDownText = wallet.name; //đoạn này tên ví 1
+                                  refId = wallet.id.toString(); //đoạn này id ví 1
                                   isWalletListExpand = false;
                                 })
                               },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 4),
-                                child: Text(name, style: baseStype(),
+                                child: Text(wallet.name, style: baseStype(),
                               ))
                           ),
                         ],
@@ -229,6 +264,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                       onTapOutside: (PointerDownEvent event) {
                         FocusManager.instance.primaryFocus?.unfocus();
                       },
+                      readOnly: !widget.isCreateMode && detail?.type.compareTo("DEFAULT") == 0,
                       cursorColor: cLineText,
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -269,6 +305,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                   },
                   minLines: 3,
                   maxLines: 4,
+                  readOnly: !widget.isCreateMode && detail?.type.compareTo("DEFAULT") == 0,
                   cursorColor: cLineText,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -293,7 +330,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
               ),
               const SizedBox(height: 30,),
               Visibility(
-                visible: detail?.type.compareTo("CUSTOM") == 0,
+                visible: detail?.type.compareTo("CUSTOM") == 0 || widget.isCreateMode,
                 child: GestureDetector(
                   onTap: () {
                     log("Icon selected - $iconImage");
@@ -302,22 +339,34 @@ class _CategoryDetailState extends State<CategoryDetail> {
                     log("save type - $saveType");
                     log("ref id - $refId");
                     //save type = WALLET ->  phải check ví đã select chưa
-                    if (saveType.compareTo(saveByWallet.key) == 0 && !refId!.isNotEmpty) {
-                      showDialogWarningSingle(context, "Chưa chọn ví", "Bạn phải chọn tới một ví nếu lưu theo ví");
-                    } else if (saveType.isEmpty) {
-                      showDialogWarningSingle(context, "Lưu theo", "Lưu theo ví hoặc tài khoản?");
+                    if (widget.isCreateMode) {
+                      if (saveType.compareTo(saveByWallet.key) == 0 && !refId!.isNotEmpty) {
+                        showDialogWarningSingle(context, "Chưa chọn ví", "Bạn phải chọn tới một ví nếu lưu theo ví");
+                      } else if (saveType.isEmpty) {
+                        showDialogWarningSingle(context, "Lưu theo", "Lưu theo ví hoặc tài khoản?");
+                      }
                     }
-                    // ExpenseCategoryRequest req = ExpenseCategoryRequest(
-                    //   iconImage: iconImage,
-                    //   name: nameController.text,
-                    //   description: descriptionController.text,
-                    //   saveType: saveType,
-                    //   refId: refId == null ? null : numberFromString(refId!),
-                    //   parentId:
-                    // );
-                    // context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: detail.id, request: req));
+                    ExpenseCategoryRequest req = ExpenseCategoryRequest(
+                      iconImage: iconImage,
+                      name: nameController.text,
+                      description: descriptionController.text,
+                      saveType: saveType.isNotEmpty ? saveType : detail?.saveType,
+                      refId: refId == null ? null : numberFromString(refId!),
+                      parentId: null
+                    );
+                    context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: widget.isCreateMode ? null : detail?.id, request: req));
                   },
                   child: buttonView(true, "Lưu", null),
+                ),
+              ),
+              Visibility(
+                visible: detail?.type.compareTo("DEFAULT") == 0,
+                child: Row(
+                  children: [
+                    Text("Không thể cập nhật danh mục mặc định", style: TextStyle(fontSize: 12),),
+                    SizedBox(width: 6,),
+                    Icon(CupertinoIcons.info_circle_fill, color: cDisableBtn, size: 18,),
+                  ],
                 ),
               ),
               const SizedBox(height: 50,),

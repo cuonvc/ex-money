@@ -20,7 +20,7 @@ class CategoryAll extends StatefulWidget {
 
 class _CategoryAllState extends State<CategoryAll> {
 
-  List<Map<dynamic, dynamic>> walletNameList = [];
+  static List<Map<dynamic, dynamic>> walletNameList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +39,25 @@ class _CategoryAllState extends State<CategoryAll> {
             : null,
         centerTitle: true,
         title: const Text("Tất cả danh mục", style: TextStyle(fontSize: 18),),
-        actions: const [
-          Icon(Icons.add, color: cPrimary,)
+        actions: [
+          IconButton(
+              onPressed: () async {
+                ExpenseCategoryResponse? expUpdated = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext ctx) => BlocProvider(
+                        create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                        child: CategoryDetail(category: ExpenseCategoryResponse.empty(), isCreateMode: true,),
+                      )
+                  ),
+                );
+
+                if (expUpdated != null) {
+                  //...
+                }
+              },
+              icon: const Icon(Icons.add, color: cPrimary,)
+          )
         ],
       ),
       body: BlocProvider(
@@ -158,7 +175,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                     MaterialPageRoute(
                         builder: (BuildContext ctx) => BlocProvider(
                           create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
-                          child: CategoryDetail(category: widget.category, walletNameList: widget.walletNameList,),
+                          child: CategoryDetail(category: widget.category, isCreateMode: false,),
                         )
                     ),
                   );
@@ -195,8 +212,20 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
-                        onPressed: () {
-                          // Add edit action for subcategory
+                        onPressed: () async {
+                          ExpenseCategoryResponse? expUpdated = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext ctx) => BlocProvider(
+                                  create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                                  child: CategoryDetail(category: subcategory, isCreateMode: false,),
+                                )
+                            ),
+                          );
+
+                          if (expUpdated != null) {
+                            //...
+                          }
                         },
                       ),
                     ],

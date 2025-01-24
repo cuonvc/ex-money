@@ -18,7 +18,7 @@ class SaveCategoryBloc extends Bloc<SaveCategoryEvent, SaveCategoryState> {
         HttpResponse response = await categoryRepository.saveCategory(event.id, event.request);
         if (response.code == 0) {
           ExpenseCategoryResponse category = ExpenseCategoryResponse.fromMap(response.data[0]);
-          emit(SaveCategorySuccess(message: "Đã cập nhật chi tiêu", response: category));
+          emit(SaveCategorySuccess(message: "Đã cập nhật danh mục", response: category));
         } else {
           emit(SaveCategoryFailure(message: response.message));
         }
