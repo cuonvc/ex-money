@@ -13,6 +13,9 @@ class WalletResponse {
   late num totalExpense;
   late num balance;
   late num? expenseLimit;
+  late num? expenseWarningLevel1;
+  late num? expenseWarningLevel2;
+  late num? expenseWarningLevel3;
   late List<ExpenseResponse> expenses;
   late List? otherWallets;
   late bool isDefault;
@@ -32,6 +35,9 @@ class WalletResponse {
     required this.totalExpense,
     required this.balance,
     required this.expenseLimit,
+    required this.expenseWarningLevel1,
+    required this.expenseWarningLevel2,
+    required this.expenseWarningLevel3,
     required this.expenses,
     required this.otherWallets,
     required this.isDefault,
@@ -68,6 +74,9 @@ class WalletResponse {
       totalExpense: map['totalExpense'],
       balance: map['balance'],
       expenseLimit: map['expenseLimit'],
+      expenseWarningLevel1: map['expenseWarningLevel1'],
+      expenseWarningLevel2: map['expenseWarningLevel2'],
+      expenseWarningLevel3: map['expenseWarningLevel3'],
       expenses: expenses,
       otherWallets: null,
       isDefault: map['isDefault'],
@@ -90,6 +99,9 @@ class WalletResponse {
       totalExpense: 0,
       balance: 0,
       expenseLimit: null,
+      expenseWarningLevel1: null,
+      expenseWarningLevel2: null,
+      expenseWarningLevel3: null,
       expenses: [],
       otherWallets: null,
       isDefault: false,

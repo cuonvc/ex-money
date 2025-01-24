@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:repository/repository.dart';
 import 'package:repository/src/controllers/wallet_controller.dart';
+import 'package:repository/src/models/wallet_setting_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletRepositoryImpl implements WalletRepository {
@@ -70,12 +71,12 @@ class WalletRepositoryImpl implements WalletRepository {
   }
 
   @override
-  Future changeExpenseLimit(String walletId, num amount) async {
+  Future setting(String walletId, WalletSettingRequest request) async {
     try {
-      var resp = await walletController.changeExpenseLimit(walletId, amount);
+      var resp = await walletController.setting(walletId, request);
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
-        resp = await walletController.changeExpenseLimit(walletId, amount);
+        resp = await walletController.setting(walletId, request);
       }
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
@@ -93,7 +94,7 @@ class WalletRepositoryImpl implements WalletRepository {
           for (var wallet in list) {
             num id = num.parse(walletId);
             if (wallet['id'] == id) {
-              wallet['id'] = id;
+              wallet = response.data[0];
               // break;
             }
           }

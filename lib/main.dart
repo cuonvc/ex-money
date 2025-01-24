@@ -12,6 +12,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   await Firebase.initializeApp(
+    name: "exmoney",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await NotificationService.instance.initialize();

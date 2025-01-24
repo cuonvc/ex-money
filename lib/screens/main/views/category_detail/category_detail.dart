@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/save_category/save_category_bloc.dart';
 import 'package:ex_money/screens/main/views/category_detail/category_icon_selection.dart';
 import 'package:ex_money/utils/constant.dart';
-import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_confirm.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
@@ -293,45 +292,51 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 ),
               ),
               const SizedBox(height: 30,),
-              GestureDetector(
-                onTap: () {
-                  log("Icon selected - $iconImage");
-                  log("Name - ${nameController.text}");
-                  log("Description - ${descriptionController.text}");
-                  log("save type - $saveType");
-                  log("ref id - $refId");
-                  //save type = WALLET ->  phải check ví đã select chưa
-                  if (saveType.compareTo(saveByWallet.key) == 0 && !refId!.isNotEmpty) {
-                    showDialogWarningSingle(context, "Chưa chọn ví", "Bạn phải chọn tới một ví nếu lưu theo ví");
-                  } else if (saveType.isEmpty) {
-                    showDialogWarningSingle(context, "Lưu theo", "Lưu theo ví hoặc tài khoản?");
-                  }
-                  // ExpenseCategoryRequest req = ExpenseCategoryRequest(
-                  //   iconImage: iconImage,
-                  //   name: nameController.text,
-                  //   description: descriptionController.text,
-                  //   saveType: saveType,
-                  //   refId: refId == null ? null : numberFromString(refId!),
-                  //   parentId:
-                  // );
-                  // context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: detail.id, request: req));
-                },
-                child: buttonView(true, "Lưu", null),
+              Visibility(
+                visible: detail?.type.compareTo("CUSTOM") == 0,
+                child: GestureDetector(
+                  onTap: () {
+                    log("Icon selected - $iconImage");
+                    log("Name - ${nameController.text}");
+                    log("Description - ${descriptionController.text}");
+                    log("save type - $saveType");
+                    log("ref id - $refId");
+                    //save type = WALLET ->  phải check ví đã select chưa
+                    if (saveType.compareTo(saveByWallet.key) == 0 && !refId!.isNotEmpty) {
+                      showDialogWarningSingle(context, "Chưa chọn ví", "Bạn phải chọn tới một ví nếu lưu theo ví");
+                    } else if (saveType.isEmpty) {
+                      showDialogWarningSingle(context, "Lưu theo", "Lưu theo ví hoặc tài khoản?");
+                    }
+                    // ExpenseCategoryRequest req = ExpenseCategoryRequest(
+                    //   iconImage: iconImage,
+                    //   name: nameController.text,
+                    //   description: descriptionController.text,
+                    //   saveType: saveType,
+                    //   refId: refId == null ? null : numberFromString(refId!),
+                    //   parentId:
+                    // );
+                    // context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: detail.id, request: req));
+                  },
+                  child: buttonView(true, "Lưu", null),
+                ),
               ),
               const SizedBox(height: 50,),
-              GestureDetector(
-                onTap: () async {
-                  bool confirmed = await showDialogConfirm(context, "Xóa danh mục", "Bạn chắc chắn muốn xóa danh mục này?", null, "Xóa");
-                  if (confirmed) {
-                    //deleting
-                  }
-                },
-                child: const Row(
-                  children: [
-                    Icon(CupertinoIcons.trash, color: Colors.red, size: 18,),
-                    SizedBox(width: 6,),
-                    Text("Xóa danh mục này", style: TextStyle(color: Colors.red),)
-                  ],
+              Visibility(
+                visible: detail?.type.compareTo("CUSTOM") == 0,
+                child: GestureDetector(
+                  onTap: () async {
+                    bool confirmed = await showDialogConfirm(context, "Xóa danh mục", "Bạn chắc chắn muốn xóa danh mục này?", null, "Xóa");
+                    if (confirmed) {
+                      //deleting
+                    }
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(CupertinoIcons.trash, color: Colors.red, size: 18,),
+                      SizedBox(width: 6,),
+                      Text("Xóa danh mục này", style: TextStyle(color: Colors.red),)
+                    ],
+                  ),
                 ),
               )
             ],

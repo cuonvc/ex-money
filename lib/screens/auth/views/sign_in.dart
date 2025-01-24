@@ -109,13 +109,14 @@ class _SignInState extends State<SignIn> {
                             ],
                           ),
                           const SizedBox(height: 16,),
-                          GestureDetector(
-                            onTap: () {
-                              signInModel.email = emailInput.text;
-                              signInModel.password = passwordInput.text;
-                              context.read<SignInBloc>().add(SignInEv(signInModel));
-                            },
-                            child: buttonView(true, "Đăng nhập", null),
+                          isLoading
+                              ? buttonLoading(true, Colors.white)
+                              : GestureDetector(
+                                onTap: () {
+                                  signInModel.email = emailInput.text;
+                                  signInModel.password = passwordInput.text;
+                                  context.read<SignInBloc>().add(SignInEv(signInModel));
+                                }, child: buttonView(true, "Đăng nhập", null),
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 14),

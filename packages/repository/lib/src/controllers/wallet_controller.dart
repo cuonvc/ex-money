@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:repository/src/models/wallet_setting_request.dart';
 import 'package:repository/src/utils/utils.dart';
 
 import '../../repository.dart';
@@ -46,14 +47,15 @@ class WalletController {
     );
   }
 
-  Future<dynamic> changeExpenseLimit(String walletId, num amount) async {
+  Future<dynamic> setting(String walletId, WalletSettingRequest request) async {
     Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
     return http.put(
-      Uri.parse('$domain/api/wallet/expense_limit?locale=vi&wallet_id=$walletId&amount=$amount'),
+      Uri.parse('$domain/api/wallet/setting?locale=vi&wallet_id=$walletId'),
       headers: {
         'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
         'Content-Type': 'application/json'
       },
+      body: json.encode(WalletSettingRequest.toMap(request))
     );
   }
 }
