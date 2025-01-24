@@ -5,7 +5,8 @@
 - Clone the backend project from [develop branch]() and run with Spring or pull the [Docker image]() from Docker hub
 - [Install Dart and Flutter](https://docs.flutter.dev/get-started/install)
 - Create [Firebase](https://console.firebase.google.com/u/0/) project
-- Generate SHA1 and SHA256 and config to the Android application on Firebase - ```keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android```
+- Get SHA1 and SHA256 and config to the Android application on Firebase
+  + Windows: ```keytool -list -v -keystore C:\Users\username\.android\debug.keystore -alias androiddebugkey -storepass android -keypass android```
 - In the Android app on Firebase project, config the ```SHA1``` and ```SHA256``` token
 - Download the ```google-services.json``` file and paste to ```../android/app``` directory
 - Copy and paste the client ID from the ```GoogleService-Info.plist``` into ```../ios/Runner/Info.plist``` file
