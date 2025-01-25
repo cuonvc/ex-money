@@ -356,7 +356,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                     );
                     context.read<SaveCategoryBloc>().add(SaveCategoryEv(id: widget.isCreateMode ? null : detail?.id, request: req));
                   },
-                  child: buttonView(true, "Lưu", null),
+                  child: isLoading ? buttonLoading(true, null) : buttonView(true, "Lưu", null),
                 ),
               ),
               Visibility(

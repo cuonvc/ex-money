@@ -9,6 +9,6 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoadingAnimationWidget.waveDots(color: loadingColor != null ? loadingColor! : cPrimary, size: 40);
+    return const CircularProgressIndicator(color: cBlurPrimary, backgroundColor: cPrimary,);
   }
 }

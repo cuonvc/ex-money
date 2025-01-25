@@ -23,6 +23,41 @@ Widget buttonView(bool isPrimary, String text, Color? textColor) {
   );
 }
 
+// class CustomButton extends StatelessWidget {
+//   final String text;
+//   final VoidCallback onPressed;
+//
+//   const CustomButton({
+//     Key? key,
+//     required this.text,
+//     required this.onPressed,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ElevatedButton(
+//       onPressed: onPressed,
+//       style: ElevatedButton.styleFrom(
+//         backgroundColor: cPrimary, // Adjust this color to match the button
+//         minimumSize: const Size(double.infinity, 43), // Full width and height
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(ConstantSize.borderButton), // Rounded corners
+//         ),
+//         elevation: 0, // Remove shadow
+//       ),
+//       child: Text(
+//         text,
+//         style: const TextStyle(
+//           fontSize: 15,
+//           fontWeight: FontWeight.w500,
+//           color: Colors.white, // White text color
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
 Widget buttonLoading(bool isPrimary, Color? loadingColor) {
   return Container(
     height: ConstantSize.buttonHeight,
