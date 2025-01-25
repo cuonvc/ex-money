@@ -205,7 +205,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                               color: Colors.green,
                                             ),
                                             const SizedBox(width: 6,),
-                                            Text("Hạn mức ${toAmountFormat(currentWallet.totalIncome)}")
+                                            Text("Hạn mức ${toAmountFormat(currentWallet.expenseLimit)}")
                                           ],
                                         ),
                                         Row(

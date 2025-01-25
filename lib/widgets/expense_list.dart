@@ -57,7 +57,7 @@ class _ExpenseListState extends State<ExpenseList> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.only(top: 10),
-            child: ListView.builder(
+            child: expenseList.isEmpty ? const Center(child: Text("Không có chi tiêu nào..."),) : ListView.builder(
               controller: widget.expenseScrollController,
               itemCount: expenseList.length,
               itemBuilder: (ctx, int i) {

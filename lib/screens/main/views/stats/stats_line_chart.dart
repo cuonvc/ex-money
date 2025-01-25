@@ -146,8 +146,9 @@ class _StatsLineChartState extends State<StatsLineChart> {
 
     if (dispAmount == 0) {
       text = '';
+      //nếu là VND thì bỏ luôn phần thập phân của nghìn
     } else if (dispAmount < 1000) {
-      text = "${dispAmount}K";
+      text = "${dispAmount.toInt()}K";
     } else if (dispAmount >= 1000) {
       text = "${(dispAmount/1000).toStringAsFixed(1)}Tr";
     }
@@ -206,6 +207,7 @@ class _StatsLineChartState extends State<StatsLineChart> {
           ),
           belowBarData: BarAreaData(
             show: true,
+            color: cBlurPrimary
           ),
         ),
       ],

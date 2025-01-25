@@ -249,7 +249,11 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                         },
                         child: Row(
                           children: [
-                            Text(categoryDisplay.isEmpty ? "Danh mục" : categoryDisplay),
+                            Text(
+                              categoryDisplay.isEmpty ? "Danh mục" : categoryDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             AnimatedRotation(
                               turns: filterByCategoryVisible ? 0.75 : 0.5,
                               duration: const Duration(milliseconds: 200),
@@ -267,15 +271,15 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
                   selectWallet(resource.otherWalletMap),
                   selectMember(resource.members),
                   selectCategory(resource.categories),
-                  SizedBox(height: 20,),
-                  Expanded(child: ExpenseListData())
+                  const SizedBox(height: 20,),
+                  const Expanded(child: ExpenseListData())
                 ],
               ),
             );
           } else if (state is GetExpenseFilterResourceFailure) {
             return Center(child: Text("Failed: ${state.message}"),);
           } else {
-            return Center(child: Text("Error not define"),);
+            return const Center(child: Text("Error not define"),);
           }
         },
       ),
