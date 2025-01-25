@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/main/blocs/delete_category/delete_category_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
 import 'package:ex_money/screens/main/blocs/save_category/save_category_bloc.dart';
 import 'package:ex_money/screens/main/views/category_detail/category_detail.dart';
@@ -170,11 +171,18 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               IconButton(
                 icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
                 onPressed: () async {
-                  ExpenseCategoryResponse? expUpdated = await Navigator.push(
+                  var expUpdated = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext ctx) => BlocProvider(
-                          create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                        builder: (BuildContext ctx) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                            ),
+                            BlocProvider(
+                              create: (context) => DeleteCategoryBloc(CategoryRepositoryImpl()),
+                            ),
+                          ], 
                           child: CategoryDetail(category: widget.category, isCreateMode: false,),
                         )
                     ),
@@ -213,11 +221,18 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                       IconButton(
                         icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
                         onPressed: () async {
-                          ExpenseCategoryResponse? expUpdated = await Navigator.push(
+                          var expUpdated = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext ctx) => BlocProvider(
-                                  create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                                builder: (BuildContext ctx) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => DeleteCategoryBloc(CategoryRepositoryImpl()),
+                                    ),
+                                  ],
                                   child: CategoryDetail(category: subcategory, isCreateMode: false,),
                                 )
                             ),

@@ -44,6 +44,16 @@ class CategoryController {
           body: body
       );
     }
+  }
 
+  Future<dynamic> deleteCategory(num id) async {
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+    return http.delete(
+      Uri.parse('$domain/api/category/$id?locale=vi'),
+      headers: {
+        'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+        'Content-Type': 'application/json'
+      },
+    );
   }
 }

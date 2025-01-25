@@ -43,4 +43,23 @@ class CategoryRepositoryImpl extends CategoryRepository {
     }
   }
 
+  @override
+  Future deleteById(num id) async {
+    try {
+      var resp = await categoryController.deleteCategory(id);
+      if (resp.statusCode == 401) {
+        await userRepository.renewAccessToken();
+        resp = await categoryController.deleteCategory(id);
+      }
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await resp).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log("Delete category error - $e");
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
+
+
 }
