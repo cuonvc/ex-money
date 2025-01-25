@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
+import '../screens/main/blocs/get_category/get_category_bloc.dart';
 import '../utils/constant.dart';
 
 class ExpenseEdit extends StatefulWidget {
@@ -295,7 +296,12 @@ class _ExpenseEditState extends State<ExpenseEdit> {
             // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
             ExpenseCategoryResponse? selected = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CategoryAll(walletId: id,))
+                MaterialPageRoute(
+                    builder: (BuildContext ctx) => BlocProvider(
+                        create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: numberFromString(walletId), isReload: false)),
+                        child: CategoryAll(walletId: id,)
+                    )
+                )
             );
             if (selected != null) {
               setState (() {

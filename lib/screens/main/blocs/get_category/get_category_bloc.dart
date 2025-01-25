@@ -44,7 +44,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
             emit(GetCategoryFailure(response.message));
           }
         } else {
-          log("Trigger get data from disk");
+          log("Trigger get category from disk");
           List fromDisk = jsonDecode(listCategory.toString());
           List<ExpenseCategoryResponse> dataFromDisk = ExpenseCategoryResponse.fromList(fromDisk);
           emit(GetCategorySuccess(dataFromDisk, wallets!));

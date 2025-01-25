@@ -98,7 +98,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     return MultiBlocListener(
       listeners: [
         BlocListener<SaveCategoryBloc, SaveCategoryState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is SaveCategoryLoading) {
               setState(() {
                 isLoading = true;
@@ -107,13 +107,15 @@ class _CategoryDetailState extends State<CategoryDetail> {
               setState(() {
                 isLoading = false;
               });
-              showDialogResponse(context, false, "Lưu danh mục", state.message);
+              await showDialogResponse(context, false, "Lưu danh mục", state.message);
+              Navigator.pop(context, ""); // "" != null
             } else if (state is SaveCategorySuccess) {
               setState(() {
                 isLoading = false;
                 detail = state.response;
               });
-              showDialogResponse(context, true, "Lưu danh mục", state.message);
+              await showDialogResponse(context, true, "Lưu danh mục", state.message);
+              Navigator.pop(context, ""); // "" != null
             }
           },
         ),
@@ -128,13 +130,13 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 isLoading = false;
               });
               await showDialogResponse(context, false, "Xóa danh mục", state.message);
-              Navigator.pop(context, null);
+              Navigator.pop(context, ""); // "" != null
             } else if (state is DeleteCategorySuccess) {
               setState(() {
                 isLoading = false;
               });
               await showDialogResponse(context, true, "Xóa danh mục", state.message);
-              Navigator.pop(context, detail!.id);
+              Navigator.pop(context, ""); // "" != null
             }
           },
         ),

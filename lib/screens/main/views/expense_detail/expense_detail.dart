@@ -1,3 +1,4 @@
+import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
 import 'package:ex_money/screens/main/blocs/update_expense/update_expense_bloc.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
@@ -350,7 +351,12 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
       onTap: () async {
         ExpenseCategoryResponse? selected = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CategoryAll(walletId: detail.walletId,))
+            MaterialPageRoute(
+                builder: (BuildContext ctx) => BlocProvider(
+                  create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: detail.walletId, isReload: false)),
+                  child: CategoryAll(walletId: detail.walletId,),
+                )
+            )
         );
         if (selected != null) {
           setState (() {

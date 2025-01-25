@@ -43,56 +43,60 @@ class _CategoryAllState extends State<CategoryAll> {
         actions: [
           IconButton(
               onPressed: () async {
-                ExpenseCategoryResponse? expUpdated = await Navigator.push(
+                var res = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext ctx) => BlocProvider(
-                        create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                      builder: (BuildContext ctx) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                          ),
+                          BlocProvider(
+                            create: (context) => DeleteCategoryBloc(CategoryRepositoryImpl()),
+                          ),
+                        ], 
                         child: CategoryDetail(category: ExpenseCategoryResponse.empty(), isCreateMode: true,),
                       )
                   ),
                 );
 
-                if (expUpdated != null) {
-                  //...
+                if (res != null) {
+                  context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: data, isReload: true));
                 }
               },
               icon: const Icon(Icons.add, color: cPrimary,)
           )
         ],
       ),
-      body: BlocProvider(
-        create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: data, isReload: false)),
-        child: BlocBuilder<GetCategoryBloc, GetCategoryState>(
-          builder: (context, state) {
-            if (state is GetCategoryFailure) {
-              return Center(child: Text(state.message),);
-            } else if (state is GetCategoryLoading) {
-              return const Center(child: Loading(loadingColor: null,),);
-            } else if (state is GetCategorySuccess) {
-              List<ExpenseCategoryResponse> list = state.data;
-              walletNameList = state.walletListInfo;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-                child: Column(
-                  children: [
-                    BaseTextFieldSubmit(
-                        controller: keywordController,
-                        inputType: TextInputType.text,
-                        icon: Icons.search,
-                        hintText: "Tên, mô tả danh mục",
-                        submitBtn: true,
-                        fetchMethod: fetchSearch
-                    ),
-                    Expanded(child: ListView(children: _buildCategoryList(list),))
-                  ],
-                ),
-              );
-            } else {
-              return const Center(child: Text("Ops! Có lỗi xảy ra"),);
-            }
-          },
-        ),
+      body: BlocBuilder<GetCategoryBloc, GetCategoryState>(
+        builder: (context, state) {
+          if (state is GetCategoryFailure) {
+            return Center(child: Text(state.message),);
+          } else if (state is GetCategoryLoading) {
+            return const Center(child: Loading(loadingColor: null,),);
+          } else if (state is GetCategorySuccess) {
+            List<ExpenseCategoryResponse> list = state.data;
+            walletNameList = state.walletListInfo;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+              child: Column(
+                children: [
+                  BaseTextFieldSubmit(
+                      controller: keywordController,
+                      inputType: TextInputType.text,
+                      icon: Icons.search,
+                      hintText: "Tên, mô tả danh mục",
+                      submitBtn: true,
+                      fetchMethod: fetchSearch
+                  ),
+                  Expanded(child: ListView(children: _buildCategoryList(list),))
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: Text("Ops! Có lỗi xảy ra"),);
+          }
+        },
       ),
     );
   }
@@ -171,7 +175,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
               IconButton(
                 icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
                 onPressed: () async {
-                  var expUpdated = await Navigator.push(
+                  var res = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext ctx) => MultiBlocProvider(
@@ -188,8 +192,8 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                     ),
                   );
 
-                  if (expUpdated != null) {
-                    //...
+                  if (res != null) {
+                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, isReload: true));
                   }
                 },
               ),
@@ -221,7 +225,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                       IconButton(
                         icon: const Icon(Icons.keyboard_arrow_right, color: cPrimary),
                         onPressed: () async {
-                          var expUpdated = await Navigator.push(
+                          var res = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext ctx) => MultiBlocProvider(
@@ -238,8 +242,8 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                             ),
                           );
 
-                          if (expUpdated != null) {
-                            //...
+                          if (res != null) {
+                            context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, isReload: true));
                           }
                         },
                       ),
