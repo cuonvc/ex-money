@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:ex_money/utils/constant.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String dateTimeFormated(DateTime dateTime, bool getTime) {
@@ -76,4 +79,54 @@ num fromAmountFormatted(String value) {
       .replaceAll(',', '')
       .trim();
   return numberFromString(value);
+}
+
+String getNotificationTypeName(String type) {
+  String name;
+  switch (type) {
+    case "USER":
+      name = "Tài khoản";
+      break;
+    case "WALLET":
+      name = "Ví";
+      break;
+    case "EXPENSE":
+      name = "Chi tiêu";
+      break;
+    case "CATEGORY":
+      name = "Danh mục";
+      break;
+    case "SYSTEM":
+      name = "Hệ thống";
+      break;
+    default:
+      name = "Khác";
+      break;
+  }
+  return name;
+}
+
+Icon getNotificationTypeIcon(String type) {
+  Icon icon;
+  switch (type) {
+    case "USER":
+      icon = const Icon(Icons.account_circle_rounded, color: cPrimary, size: 16,);
+      break;
+    case "WALLET":
+      icon = const Icon(Icons.wallet, color: cPrimary, size: 16,);
+      break;
+    case "EXPENSE":
+      icon = const Icon(Icons.trending_up, color: cPrimary, size: 16,);
+      break;
+    case "CATEGORY":
+      icon = const Icon(Icons.list, color: cPrimary, size: 16,);
+      break;
+    case "SYSTEM":
+      icon = const Icon(Icons.settings, color: cPrimary, size: 16,);
+      break;
+    default:
+      icon = const Icon(Icons.open_in_full, color: cPrimary, size: 16,);
+      break;
+  }
+  return icon;
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
@@ -25,6 +28,7 @@ class _HomeState extends State<HomeScreen> {
 
   GlobalKey comparePrevMonthKey = GlobalKey();
   GlobalKey selectMonthKey = GlobalKey();
+  GlobalKey notiListKey = GlobalKey();
 
   final ScrollController _homeScrollController = ScrollController();
   final ScrollController _expenseScrollController = ScrollController();
@@ -76,6 +80,8 @@ class _HomeState extends State<HomeScreen> {
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
           List<ExpenseResponse> expenseList = response.ownerExpenses;
+          List<NotificationResponse> notificationList = response.notifications;
+          int unseenNotiCount = notificationList.where((item) => !item.seen).length;
           // if (expenseAdd != null) {
           //   setState(() {
           //     expenseList.add(expenseAdd);
@@ -116,8 +122,13 @@ class _HomeState extends State<HomeScreen> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "Chào buổi tối",
+                                      Text(
+                                        DateTime.now().hour < 12
+                                            ? "Chào buổi sáng"
+                                            : (DateTime.now().hour > 12 && DateTime.now().hour < 18
+                                              ? "Chào buổi chiều"
+                                              : "Chào buổi tối"
+                                            ),
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: cText
@@ -135,10 +146,35 @@ class _HomeState extends State<HomeScreen> {
                                   )
                                 ]
                             ),
-                            const Icon(
-                              Icons.notifications_outlined,
-                              size: 28,
-                            )
+                            GestureDetector(
+                              onTap: () {
+                                showBubbleNotificationList(context, notificationList);
+                              },
+                              child: Stack(
+                                key: notiListKey,
+                                children: [
+                                  const Icon(
+                                    Icons.notifications_outlined,
+                                    size: 28,
+                                  ),
+                                  unseenNotiCount > 0 ? Positioned(
+                                    right: 0,
+                                    top: -1,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: cPrimary,
+                                      ),
+                                      child: Text(
+                                        "$unseenNotiCount",
+                                        style: TextStyle(color: Colors.white, fontSize: unseenNotiCount > 9 ? 7 : 10),
+                                      ),
+                                    ),
+                                  ) : const Text("")
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                         //---- end header
@@ -316,6 +352,128 @@ class _HomeState extends State<HomeScreen> {
                           ),
                         );
                       }
+                    )
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  void showBubbleNotificationList(BuildContext context, List<NotificationResponse> list) {
+    RenderBox box = notiListKey.currentContext?.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero);
+    Size size = box.size;
+    double parentHeight = size.height;
+
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return Stack(
+            children: [
+              Positioned(
+                top: position.dy + parentHeight, // Add padding between icon and bubble
+                right: ConstantSize.hozPadScreen, // Center the bubble horizontally around the icon
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width / 1.4,
+                    height: MediaQuery.sizeOf(context).height / 1.5,
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 5,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
+                              Row(
+                                children: [
+                                  Icon(Icons.read_more, size: 16,),
+                                  SizedBox(width: 4,),
+                                  Text("Đọc tất cả", style: TextStyle(
+                                    fontSize: 12
+                                  ),)
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: list.isEmpty ? const Center(
+                            child: Text("Chưa có thông báo nào"),
+                          ) : ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (ctx, idx) {
+                              NotificationResponse data = list[idx];
+                              return GestureDetector(
+                                onTap: () {
+
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                  color: data.seen ? Colors.white : cBlurPrimary,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              getNotificationTypeIcon(data.type),
+                                              const SizedBox(width: 6,),
+                                              Text(
+                                                getNotificationTypeName(data.type),
+                                                style: const TextStyle(
+                                                    color: cTextDisable,
+                                                  fontSize: 12
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            dateTimeFormatedFromStr(data.createdAt, false),
+                                            style: const TextStyle(fontSize: 12, color: cTextDisable),
+                                          )
+                                        ],
+                                      ),
+                                      Text(data.title,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4,),
+                                      Text(
+                                        data.content,
+                                        style: const TextStyle(fontSize: 12),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     )
                   ),
                 ),
