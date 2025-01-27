@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
+import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
@@ -51,6 +52,9 @@ class _MainScreenState extends State<MainScreen> {
         ),
         BlocProvider<GetExpenseFilterResourceBloc>(
           create: (context) => GetExpenseFilterResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseFilterResourceEv(walletId: null, isReload: false, isCache: false)),
+        ),
+        BlocProvider<MarkReadNotificationBloc>(
+          create: (context) => MarkReadNotificationBloc(NotificationRepositoryImpl()),
         ),
       ],
       child: WillPopScope(

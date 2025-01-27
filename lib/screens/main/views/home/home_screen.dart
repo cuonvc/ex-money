@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
+import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
 import 'package:ex_money/screens/main/views/stats/stats_line_chart.dart';
 import 'package:ex_money/utils/utils.dart';
+import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/loading.dart';
@@ -32,6 +34,8 @@ class _HomeState extends State<HomeScreen> {
 
   final ScrollController _homeScrollController = ScrollController();
   final ScrollController _expenseScrollController = ScrollController();
+
+  List<NotificationResponse> notificationList = [];
 
 
   @override
@@ -80,7 +84,7 @@ class _HomeState extends State<HomeScreen> {
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
           List<ExpenseResponse> expenseList = response.ownerExpenses;
-          List<NotificationResponse> notificationList = response.notifications;
+          notificationList = response.notifications;
           int unseenNotiCount = notificationList.where((item) => !item.seen).length;
           // if (expenseAdd != null) {
           //   setState(() {
@@ -147,8 +151,8 @@ class _HomeState extends State<HomeScreen> {
                                 ]
                             ),
                             GestureDetector(
-                              onTap: () {
-                                showBubbleNotificationList(context, notificationList);
+                              onTap: () async {
+                                showBubbleNotificationList(context);
                               },
                               child: Stack(
                                 key: notiListKey,
@@ -362,7 +366,7 @@ class _HomeState extends State<HomeScreen> {
     );
   }
 
-  void showBubbleNotificationList(BuildContext context, List<NotificationResponse> list) {
+  void showBubbleNotificationList(BuildContext context) {
     RenderBox box = notiListKey.currentContext?.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
     Size size = box.size;
@@ -371,114 +375,128 @@ class _HomeState extends State<HomeScreen> {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return Stack(
-            children: [
-              Positioned(
-                top: position.dy + parentHeight, // Add padding between icon and bubble
-                right: ConstantSize.hozPadScreen, // Center the bubble horizontally around the icon
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width / 1.4,
-                    height: MediaQuery.sizeOf(context).height / 1.5,
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          spreadRadius: 5,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
-                              Row(
-                                children: [
-                                  Icon(Icons.read_more, size: 16,),
-                                  SizedBox(width: 4,),
-                                  Text("Đọc tất cả", style: TextStyle(
-                                    fontSize: 12
-                                  ),)
-                                ],
-                              )
-                            ],
-                          ),
+          return BlocProvider(
+            create: (context) => MarkReadNotificationBloc(NotificationRepositoryImpl()),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: position.dy + parentHeight, // Add padding between icon and bubble
+                  right: ConstantSize.hozPadScreen, // Center the bubble horizontally around the icon
+                  child: Material(
+                    color: Colors.transparent,
+                    child: BlocListener<MarkReadNotificationBloc, MarkReadNotificationState>(
+                      listener: (context, state) {
+                        if (state is MarkReadNotificationFailure) {
+                          showDialogResponse(context, false, "Có lỗi xảy ra", "Có lỗi khi cập nhật thông báo");
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width / 1.4,
+                        height: MediaQuery.sizeOf(context).height / 1.5,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 5,
+                            )
+                          ],
                         ),
-                        Expanded(
-                          child: list.isEmpty ? const Center(
-                            child: Text("Chưa có thông báo nào"),
-                          ) : ListView.builder(
-                            itemCount: list.length,
-                            itemBuilder: (ctx, idx) {
-                              NotificationResponse data = list[idx];
-                              return GestureDetector(
-                                onTap: () {
-
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                  color: data.seen ? Colors.white : cBlurPrimary,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Row(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      Icon(Icons.read_more, size: 16,),
+                                      SizedBox(width: 4,),
+                                      Text("Đọc tất cả", style: TextStyle(
+                                        fontSize: 12
+                                      ),)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: notificationList.isEmpty ? const Center(
+                                child: Text("Chưa có thông báo nào"),
+                              ) : ListView.builder(
+                                itemCount: notificationList.length,
+                                itemBuilder: (ctx, idx) {
+                                  NotificationResponse data = notificationList[idx];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      context.read<MarkReadNotificationBloc>().add(MarkReadNotificationEv(id: data.id, all: false));
+                                      setState(() {
+                                        data.seen = true;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                      color: data.seen ? Colors.white : cBlurPrimary,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              getNotificationTypeIcon(data.type),
-                                              const SizedBox(width: 6,),
-                                              Text(
-                                                getNotificationTypeName(data.type),
-                                                style: const TextStyle(
-                                                    color: cTextDisable,
-                                                  fontSize: 12
-                                                ),
+                                              Row(
+                                                children: [
+                                                  getNotificationTypeIcon(data.type),
+                                                  const SizedBox(width: 6,),
+                                                  Text(
+                                                    getNotificationTypeName(data.type),
+                                                    style: const TextStyle(
+                                                        color: cTextDisable,
+                                                      fontSize: 12
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
+                                              Text(
+                                                dateTimeFormatedFromStr(data.createdAt, false),
+                                                style: const TextStyle(fontSize: 12, color: cTextDisable),
+                                              )
                                             ],
                                           ),
+                                          Text(data.title,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4,),
                                           Text(
-                                            dateTimeFormatedFromStr(data.createdAt, false),
-                                            style: const TextStyle(fontSize: 12, color: cTextDisable),
+                                            data.content,
+                                            style: const TextStyle(fontSize: 12),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                           )
                                         ],
                                       ),
-                                      Text(data.title,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4,),
-                                      Text(
-                                        data.content,
-                                        style: const TextStyle(fontSize: 12),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          ],
                         )
-                      ],
-                    )
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         }
     );

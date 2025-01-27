@@ -9,6 +9,8 @@ export 'src/repository/impl/user_repository_impl.dart';
 export 'src/repository/wallet_repository.dart';
 export 'src/repository/impl/wallet_repository_impl.dart';
 export 'src/repository/expense_repository.dart';
+export 'src/repository/notification_repository.dart';
+export 'src/repository/impl/notification_repository_impl.dart';
 export 'src/repository/impl/expense_repository_impl.dart';
 export 'src/repository/overview_repository.dart';
 export 'src/repository/impl/overview_repository_impl.dart';
