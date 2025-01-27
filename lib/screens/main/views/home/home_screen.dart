@@ -407,20 +407,31 @@ class _HomeState extends State<HomeScreen> {
                         ),
                         child: Column(
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(10),
+                            Padding(
+                              padding: const EdgeInsets.all(10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.read_more, size: 16,),
-                                      SizedBox(width: 4,),
-                                      Text("Đọc tất cả", style: TextStyle(
-                                        fontSize: 12
-                                      ),)
-                                    ],
+                                  const Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<MarkReadNotificationBloc>().add(const MarkReadNotificationEv(id: null, all: true));
+                                      setState(() {
+                                        for (NotificationResponse item in notificationList) {
+                                          item.seen = true;
+                                        }
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Row(
+                                      children: [
+                                        Icon(Icons.read_more, size: 16,),
+                                        SizedBox(width: 4,),
+                                        Text("Đọc tất cả", style: TextStyle(
+                                          fontSize: 12
+                                        ),)
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
