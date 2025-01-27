@@ -5,6 +5,7 @@ import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expens
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
 import 'package:ex_money/screens/main/blocs/wallet_setting/wallet_setting_bloc.dart';
+import 'package:ex_money/screens/main/views/stats/stats_pie_chart.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/config_tab.dart';
@@ -34,7 +35,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
   List<WalletResponse> walletList = [];
   int currentWalletIndex = 0;
   late double cardHeight = 0;
-  double statsHeight = 120;
+  final double statsHeight = 300;
   WalletResponse currentWallet = WalletResponse.empty();
 
   final ScrollController _walletScrollController = ScrollController();
@@ -246,15 +247,12 @@ class _WalletListScreenState extends State<WalletListScreen> {
                   child: ListView(
                     controller: _walletScrollController,
                     children: [
-                      //demo
                       SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          height: statsHeight,
-                          child: Image.asset('assets/images/test/test_stats_wallet.png')
+                        height: 300,
+                        child: StatsPieChart(expenses: currentWallet.expenses,)
                       ),
-
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - cardHeight - statsHeight - 20,
+                        height: MediaQuery.sizeOf(context).height - cardHeight - 240,
                         child: Column(
                           children: [
                             Row(

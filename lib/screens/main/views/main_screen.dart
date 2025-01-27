@@ -4,7 +4,7 @@ import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expe
 import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
-import 'package:ex_money/screens/main/views/stats/stats_screen.dart';
+import 'package:ex_money/screens/main/views/voice/voice.dart';
 import 'package:ex_money/screens/main/views/wallet_list/wallet_list_screen.dart';
 import 'package:ex_money/widgets/expense_edit.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
 
   //static screen index
   static const int _homeIndex = 0;
-  static const int _statsIndex = 1;
+  static const int _voiceIndex = 1;
   static const int _walletIndex = 2;
   static const int _noteIndex = 3;
 
@@ -72,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                 index: screenIndex,
                   children: const [
                     HomeScreen(),
-                    StatsScreen(),
+                    Voice(),
                     WalletListScreen(),
                     NoteScreen(),
                   ]
@@ -169,21 +169,21 @@ class _MainScreenState extends State<MainScreen> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                            screenIndex = _statsIndex;
+                            screenIndex = _voiceIndex;
                           });
                         },
                         child: Column(
                           children: [
                             Icon(
-                              Icons.query_stats,
-                              color: screenIndex == _statsIndex ? selectedTab : unselectedTab,
-                              size: screenIndex == _statsIndex ? 22 : 20,
+                              Icons.keyboard_voice,
+                              color: screenIndex == _voiceIndex ? selectedTab : unselectedTab,
+                              size: screenIndex == _voiceIndex ? 22 : 20,
                             ),
                             Text(
-                              "Phân tích",
+                              "Voice",
                               style: TextStyle(
                                   fontSize: 12,
-                                  color: screenIndex == _statsIndex ? selectedTab : unselectedTab
+                                  color: screenIndex == _voiceIndex ? selectedTab : unselectedTab
                               ),
                             )
                           ],

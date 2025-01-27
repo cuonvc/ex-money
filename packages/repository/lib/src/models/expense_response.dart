@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class ExpenseResponse {
   late num id;
   late String status;
@@ -12,6 +14,8 @@ class ExpenseResponse {
   late String walletName;
   late num categoryId;
   late String categoryName;
+  late num? parentCategoryId; //optional
+  late String? parentCategoryName; //optional
   late String createdAt;
   late String createdBy;
   late String? updatedAt;
@@ -31,6 +35,8 @@ class ExpenseResponse {
     required this.walletName,
     required this.categoryId,
     required this.categoryName,
+    required this.parentCategoryId,
+    required this.parentCategoryName,
     required this.createdAt,
     required this.createdBy,
     required this.updatedAt,
@@ -52,6 +58,8 @@ class ExpenseResponse {
         walletName: data['walletName'],
         categoryId: data['categoryId'],
         categoryName: data['categoryName'],
+        parentCategoryId: data['parentCategoryId'],
+        parentCategoryName: data['parentCategoryName'],
         createdAt: data['createdAt'],
         createdBy: data['createdBy'],
         updatedAt: data['updatedAt'],
@@ -74,6 +82,8 @@ class ExpenseResponse {
       'walletName': data.walletName,
       'categoryId': data.categoryId,
       'categoryName': data.categoryName,
+      'parentCategoryId': data.parentCategoryId,
+      'parentCategoryName': data.parentCategoryName,
       'createdAt': data.createdAt,
       'createdBy': data.createdBy,
       'updatedAt': data.updatedAt,
