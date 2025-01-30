@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:repository/src/models/expense_scheduler_response.dart';
+
 import '../../repository.dart';
 
 class WalletResponse {
@@ -7,6 +9,7 @@ class WalletResponse {
   late String status;
   late num ownerUserId;
   late List<UserResponse> members;
+  late List<ExpenseSchedulerResponse> schedulers;
   late String name;
   late String? description;
   late num totalIncome;
@@ -29,6 +32,7 @@ class WalletResponse {
     required this.status,
     required this.ownerUserId,
     required this.members,
+    required this.schedulers,
     required this.name,
     required this.description,
     required this.totalIncome,
@@ -51,9 +55,11 @@ class WalletResponse {
 
     var membersVal = map['members'];
     var expensesVal = map['expenses'];
+    var schedulersVal = map['schedulers'];
 
     List<ExpenseResponse> expenses = [];
     List<UserResponse> members = [];
+    List<ExpenseSchedulerResponse> schedulers = [];
     if (expensesVal != null) {
       List rawExpenses = expensesVal;
       expenses = rawExpenses.map((expense) => ExpenseResponse.fromMap(expense)).toList();
@@ -63,11 +69,17 @@ class WalletResponse {
       members = rawMembers.map((user) => UserResponse.fromMap(user)).toList();
     }
 
+    if(schedulersVal != null) {
+      List rawSchedulers = schedulersVal;
+      schedulers = rawSchedulers.map((element) => ExpenseSchedulerResponse.fromMap(element)).toList();
+    }
+
     return WalletResponse(
       id: map['id'],
       status: map['status'],
       ownerUserId: map['ownerUserId'],
       members: members,
+      schedulers: schedulers,
       name: map['name'],
       description: map['description'],
       totalIncome: map['totalIncome'],
@@ -93,6 +105,7 @@ class WalletResponse {
       status: '',
       ownerUserId: 0,
       members: [],
+      schedulers: [],
       name: '',
       description: '',
       totalIncome: 0,

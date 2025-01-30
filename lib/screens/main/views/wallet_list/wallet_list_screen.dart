@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/main/blocs/create_expense_scheduler/create_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
@@ -252,7 +253,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                         child: StatsPieChart(expenses: currentWallet.expenses,)
                       ),
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - cardHeight - 240,
+                        height: MediaQuery.sizeOf(context).height - cardHeight,
                         child: Column(
                           children: [
                             Row(
@@ -309,9 +310,16 @@ class _WalletListScreenState extends State<WalletListScreen> {
                             //wallet info tab
                             Visibility(
                               visible: configTab,
-                                child:  BlocProvider(
-                                    create: (ctx) => WalletSettingBloc(WalletRepositoryImpl()),
-                                    child: ConfigTab(wallet: walletList[currentWalletIndex],)
+                                child:  MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                        create: (ctx) => WalletSettingBloc(WalletRepositoryImpl()),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                    ),
+                                  ],
+                                  child: ConfigTab(wallet: walletList[currentWalletIndex],),
                                 )
                               // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
                             )

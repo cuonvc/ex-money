@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:ex_money/screens/main/views/stats/widgets/indicator.dart';
-import 'package:ex_money/utils/constant.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:repository/repository.dart';

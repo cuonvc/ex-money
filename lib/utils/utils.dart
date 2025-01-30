@@ -20,12 +20,20 @@ String dateTimeFormated(DateTime dateTime, bool getTime) {
 }
 
 String dateTimeFormatedFromStr(String dateTime, bool getTime) {
-  DateTime input = DateTime.parse(dateTime);
-  return dateTimeFormated(input, getTime);
+  try {
+    DateTime input = DateTime.parse(dateTime);
+    return dateTimeFormated(input, getTime);
+  } catch (e) {
+    return '';
+  }
 }
 
 DateTime dateTimeFromString(String dateTime) {
-  return DateTime.parse(dateTime);
+  try {
+    return DateTime.parse(dateTime);
+  } catch (e) {
+    return DateTime.now();
+  }
 }
 
 String getDateTimeToRequest(String dateTime) {
@@ -129,4 +137,32 @@ Icon getNotificationTypeIcon(String type) {
       break;
   }
   return icon;
+}
+
+String getTimeIntervalDesc(MapEntry<String, int> intervalMapValue) {
+  String desc = "";
+  String interval = intervalMapValue.key;
+  int value = intervalMapValue.value;
+  switch (interval) {
+    case "MONTHLY":
+      desc = "Ngày $value hằng tháng";
+      break;
+    case "WEEKLY":
+      desc = "Ngày $value hằng tuần";
+      break;
+    case "DAILY":
+      desc = "$value giờ hằng ngày";
+      break;
+    case "PER_HOUR":
+      desc = "$value phút mỗi giờ";
+      break;
+    case "PER_MINUTE":
+      desc = "$value giây mỗi phút";
+      break;
+    default:
+      desc = 'Có lỗi...';
+      break;
+  }
+
+  return desc;
 }

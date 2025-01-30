@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:ex_money/screens/main/blocs/create_expense_scheduler/create_expense_scheduler_bloc.dart';
+import 'package:ex_money/screens/main/views/wallet_list/widgets/expense_scheduler_edit.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/base_text_field.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:ex_money/widgets/expense_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
@@ -26,6 +30,7 @@ class _ConfigTabState extends State<ConfigTab> {
   final warningLevel2Controller = TextEditingController();
   final warningLevel3Controller = TextEditingController();
   bool isLoading = false;
+  bool schedulerLoading = false;
   UserResponse currentUser = UserResponse.empty();
   // late num walletId;
   // num? expenseLimitAmt;
@@ -81,155 +86,215 @@ class _ConfigTabState extends State<ConfigTab> {
           showDialogResponse(context, true, "Thiết lập ví", "Đã cập nhật");
         }
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Hạn mức", style: titleStyle(),),
-              const SizedBox(width: 30,),
-              Visibility(
-                visible: currentUser.id == widget.wallet.ownerUserId,
-                child: GestureDetector(
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (BuildContext ctx) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)
-                            ),
-                            title: Center(child: Text("Thiết lập hạn mức", style: titleStyle(),)),
-                            content: SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.4,
-                              child: ListView(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Hạn mức tối đa (VNĐ)", style: TextStyle(color: cTextDisable),),
-                                      BaseTextField(
-                                          controller: limitAmountController,
-                                          inputType: TextInputType.number,
-                                          icon: null,
-                                          hintText: '',
-                                          // hintText: widget.wallet.expenseLimit == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseLimit),
-                                          passwordField: false
-                                      ),
-                                    ],
+      child: Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Hạn mức", style: titleStyle(),),
+                    const SizedBox(width: 30,),
+                    Visibility(
+                      visible: currentUser.id == widget.wallet.ownerUserId,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)
                                   ),
-                                  const SizedBox(height: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mức cảnh báo 1 (%)", style: TextStyle(color: cTextDisable),),
-                                      BaseTextField(
-                                          controller: warningLevel1Controller,
-                                          inputType: TextInputType.number,
-                                          icon: null,
-                                          hintText: '',
-                                          // hintText: widget.wallet.expenseWarningLevel1 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel1),
-                                          passwordField: false
-                                      ),
-                                    ],
+                                  title: Center(child: Text("Thiết lập hạn mức", style: titleStyle(),)),
+                                  content: SizedBox(
+                                    height: MediaQuery.sizeOf(context).height * 0.4,
+                                    child: ListView(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Hạn mức tối đa (VNĐ)", style: TextStyle(color: cTextDisable),),
+                                            BaseTextField(
+                                                controller: limitAmountController,
+                                                inputType: TextInputType.number,
+                                                icon: null,
+                                                hintText: '',
+                                                // hintText: widget.wallet.expenseLimit == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseLimit),
+                                                passwordField: false
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Mức cảnh báo 1 (%)", style: TextStyle(color: cTextDisable),),
+                                            BaseTextField(
+                                                controller: warningLevel1Controller,
+                                                inputType: TextInputType.number,
+                                                icon: null,
+                                                hintText: '',
+                                                // hintText: widget.wallet.expenseWarningLevel1 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel1),
+                                                passwordField: false
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Mức cảnh báo 2 (%)", style: TextStyle(color: cTextDisable),),
+                                            BaseTextField(
+                                                controller: warningLevel2Controller,
+                                                inputType: TextInputType.number,
+                                                icon: null,
+                                                hintText: '',
+                                                // hintText: widget.wallet.expenseWarningLevel2 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel2),
+                                                passwordField: false
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Mức cảnh báo 3 (%)", style: TextStyle(color: cTextDisable),),
+                                            BaseTextField(
+                                                controller: warningLevel3Controller,
+                                                inputType: TextInputType.number,
+                                                icon: null,
+                                                hintText: '',
+                                                // hintText: widget.wallet.expenseWarningLevel3 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel3),
+                                                passwordField: false
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(height: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mức cảnh báo 2 (%)", style: TextStyle(color: cTextDisable),),
-                                      BaseTextField(
-                                          controller: warningLevel2Controller,
-                                          inputType: TextInputType.number,
-                                          icon: null,
-                                          hintText: '',
-                                          // hintText: widget.wallet.expenseWarningLevel2 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel2),
-                                          passwordField: false
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mức cảnh báo 3 (%)", style: TextStyle(color: cTextDisable),),
-                                      BaseTextField(
-                                          controller: warningLevel3Controller,
-                                          inputType: TextInputType.number,
-                                          icon: null,
-                                          hintText: '',
-                                          // hintText: widget.wallet.expenseWarningLevel3 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel3),
-                                          passwordField: false
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Hủy")
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    widget.wallet.expenseLimit = fromAmountFormatted(limitAmountController.text);
-                                    widget.wallet.expenseWarningLevel1 = fromAmountFormatted(warningLevel1Controller.text);
-                                    widget.wallet.expenseWarningLevel2 = fromAmountFormatted(warningLevel2Controller.text);
-                                    widget.wallet.expenseWarningLevel3 = fromAmountFormatted(warningLevel3Controller.text);
-                                    WalletSettingRequest request = WalletSettingRequest(
-                                      totalExpenseLimit: widget.wallet.expenseLimit,
-                                      expenseWarningLevel1: widget.wallet.expenseWarningLevel1,
-                                      expenseWarningLevel2: widget.wallet.expenseWarningLevel2,
-                                      expenseWarningLevel3: widget.wallet.expenseWarningLevel3,
-                                    );
-                                    context.read<WalletSettingBloc>().add(
-                                        WalletSettingEv(walletId: widget.wallet.id, request: request)
-                                    );
-                                  },
-                                  child: const Text("Lưu")
-                              ),
-                            ],
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Hủy")
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          widget.wallet.expenseLimit = fromAmountFormatted(limitAmountController.text);
+                                          widget.wallet.expenseWarningLevel1 = fromAmountFormatted(warningLevel1Controller.text);
+                                          widget.wallet.expenseWarningLevel2 = fromAmountFormatted(warningLevel2Controller.text);
+                                          widget.wallet.expenseWarningLevel3 = fromAmountFormatted(warningLevel3Controller.text);
+                                          WalletSettingRequest request = WalletSettingRequest(
+                                            totalExpenseLimit: widget.wallet.expenseLimit,
+                                            expenseWarningLevel1: widget.wallet.expenseWarningLevel1,
+                                            expenseWarningLevel2: widget.wallet.expenseWarningLevel2,
+                                            expenseWarningLevel3: widget.wallet.expenseWarningLevel3,
+                                          );
+                                          context.read<WalletSettingBloc>().add(
+                                              WalletSettingEv(walletId: widget.wallet.id, request: request)
+                                          );
+                                        },
+                                        child: const Text("Lưu")
+                                    ),
+                                  ],
+                                );
+                              }
                           );
-                        }
-                    );
-                  },
-                  child: const Row(
+                        },
+                        child: const Row(
+                          children: [
+                            Text("Chỉnh sửa", style: TextStyle(color: cPrimary, fontSize: 13),),
+                            SizedBox(width: 4,),
+                            Icon(Icons.edit_note, color: cPrimary, size: 16,)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "Hạn mức tối đa: "
+                      "${widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseLimit)} VNĐ"}",
+                  style: descriptionStyle(),
+                ),
+                Text(
+                  "Mức cảnh báo: ${"${widget.wallet.expenseWarningLevel1 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel1)}%' : ''} - ${widget.wallet.expenseWarningLevel2 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel2)}%' : ''} - ${widget.wallet.expenseWarningLevel3 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel3)}%' : ''}".compareTo(' -  - ') != 0 && widget.wallet.expenseLimit != null ? "${widget.wallet.expenseWarningLevel1 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel1)}%' : ''} - ${widget.wallet.expenseWarningLevel2 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel2)}%' : ''} - ${widget.wallet.expenseWarningLevel3 != null ? '${toAmountFormat(widget.wallet.expenseWarningLevel3)}%' : ''}" : "Chưa thiết lập"}",
+                  style: descriptionStyle(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Chỉnh sửa", style: TextStyle(color: cPrimary, fontSize: 13),),
-                      SizedBox(width: 4,),
-                      Icon(Icons.edit_note, color: cPrimary, size: 16,)
+                      Text("Chi tiêu định kỳ", style: titleStyle(),),
+                      GestureDetector(
+                        onTap: () async {
+                          ExpenseSchedulerResponse? response = await showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) {
+                                return  BlocProvider(
+                                  create: (ctx) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                  child: ExpenseSchedulerEdit(wallet: widget.wallet,),
+                                );
+                              }
+                          );
+
+                          setState(() {
+                            if (response != null) {
+                              widget.wallet.schedulers.add(response);
+                            }
+                          });
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(Icons.add, color: cPrimary, size: 20,),
+                            Text("Thêm mới", style: TextStyle(color: cPrimary, fontSize: 12),)
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-          Text(
-            "Hạn mức tối đa: "
-                "${widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseLimit)} VNĐ"}",
-            style: descriptionStyle(),
-          ),
-          Text(
-            "Mức cảnh báo 1: "
-                "${widget.wallet.expenseWarningLevel1 == null || widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseWarningLevel1)}%"}",
-            style: descriptionStyle(),
-          ),
-          Text(
-            "Mức cảnh báo 2: "
-                "${widget.wallet.expenseWarningLevel2 == null || widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseWarningLevel2)}%"}",
-            style: descriptionStyle(),
-          ),
-          Text(
-            "Mức cảnh báo 3: "
-                "${widget.wallet.expenseWarningLevel3 == null || widget.wallet.expenseLimit == null ? "Chưa thiết lập" : "${toAmountFormat(widget.wallet.expenseWarningLevel3)}%"}",
-            style: descriptionStyle(),
-          )
-        ],
+                  const SizedBox(height: 10,),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: widget.wallet.schedulers.length,
+                      itemBuilder: (ctx, idx) {
+                        ExpenseSchedulerResponse item = widget.wallet.schedulers[idx];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              getTimeIntervalDesc(MapEntry(item.timeInterval, item.timeValue)),
+                              style: descriptionStyle(),
+                            ),
+                            GestureDetector(
+                              child: ExpenseItem(expense: item.data),
+                              onLongPress: () {
+                                log("Editing opened");
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 80,),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

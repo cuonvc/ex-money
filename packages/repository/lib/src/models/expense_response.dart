@@ -51,7 +51,7 @@ class ExpenseResponse {
         amount: data['amount'],
         categoryIconImage: data['categoryIconImage'],
         currencyUnit: data['currencyUnit'],
-        entryDate: data['entryDate'],
+        entryDate: data['entryDate'] ?? '',
         entryType: data['entryType'],
         type: data['type'],
         walletId: data['walletId'],
@@ -90,4 +90,29 @@ class ExpenseResponse {
       'updatedBy': data.updatedBy
     };
   }
+
+  static ExpenseResponse empty() {
+    return ExpenseResponse(
+        id: 0,
+        status: '',
+        description: '',
+        amount: 0,
+        categoryIconImage: '',
+        currencyUnit: '',
+        entryDate: '',
+        entryType: '',
+        type: '',
+        walletId: 0,
+        walletName: '',
+        categoryId: 0,
+        categoryName: '',
+        parentCategoryId: 0,
+        parentCategoryName: '',
+        createdAt: '',
+        createdBy: '',
+        updatedAt: '',
+        updatedBy: ''
+    );
+  }
+
 }

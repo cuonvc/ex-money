@@ -11,6 +11,7 @@ const String response_data = "data";
 class ExpenseConstant {
   static const String entry_type_income = "INCOME";
   static const String entry_type_expense = "EXPENSE";
+  static const String entry_type_schedule = "SCHEDULE";
   static const String type_manual = "MANUAL";
   static const String type_bank = "BANK"; //...
 }

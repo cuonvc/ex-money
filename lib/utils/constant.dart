@@ -41,6 +41,16 @@ class CategorySaveType {
   };
 }
 
+class ScheduleTimeIntervalType {
+  static MapEntry<String, String> monthly = const MapEntry("MONTHLY", "Hằng tháng");
+  static MapEntry<String, String> weekly = const MapEntry("WEEKLY", "Hằng tuần");
+  static MapEntry<String, String> daily = const MapEntry("DAILY", "Hằng ngày");
+  // static MapEntry<String, String> per_hour = const MapEntry("PER_HOUR", "Mỗi giờ");
+  // static MapEntry<String, String> per_minute = const MapEntry("PER_MINUTE", "Mỗi phút");
+
+  static List<MapEntry<String, String>> interval_type_list = [monthly, weekly, daily];
+}
+
 class CategoryIcon {
   static List<String> list = [
   "health",
