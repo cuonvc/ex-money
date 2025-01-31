@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:ex_money/screens/main/blocs/create_expense_scheduler/create_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_category/get_category_bloc.dart';
+import 'package:ex_money/screens/main/blocs/update_expense_scheduler/update_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/views/category/category_all.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
@@ -17,7 +18,8 @@ import 'package:repository/repository.dart';
 
 class ExpenseSchedulerEdit extends StatefulWidget {
   final WalletResponse wallet;
-  const ExpenseSchedulerEdit({super.key, required this.wallet});
+  final ExpenseSchedulerResponse? item;
+  const ExpenseSchedulerEdit({super.key, required this.wallet, required this.item});
 
   @override
   State<ExpenseSchedulerEdit> createState() => _ExpenseSchedulerEditState();
@@ -59,7 +61,9 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
     rootHeight = MediaQuery.of(context).size.height / 1.8;
     isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    return BlocListener<CreateExpenseSchedulerBloc, CreateExpenseSchedulerState>(
+    return MultiBlocListener(
+  listeners: [
+    BlocListener<CreateExpenseSchedulerBloc, CreateExpenseSchedulerState>(
         listener: (context, state) {
           if(state is CreateExpenseSchedulerLoading) {
             setState(() {
@@ -72,7 +76,23 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
             Navigator.pop(context, state.response);
           }
         },
-        child: GestureDetector(
+    ),
+    BlocListener<UpdateExpenseSchedulerBloc, UpdateExpenseSchedulerState>(
+      listener: (context, state) {
+        if(state is UpdateExpenseSchedulerLoading) {
+          setState(() {
+            isLoading = true;
+          });
+        } else if (state is UpdateExpenseSchedulerFailure) {
+          Navigator.pop(context, null);
+          showDialogResponse(context, false, "Lên lịch chi tiêu", state.message);
+        } else if (state is UpdateExpenseSchedulerSuccess) {
+          Navigator.pop(context, state.response);
+        }
+      },
+    ),
+  ],
+  child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: AlertDialog(
               shape: RoundedRectangleBorder(
@@ -91,10 +111,10 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                       child: const Icon(Icons.close),
                     ),
                   ),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Chi tiêu định kỳ", style: TextStyle(fontSize: 18),),
+                      Text(widget.item == null ? "Chi tiêu định kỳ" : "Chỉnh sửa", style: TextStyle(fontSize: 18),),
                     ],
                   ),
                 ],
@@ -112,7 +132,7 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            typeAmount(),
+                            typeAmount(widget.item),
                             Row(
                               children: [
                                 iconStyle(Icons.wallet),
@@ -121,9 +141,9 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                               ],
                             ),
                             const SizedBox(height: 20,),
-                            selectCategory(walletIdController.text),
+                            selectCategory(walletIdController.text, widget.item),
                             const SizedBox(height: 10,),
-                            noteInput(),
+                            noteInput(widget.item),
                             selectIntervalType(rootHeight),
                             selectDateTime(),
                           ],
@@ -137,7 +157,7 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                             child: !isLoading ? buttonView(true, "Lưu", null) : buttonLoading(false, null),
                             onPressed: () {
                               String rawAmount = amountController.text;
-                              ExpenseCreateRequest expense = ExpenseCreateRequest(
+                              ExpenseCreateRequest? expense = widget.item == null ? ExpenseCreateRequest(
                                 description: noteController.text,
                                 amount: rawAmount.isNotEmpty
                                     ? num.parse(rawAmount.substring(0, rawAmount.length - 4))
@@ -147,7 +167,7 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                                 type: ExpenseConstant.entry_type_schedule, //tạm
                                 walletId: widget.wallet.id,
                                 categoryId: numberFromString(categoryIdController.text),
-                              );
+                              ) : null;
 
                               ExpenseSchedulerRequest request = ExpenseSchedulerRequest(
                                 expense: expense,
@@ -156,12 +176,16 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                                 timeValue: dateOrTimeVal
                               );
 
-                              if (amountController.text.isEmpty) {
-                                showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa nhập số tiền");
-                              } else if (categoryIdController.text.isEmpty || categoryIdController.text.compareTo("0") == 0) {
-                                showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa chọn danh mục");
+                              if (widget.item == null) {
+                                if (amountController.text.isEmpty) {
+                                  showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa nhập số tiền");
+                                } else if (categoryIdController.text.isEmpty || categoryIdController.text.compareTo("0") == 0) {
+                                  showDialogWarningSingle(context, "Thêm chi tiêu", "Bạn chưa chọn danh mục");
+                                } else {
+                                  context.read<CreateExpenseSchedulerBloc>().add(CreateExpenseSchedulerEv(request: request));
+                                }
                               } else {
-                                context.read<CreateExpenseSchedulerBloc>().add(CreateExpenseSchedulerEv(request: request));
+                                context.read<UpdateExpenseSchedulerBloc>().add(UpdateExpenseSchedulerEv(id: widget.item!.id, request: request));
                               }
                             },
                           ),
@@ -172,12 +196,13 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                 ),
               )
           ),
-        )
-    );
+        ),
+);
   }
 
-  Widget typeAmount() {
+  Widget typeAmount(ExpenseSchedulerResponse? oldData) {
     return TextField(
+      readOnly: oldData != null,
       controller: amountController,
       keyboardType: TextInputType.number,
       inputFormatters: [
@@ -191,8 +216,8 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
           fontWeight: FontWeight.w900
       ),
       textAlign: TextAlign.center,
-      decoration: const InputDecoration(
-        hintText: '0 VND',
+      decoration: InputDecoration(
+        hintText: oldData == null ? '0 VND' : '${oldData.data.amount} VND',
         hintStyle: TextStyle(
             color: cTextInputHint,
             fontSize: 28,
@@ -204,7 +229,7 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
     );
   }
 
-  Row selectCategory(String walletId) {
+  Row selectCategory(String walletId, ExpenseSchedulerResponse? oldData) {
     num id = numberFromString(walletId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,43 +240,46 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
             iconStyle(Icons.format_list_bulleted),
             const SizedBox(width: 10,),
             categorySelected.id == 0
-                ? Text("Danh mục", style: hintStyle(),)
+                ? Text(oldData == null ? "Danh mục" : oldData.data.categoryName, style: hintStyle(),)
                 : Text(categorySelected.name, style: selectedStyle(),)
           ],
         ),
         const SizedBox(width: 8,),
-        GestureDetector(
-          onTap: () async {
-            // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
-            ExpenseCategoryResponse? selected = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext ctx) => BlocProvider(
-                        create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: numberFromString(walletId), isReload: false)),
-                        child: CategoryAll(walletId: id,)
-                    )
-                )
-            );
-            if (selected != null) {
-              setState (() {
-                categorySelected = selected;
-                categoryIdController.text = selected.id.toString();
-              });
-            }
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text("Tất cả", style: hintStyle(),),
-              iconStyle(Icons.keyboard_arrow_right)
-            ],
+        Visibility(
+          visible: oldData == null,
+          child: GestureDetector(
+            onTap: () async {
+              // Navigator.pushNamed(context, NavigatePath.categoryListPath, arguments: walletId);
+              ExpenseCategoryResponse? selected = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext ctx) => BlocProvider(
+                          create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: numberFromString(walletId), isReload: false)),
+                          child: CategoryAll(walletId: id,)
+                      )
+                  )
+              );
+              if (selected != null) {
+                setState (() {
+                  categorySelected = selected;
+                  categoryIdController.text = selected.id.toString();
+                });
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Tất cả", style: hintStyle(),),
+                iconStyle(Icons.keyboard_arrow_right)
+              ],
+            ),
           ),
         )
       ],
     );
   }
 
-  Widget noteInput() {
+  Widget noteInput(ExpenseSchedulerResponse? oldData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -260,9 +288,10 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
         Expanded(
           child: TextField(
             controller: noteController,
+            readOnly: oldData != null,
             style: hintStyle(),
             decoration: InputDecoration(
-                hintText: "Ghi chú",
+                hintText: oldData == null ? "Ghi chú" : (oldData.data.description == null || oldData.data.description!.isNotEmpty ? oldData.data.description : "Ghi chú"),
                 hintStyle: hintStyle(),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none

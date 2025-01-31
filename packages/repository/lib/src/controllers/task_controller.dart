@@ -17,4 +17,16 @@ class TaskController {
       body: jsonEncode(ExpenseSchedulerRequest.toMap(request))
     );
   }
+
+  Future<dynamic> expenseSchedulerUpdate(num id, ExpenseSchedulerRequest request) async {
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+    return http.put(
+        Uri.parse('$domain/api/task/expense_scheduler/$id?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(ExpenseSchedulerRequest.toMap(request))
+    );
+  }
 }

@@ -5,6 +5,7 @@ import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dar
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
+import 'package:ex_money/screens/main/blocs/update_expense_scheduler/update_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/blocs/wallet_setting/wallet_setting_bloc.dart';
 import 'package:ex_money/screens/main/views/stats/stats_pie_chart.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/create_wallet.dart';
@@ -317,6 +318,9 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                     ),
                                     BlocProvider(
                                       create: (context) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
                                     ),
                                   ],
                                   child: ConfigTab(wallet: walletList[currentWalletIndex],),

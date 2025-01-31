@@ -1,7 +1,7 @@
 import 'package:repository/repository.dart';
 
 class ExpenseSchedulerRequest {
-  late ExpenseCreateRequest expense;
+  late ExpenseCreateRequest? expense;
   late String timeInterval;
   late int timeValue;
 
@@ -12,7 +12,10 @@ class ExpenseSchedulerRequest {
   });
 
   static toMap(ExpenseSchedulerRequest request) {
-    Map<String, dynamic> expense = ExpenseCreateRequest.toMap(request.expense);
+    Map<String, dynamic> expense = {};
+    if (request.expense != null) {
+      expense = ExpenseCreateRequest.toMap(request.expense!);
+    }
 
     return {
       'expense': expense,

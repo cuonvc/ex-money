@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/create_expense_scheduler/create_expense_scheduler_bloc.dart';
+import 'package:ex_money/screens/main/blocs/update_expense_scheduler/update_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/views/wallet_list/widgets/expense_scheduler_edit.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
@@ -243,9 +244,16 @@ class _ConfigTabState extends State<ConfigTab> {
                           ExpenseSchedulerResponse? response = await showDialog(
                               context: context,
                               builder: (BuildContext ctx) {
-                                return  BlocProvider(
-                                  create: (ctx) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
-                                  child: ExpenseSchedulerEdit(wallet: widget.wallet,),
+                                return  MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (ctx) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                    ),
+                                  ],
+                                  child: ExpenseSchedulerEdit(wallet: widget.wallet, item: null,),
                                 );
                               }
                           );
@@ -280,8 +288,34 @@ class _ConfigTabState extends State<ConfigTab> {
                             ),
                             GestureDetector(
                               child: ExpenseItem(expense: item.data),
-                              onLongPress: () {
+                              onLongPress: () async {
                                 log("Editing opened");
+                                ExpenseSchedulerResponse? response = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                      return  MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (ctx) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                          ),
+                                        ],
+                                        child: ExpenseSchedulerEdit(wallet: widget.wallet, item: item,),
+                                      );
+                                    }
+                                );
+
+                                if (response != null) {
+                                  setState(() {
+                                    for (int index = 0; index < widget.wallet.schedulers.length; index++) {
+                                      if (widget.wallet.schedulers[index].id == response.id) {
+                                        widget.wallet.schedulers[index] = response;
+                                      }
+                                    }
+                                  });
+                                }
                               },
                             ),
                           ],
