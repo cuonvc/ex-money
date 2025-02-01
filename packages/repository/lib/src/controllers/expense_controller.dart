@@ -83,4 +83,16 @@ class ExpenseController {
         }
     );
   }
+
+  Future<dynamic> getConfirmExpenseFromSpeech(String text) async {
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+    return http.post(
+        Uri.parse('$domain/api/expense/voice?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+          'Content-Type': 'application/json'
+        },
+      body: text
+    );
+  }
 }

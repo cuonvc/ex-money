@@ -111,6 +111,23 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     }
   }
 
+  @override
+  Future getConfirmExpenseFromSpeech(String text) async {
+    try {
+      var resp = await expenseController.getConfirmExpenseFromSpeech(text);
+      if (resp.statusCode == 401) {
+        await userRepository.renewAccessToken();
+        resp = await expenseController.getConfirmExpenseFromSpeech(text);
+      }
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode(resp.bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log("Get confirm expense from Speech error - $e");
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
 
 
 }

@@ -7,4 +7,5 @@ abstract class ExpenseRepository {
   Future<dynamic> updateExpense(num id, ExpenseUpdateRequest request);
   Future<dynamic> deleteExpense(num id);
   Future<dynamic> getExpenseFilterResource(num? walletId);
+  Future<dynamic> getConfirmExpenseFromSpeech(String text);
 }
