@@ -16,7 +16,8 @@ import '../utils/constant.dart';
 
 class ExpenseEdit extends StatefulWidget {
   final ExpenseEditResource resource;
-  const ExpenseEdit({super.key, required this.resource});
+  final ExpenseConfirmResponse? confirmFromSpeech;
+  const ExpenseEdit({super.key, required this.resource, required this.confirmFromSpeech});
 
   @override
   State<ExpenseEdit> createState() => _ExpenseEditState();
@@ -32,6 +33,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
   late DateTime selectedDateTime;
 
   ExpenseEditResource? dataSrc;
+  ExpenseConfirmResponse? confirmResponse; //from speech
   String walletNameDisp = "";
   List<ExpenseCategoryResponse> categories = []; //dung de show popular cateogry
   List<Map<dynamic, dynamic>> otherWalletMap = [];
@@ -56,11 +58,23 @@ class _ExpenseEditState extends State<ExpenseEdit> {
   Widget build(BuildContext context) {
 
     dataSrc ??= widget.resource;
+    confirmResponse = widget.confirmFromSpeech;
     if (walletIdController.text.isEmpty) {
       walletIdController.text = dataSrc!.walletId.toString();
     }
     if (walletNameDisp.isEmpty) {
       walletNameDisp = dataSrc!.walletName;
+    }
+
+    if (confirmResponse != null && confirmResponse!.walletId != null && confirmResponse!.walletName != null) {
+      walletIdController.text = confirmResponse!.walletId.toString();
+      walletNameDisp = confirmResponse!.walletName!;
+    }
+
+    if (confirmResponse != null && confirmResponse!.categoryId != null && confirmResponse!.categoryName != null) {
+      categorySelected.id = confirmResponse!.categoryId!;
+      categorySelected.name = confirmResponse!.categoryName!;
+      categoryIdController.text = confirmResponse!.categoryId!.toString();
     }
 
     var categories = ExpenseCategoryResponse.fromList(dataSrc!.categories); //dung de show popular cateogry
@@ -121,12 +135,12 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                     height: rootHeight - (isKeyboardVisible ? 100 : 60),
                     child: Column(
                       children: [
-                        typeAmount(),
-                        selectWallet(),
+                        typeAmount(confirmResponse),
+                        selectWallet(confirmResponse),
                         const SizedBox(height: 20,),
-                        selectCategory(walletIdController.text),
+                        selectCategory(walletIdController.text, confirmResponse),
                         const SizedBox(height: 10,),
-                        noteInput(),
+                        noteInput(confirmResponse),
                         selectDateTime(),
                       ],
                     ),
@@ -172,7 +186,10 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Widget typeAmount() {
+  Widget typeAmount(ExpenseConfirmResponse? fromSpeech) {
+    if (fromSpeech != null && fromSpeech.amount != null) {
+      amountController.text = "${fromSpeech.amount} VND"; //reduce ' VND' later
+    }
     return TextField(
       controller: amountController,
       keyboardType: TextInputType.number,
@@ -200,7 +217,10 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Column selectWallet() {
+  Column selectWallet(ExpenseConfirmResponse? fromSpeech) {
+    if (fromSpeech != null && fromSpeech.walletId != null && fromSpeech.walletName != null) {
+      walletNameDisp = fromSpeech.walletName!;
+    }
     return Column(
       children: [
         Row(
@@ -275,8 +295,12 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Row selectCategory(String walletId) {
+  Row selectCategory(String walletId, ExpenseConfirmResponse? fromSpeech) {
     num id = numberFromString(walletId);
+    if (fromSpeech != null && fromSpeech.categoryId != null && fromSpeech.categoryName != null) {
+      categorySelected.id = fromSpeech.categoryId!;
+      categorySelected.name = fromSpeech.categoryName!;
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -322,7 +346,10 @@ class _ExpenseEditState extends State<ExpenseEdit> {
     );
   }
 
-  Widget noteInput() {
+  Widget noteInput(ExpenseConfirmResponse? fromSpeech) {
+    if (fromSpeech != null) {
+      noteController.text = fromSpeech.description;
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

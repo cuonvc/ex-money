@@ -72,7 +72,7 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ExpenseResponse? expenseAdd = widget.newExpense;
+    final ExpenseResponse? expenseAdd = ModalRoute.of(context)!.settings.arguments as ExpenseResponse?;
     return BlocBuilder<HomeOverviewBloc, HomeOverviewState>(
       builder: (context, state) {
         if (state is HomeOverviewFailure) {
@@ -84,13 +84,11 @@ class _HomeState extends State<HomeScreen> {
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
           List<ExpenseResponse> expenseList = response.ownerExpenses;
+          if (expenseAdd != null) {
+            expenseList.add(expenseAdd);
+          }
           notificationList = response.notifications;
           int unseenNotiCount = notificationList.where((item) => !item.seen).length;
-          // if (expenseAdd != null) {
-          //   setState(() {
-          //     expenseList.add(expenseAdd);
-          //   });
-          // }
 
           return RefreshIndicator(
             onRefresh: () async {

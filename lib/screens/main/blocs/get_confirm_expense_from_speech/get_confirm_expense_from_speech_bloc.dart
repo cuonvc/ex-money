@@ -17,8 +17,8 @@ class GetConfirmExpenseFromSpeechBloc extends Bloc<GetConfirmExpenseFromSpeechEv
       try {
         HttpResponse response = await expenseRepository.getConfirmExpenseFromSpeech(event.text);
         if (response.code == 0) {
-          ExpenseResponse expense = ExpenseResponse.fromMap(response.data[0]);
-          emit(GetConfirmExpenseFromSpeechSuccess(message: response.message, expenseSuggest: expense));
+          ExpenseConfirmResponse expense = ExpenseConfirmResponse.fromMap(response.data[0]);
+          emit(GetConfirmExpenseFromSpeechSuccess(message: response.message, response: expense));
         } else {
           emit(GetConfirmExpenseFromSpeechFailure(message: response.message));
         }

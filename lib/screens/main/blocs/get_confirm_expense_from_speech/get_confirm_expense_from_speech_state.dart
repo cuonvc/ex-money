@@ -19,10 +19,10 @@ final class GetConfirmExpenseFromSpeechFailure extends GetConfirmExpenseFromSpee
 
 final class GetConfirmExpenseFromSpeechSuccess extends GetConfirmExpenseFromSpeechState {
   final String message;
-  final ExpenseResponse? expenseSuggest;
+  final ExpenseConfirmResponse response;
 
   const GetConfirmExpenseFromSpeechSuccess({
     required this.message,
-    required this.expenseSuggest
+    required this.response
   });
 }

@@ -111,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (BuildContext ctx) {
                               return  BlocProvider(
                                 create: (ctx) => AddExpenseBloc(ExpenseRepositoryImpl()),
-                                child: ExpenseEdit(resource: resource),
+                                child: ExpenseEdit(resource: resource, confirmFromSpeech: null,),
                               );
                             }
                         );
