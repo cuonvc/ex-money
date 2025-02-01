@@ -41,7 +41,7 @@ String getDateTimeToRequest(String dateTime) {
 }
 
 String getCurrentMonth(int month) {
-  return DateTime.now().month == month ? "Này" : month.toString();
+  return DateTime.now().month == month ? "này" : month.toString();
 }
 
 String getAmountFormated(int amount) {

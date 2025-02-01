@@ -323,7 +323,7 @@ class _HomeState extends State<HomeScreen> {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: MediaQuery.sizeOf(context).width / 4,
+                    width: MediaQuery.sizeOf(context).width / 3.5,
                     height: 300,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
