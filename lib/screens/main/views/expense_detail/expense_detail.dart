@@ -103,6 +103,10 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
       descriptionController.text = (detail.description ?? "");
     }
 
+    void onBackScreen(BuildContext ctx, ExpenseResponse expense) {
+      Navigator.pop(context, response);
+    }
+
 
     return MultiBlocListener(
       listeners: [
@@ -147,140 +151,148 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
           },
         ),
       ],
-      child: Scaffold(
-        backgroundColor: cBackground,
-        appBar: AppBar(
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (!didPop) {
+            onBackScreen(context, response!);
+          }
+        },
+        child: Scaffold(
           backgroundColor: cBackground,
-          leading: ModalRoute.of(context)!.canPop
-              ? IconButton(onPressed: () => Navigator.pop(context, response), icon: const Icon(Icons.arrow_back_ios_new))
-              : null,
-          title: const Text(
-            "Chi tiết chi chi tiêu",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          appBar: AppBar(
+            backgroundColor: cBackground,
+            leading: ModalRoute.of(context)!.canPop
+                ? IconButton(onPressed: () => onBackScreen(context, response!), icon: const Icon(Icons.arrow_back_ios_new))
+                : null,
+            title: const Text(
+              "Chi tiết chi chi tiêu",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            centerTitle: true,
           ),
-          centerTitle: true,
-        ),
 
-        body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-        child: ListView(
-          children: [
-            const SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Thời gian", style: labelFormat(),),
-                selectDateTime(detail)
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Ví", style: labelFormat(),),
-                Text(detail.walletName, style: valueFormat()),
-              ],
-            ),
-            const SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Danh mục", style: labelFormat(),),
-                selectCategory(detail)
-              ],
-            ),
-            const SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Số tiền", style: labelFormat(),),
-                selectAmount(detail)
-              ],
-            ),
-            const SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Phương thức", style: labelFormat(),),
-                Text("${detail.type}", style: valueFormat()),
-              ],
-            ),
-            const SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Chi chú", style: labelFormat(),),
-                Row(
-                  children: [
-                    Text(descriptionController.text, style: !isEditing ? valueFormat() : labelFormat()),
-                    const SizedBox(width: 6,),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10,),
-            Visibility(
-              visible: isEditing,
-              child: BaseDescriptionField(
-                  controller: descriptionController,
-                  hintText: detail.description,
-                  minLine: 2,
-                  maxLine: 4
+          body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+          child: ListView(
+            children: [
+              const SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Thời gian", style: labelFormat(),),
+                  selectDateTime(detail)
+                ],
               ),
-            ),
-            const SizedBox(height: 50,),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isEditing = !isEditing;
-                  dateTimeController.clear();
-                  categoryIdController.clear();
-                  categoryNameController.clear();
-                  amountController.clear();
-                  descriptionController.clear();
-                });
-              },
-              child: isLoading ? buttonLoading(false, null) : (!isEditing ? buttonView(true, "Sửa", null) : buttonView(false, "Hủy", null)),
-            ),
-            Visibility(
-              visible: isEditing,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: GestureDetector(
-                  onTap: () {
-                    // log("New entry date: ${getDateTimeToRequest(selectedDateTime.toString())}");
-                    // log("New amount: ${amountController.text}");
-                    // log("New category: ${categoryIdController.text}");
-                    // log("New description: ${descriptionController.text}");
-                    ExpenseUpdateRequest req = ExpenseUpdateRequest(
-                        description: descriptionController.text,
-                        amount: fromAmountFormatted(amountController.text),
-                        entryDate: getDateTimeToRequest(selectedDateTime.toString()),
-                        categoryId: numberFromString(categoryIdController.text)
-                    );
-                    context.read<UpdateExpenseBloc>().add(UpdateExpenseEv(id: detail.id, request: req));
-                    setState(() {
-                      isEditing = false;
-                    });
-                  },
-                  child: buttonView(true, "Lưu", null),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Ví", style: labelFormat(),),
+                  Text(detail.walletName, style: valueFormat()),
+                ],
+              ),
+              const SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Danh mục", style: labelFormat(),),
+                  selectCategory(detail)
+                ],
+              ),
+              const SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Số tiền", style: labelFormat(),),
+                  selectAmount(detail)
+                ],
+              ),
+              const SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Phương thức", style: labelFormat(),),
+                  Text("${detail.type}", style: valueFormat()),
+                ],
+              ),
+              const SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Chi chú", style: labelFormat(),),
+                  Row(
+                    children: [
+                      Text(descriptionController.text, style: !isEditing ? valueFormat() : labelFormat()),
+                      const SizedBox(width: 6,),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Visibility(
+                visible: isEditing,
+                child: BaseDescriptionField(
+                    controller: descriptionController,
+                    hintText: detail.description,
+                    minLine: 2,
+                    maxLine: 4
                 ),
               ),
-            )
-          ],
-        ),
-        ),
-        bottomSheet: Visibility(
-          visible: !isEditing,
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen, vertical: 20),
-            child: GestureDetector(
-              onTap: () async {
-                bool isDelete = await showDialogConfirm(context, "Xóa chi tiêu", "Bạn có chắc chắn xóa chi tiêu này?", null, "Xóa");
-                if (isDelete) {
-                  context.read<DeleteExpenseBloc>().add(DeleteExpenseEv(detail.id));
-                }
-              }, child: buttonView(false, "Xóa", Colors.red)
+              const SizedBox(height: 50,),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isEditing = !isEditing;
+                    dateTimeController.clear();
+                    categoryIdController.clear();
+                    categoryNameController.clear();
+                    amountController.clear();
+                    descriptionController.clear();
+                  });
+                },
+                child: isLoading ? buttonLoading(false, null) : (!isEditing ? buttonView(true, "Sửa", null) : buttonView(false, "Hủy", null)),
+              ),
+              Visibility(
+                visible: isEditing,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      // log("New entry date: ${getDateTimeToRequest(selectedDateTime.toString())}");
+                      // log("New amount: ${amountController.text}");
+                      // log("New category: ${categoryIdController.text}");
+                      // log("New description: ${descriptionController.text}");
+                      ExpenseUpdateRequest req = ExpenseUpdateRequest(
+                          description: descriptionController.text,
+                          amount: fromAmountFormatted(amountController.text),
+                          entryDate: getDateTimeToRequest(selectedDateTime.toString()),
+                          categoryId: numberFromString(categoryIdController.text)
+                      );
+                      context.read<UpdateExpenseBloc>().add(UpdateExpenseEv(id: detail.id, request: req));
+                      setState(() {
+                        isEditing = false;
+                      });
+                    },
+                    child: buttonView(true, "Lưu", null),
+                  ),
+                ),
+              )
+            ],
+          ),
+          ),
+          bottomSheet: Visibility(
+            visible: !isEditing,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen, vertical: 20),
+              child: GestureDetector(
+                onTap: () async {
+                  bool isDelete = await showDialogConfirm(context, "Xóa chi tiêu", "Bạn có chắc chắn xóa chi tiêu này?", null, "Xóa");
+                  if (isDelete) {
+                    context.read<DeleteExpenseBloc>().add(DeleteExpenseEv(detail.id));
+                  }
+                }, child: buttonView(false, "Xóa", Colors.red)
+              ),
             ),
           ),
         ),

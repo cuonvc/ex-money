@@ -83,205 +83,217 @@ class _ExpenseAllViewState extends State<ExpenseAllView> {
     super.initState();
   }
 
+  void onBackScreen(BuildContext ctx) {
+    Navigator.pop(ctx);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          onBackScreen(context);
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        leading: ModalRoute.of(context)!.canPop
-            ? IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_new))
-            : null,
-        title: const Text(
-          "Tất cả giao dịch",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: ModalRoute.of(context)!.canPop
+              ? IconButton(onPressed: () => onBackScreen(context), icon: const Icon(Icons.arrow_back_ios_new))
+              : null,
+          title: const Text(
+            "Tất cả giao dịch",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<GetExpenseFilterResourceBloc, GetExpenseFilterResourceState>(
-        builder: (context, state) {
-          if (state is GetExpenseFilterResourceLoading) {
-            return const Center(child: Loading(loadingColor: null,),);
-          } else if (state is GetExpenseFilterResourceSuccess) {
-            ExpenseFilterResource resource = state.resource;
-            walletSelected = resource.walletId;
-            String walletDisplay = resource.walletName;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Visibility(
-                        visible: searchSelected,
-                        child: SizedBox(
-                          width: MediaQuery.sizeOf(context).width - 2 * ConstantSize.hozPadScreen,
-                          child: BaseTextFieldSubmit(
-                            controller: searchTxtController,
-                            inputType: TextInputType.text,
-                            icon: Icons.search,
-                            hintText: "Nhập danh mục, mô tả hoặc số tiền",
-                            submitBtn: true,
-                            fetchMethod: fetchSearch,
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: !searchSelected,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              child: Icon(Icons.search),
-                              onTap: () {
-                                setState(() {
-                                  searchSelected = true;
-                                });
-                              },
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                DateTimeRange? picked = await showDateRangePicker(
-                                  context: context,
-                                  locale: const Locale("vi"),
-                                  initialDateRange: (startDate == null || endDate == null)
-                                      ? null
-                                      : DateTimeRange(start: dateTimeFromString(startDate!), end: dateTimeFromString(endDate!)),
-                                  firstDate: DateTime(DateTime.now().year - 5),
-                                  lastDate: DateTime.now(),
-                                );
-                                if (picked != null) {
-                                  setState(() {
-                                    startDate = getDateTimeToRequest(picked.start.toString());
-                                    endDate = getDateTimeToRequest(picked.end.toString());
-                                  });
-                                  fetchSearch("");
-                                }
-                              },
-                              child: Icon(Icons.calendar_month),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Visibility(
-                    visible: searchSelected,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+        body: BlocBuilder<GetExpenseFilterResourceBloc, GetExpenseFilterResourceState>(
+          builder: (context, state) {
+            if (state is GetExpenseFilterResourceLoading) {
+              return const Center(child: Loading(loadingColor: null,),);
+            } else if (state is GetExpenseFilterResourceSuccess) {
+              ExpenseFilterResource resource = state.resource;
+              walletSelected = resource.walletId;
+              String walletDisplay = resource.walletName;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Text("Hủy", style: TextStyle(color: cTextDisable, fontWeight: FontWeight.w500),),
+                        Visibility(
+                          visible: searchSelected,
+                          child: SizedBox(
+                            width: MediaQuery.sizeOf(context).width - 2 * ConstantSize.hozPadScreen,
+                            child: BaseTextFieldSubmit(
+                              controller: searchTxtController,
+                              inputType: TextInputType.text,
+                              icon: Icons.search,
+                              hintText: "Nhập danh mục, mô tả hoặc số tiền",
+                              submitBtn: true,
+                              fetchMethod: fetchSearch,
+                            ),
                           ),
-                          onTap: () {
-                            setState(() {
-                              searchSelected = false;
-                              searchTxtController.clear();
-                              fetchSearch;
-                            });
-                          },
                         ),
-                        const SizedBox(width: 10,)
+                        Visibility(
+                          visible: !searchSelected,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                child: Icon(Icons.search),
+                                onTap: () {
+                                  setState(() {
+                                    searchSelected = true;
+                                  });
+                                },
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  DateTimeRange? picked = await showDateRangePicker(
+                                    context: context,
+                                    locale: const Locale("vi"),
+                                    initialDateRange: (startDate == null || endDate == null)
+                                        ? null
+                                        : DateTimeRange(start: dateTimeFromString(startDate!), end: dateTimeFromString(endDate!)),
+                                    firstDate: DateTime(DateTime.now().year - 5),
+                                    lastDate: DateTime.now(),
+                                  );
+                                  if (picked != null) {
+                                    setState(() {
+                                      startDate = getDateTimeToRequest(picked.start.toString());
+                                      endDate = getDateTimeToRequest(picked.end.toString());
+                                    });
+                                    fetchSearch("");
+                                  }
+                                },
+                                child: Icon(Icons.calendar_month),
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => {
-                          setState(() {
-                            filterByWalletVisible = !filterByWalletVisible;
-                            filterByMemberVisible = false;
-                            filterByCategoryVisible = false;
-                          })
-                        },
-                        child: Row(
-                          children: [
-                            Text(walletDisplay),
-                            const SizedBox(width: 2,),
-                            AnimatedRotation(
-                              turns: filterByWalletVisible ? 0.75 : 0.5,
-                              duration: const Duration(milliseconds: 200),
-                              child: const Icon(
-                                Icons.keyboard_arrow_left,
-                                color: Colors.grey,
-                                size: 26,
-                              )
-                          )
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => {
-                          setState(() {
-                            filterByMemberVisible = !filterByMemberVisible;
-                            filterByCategoryVisible = false;
-                            filterByWalletVisible = false;
-                          })
-                        },
-                        child: Row(
-                          children: [
-                            Text(authorDisplay.isEmpty ? "Chi tiêu của bạn" : authorDisplay),
-                            AnimatedRotation(
-                              turns: filterByMemberVisible ? 0.75 : 0.5,
-                              duration: const Duration(milliseconds: 200),
-                              child: const Icon(
-                                Icons.keyboard_arrow_left,
-                                color: Colors.grey,
-                                size: 26,
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => {
-                          setState(() {
-                            filterByCategoryVisible = !filterByCategoryVisible;
-                            filterByMemberVisible = false;
-                            filterByWalletVisible = false;
-                          })
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              categoryDisplay.isEmpty ? "Danh mục" : categoryDisplay,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                    Visibility(
+                      visible: searchSelected,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            child: const Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Text("Hủy", style: TextStyle(color: cTextDisable, fontWeight: FontWeight.w500),),
                             ),
-                            AnimatedRotation(
-                              turns: filterByCategoryVisible ? 0.75 : 0.5,
-                              duration: const Duration(milliseconds: 200),
-                              child: const Icon(
-                                Icons.keyboard_arrow_left,
-                                color: Colors.grey,
-                                size: 26,
-                              )
-                          )
-                          ],
-                        ),
+                            onTap: () {
+                              setState(() {
+                                searchSelected = false;
+                                searchTxtController.clear();
+                                fetchSearch;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 10,)
+                        ],
                       ),
-                    ],
-                  ),
-                  selectWallet(resource.otherWalletMap),
-                  selectMember(resource.members),
-                  selectCategory(resource.categories),
-                  const SizedBox(height: 20,),
-                  const Expanded(child: ExpenseListData())
-                ],
-              ),
-            );
-          } else if (state is GetExpenseFilterResourceFailure) {
-            return Center(child: Text("Failed: ${state.message}"),);
-          } else {
-            return const Center(child: Text("Error not define"),);
-          }
-        },
+                    ),
+                    const SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => {
+                            setState(() {
+                              filterByWalletVisible = !filterByWalletVisible;
+                              filterByMemberVisible = false;
+                              filterByCategoryVisible = false;
+                            })
+                          },
+                          child: Row(
+                            children: [
+                              Text(walletDisplay),
+                              const SizedBox(width: 2,),
+                              AnimatedRotation(
+                                turns: filterByWalletVisible ? 0.75 : 0.5,
+                                duration: const Duration(milliseconds: 200),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.grey,
+                                  size: 26,
+                                )
+                            )
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => {
+                            setState(() {
+                              filterByMemberVisible = !filterByMemberVisible;
+                              filterByCategoryVisible = false;
+                              filterByWalletVisible = false;
+                            })
+                          },
+                          child: Row(
+                            children: [
+                              Text(authorDisplay.isEmpty ? "Chi tiêu của bạn" : authorDisplay),
+                              AnimatedRotation(
+                                turns: filterByMemberVisible ? 0.75 : 0.5,
+                                duration: const Duration(milliseconds: 200),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.grey,
+                                  size: 26,
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => {
+                            setState(() {
+                              filterByCategoryVisible = !filterByCategoryVisible;
+                              filterByMemberVisible = false;
+                              filterByWalletVisible = false;
+                            })
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                categoryDisplay.isEmpty ? "Danh mục" : categoryDisplay,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              AnimatedRotation(
+                                turns: filterByCategoryVisible ? 0.75 : 0.5,
+                                duration: const Duration(milliseconds: 200),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.grey,
+                                  size: 26,
+                                )
+                            )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    selectWallet(resource.otherWalletMap),
+                    selectMember(resource.members),
+                    selectCategory(resource.categories),
+                    const SizedBox(height: 20,),
+                    const Expanded(child: ExpenseListData())
+                  ],
+                ),
+              );
+            } else if (state is GetExpenseFilterResourceFailure) {
+              return Center(child: Text("Failed: ${state.message}"),);
+            } else {
+              return const Center(child: Text("Error not define"),);
+            }
+          },
+        ),
       ),
     );
   }

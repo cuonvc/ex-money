@@ -31,72 +31,84 @@ class _CategoryAllState extends State<CategoryAll> {
     TextEditingController keywordController = TextEditingController();
     final data = widget.walletId;
 
-    return Scaffold(
-      backgroundColor: cBackground,
-      appBar: AppBar(
-        backgroundColor: cBackground,
-        leading: ModalRoute.of(context)!.canPop
-            ? IconButton(onPressed: () => Navigator.pop(context, null), icon: const Icon(Icons.arrow_back_ios_new))
-            : null,
-        centerTitle: true,
-        title: const Text("Tất cả danh mục", style: TextStyle(fontSize: 18),),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                var res = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext ctx) => MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                            create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
-                          ),
-                          BlocProvider(
-                            create: (context) => DeleteCategoryBloc(CategoryRepositoryImpl()),
-                          ),
-                        ], 
-                        child: CategoryDetail(category: ExpenseCategoryResponse.empty(), isCreateMode: true,),
-                      )
-                  ),
-                );
+    void onBackScreen(BuildContext ctx) {
+      Navigator.pop(context, null);
+    }
 
-                if (res != null) {
-                  context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: data, isReload: true));
-                }
-              },
-              icon: const Icon(Icons.add, color: cPrimary,)
-          )
-        ],
-      ),
-      body: BlocBuilder<GetCategoryBloc, GetCategoryState>(
-        builder: (context, state) {
-          if (state is GetCategoryFailure) {
-            return Center(child: Text(state.message),);
-          } else if (state is GetCategoryLoading) {
-            return const Center(child: Loading(loadingColor: null,),);
-          } else if (state is GetCategorySuccess) {
-            List<ExpenseCategoryResponse> list = state.data;
-            walletNameList = state.walletListInfo;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-              child: Column(
-                children: [
-                  BaseTextFieldSubmit(
-                      controller: keywordController,
-                      inputType: TextInputType.text,
-                      icon: Icons.search,
-                      hintText: "Tên, mô tả danh mục",
-                      submitBtn: true,
-                      fetchMethod: fetchSearch
-                  ),
-                  Expanded(child: ListView(children: _buildCategoryList(list),))
-                ],
-              ),
-            );
-          } else {
-            return const Center(child: Text("Ops! Có lỗi xảy ra"),);
-          }
-        },
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          onBackScreen(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: cBackground,
+        appBar: AppBar(
+          backgroundColor: cBackground,
+          leading: ModalRoute.of(context)!.canPop
+              ? IconButton(onPressed: () => onBackScreen(context), icon: const Icon(Icons.arrow_back_ios_new))
+              : null,
+          centerTitle: true,
+          title: const Text("Tất cả danh mục", style: TextStyle(fontSize: 18),),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  var res = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext ctx) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (ctx) => SaveCategoryBloc(CategoryRepositoryImpl()),
+                            ),
+                            BlocProvider(
+                              create: (context) => DeleteCategoryBloc(CategoryRepositoryImpl()),
+                            ),
+                          ],
+                          child: CategoryDetail(category: ExpenseCategoryResponse.empty(), isCreateMode: true,),
+                        )
+                    ),
+                  );
+
+                  if (res != null) {
+                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: data, isReload: true));
+                  }
+                },
+                icon: const Icon(Icons.add, color: cPrimary,)
+            )
+          ],
+        ),
+        body: BlocBuilder<GetCategoryBloc, GetCategoryState>(
+          builder: (context, state) {
+            if (state is GetCategoryFailure) {
+              return Center(child: Text(state.message),);
+            } else if (state is GetCategoryLoading) {
+              return const Center(child: Loading(loadingColor: null,),);
+            } else if (state is GetCategorySuccess) {
+              List<ExpenseCategoryResponse> list = state.data;
+              walletNameList = state.walletListInfo;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+                child: Column(
+                  children: [
+                    BaseTextFieldSubmit(
+                        controller: keywordController,
+                        inputType: TextInputType.text,
+                        icon: Icons.search,
+                        hintText: "Tên, mô tả danh mục",
+                        submitBtn: true,
+                        fetchMethod: fetchSearch
+                    ),
+                    Expanded(child: ListView(children: _buildCategoryList(list),))
+                  ],
+                ),
+              );
+            } else {
+              return const Center(child: Text("Ops! Có lỗi xảy ra"),);
+            }
+          },
+        ),
       ),
     );
   }
