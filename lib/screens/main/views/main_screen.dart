@@ -4,6 +4,7 @@ import 'package:ex_money/screens/main/blocs/delete_note/delete_note_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_note_list/get_note_list_bloc.dart';
 import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
+import 'package:ex_money/screens/main/blocs/save_note/save_note_bloc.dart';
 import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/voice/voice.dart';
@@ -60,6 +61,9 @@ class _MainScreenState extends State<MainScreen> {
         ),
         BlocProvider<GetNoteListBloc>(
           create: (context) => GetNoteListBloc(NoteRepositoryImpl()),
+        ),
+        BlocProvider<SaveNoteBloc>(
+          create: (context) => SaveNoteBloc(NoteRepositoryImpl()),
         ),
         BlocProvider<DeleteNoteBloc>(
           create: (context) => DeleteNoteBloc(NoteRepositoryImpl()),
