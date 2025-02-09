@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/main/blocs/delete_note/delete_note_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_note_list/get_note_list_bloc.dart';
 import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
@@ -59,6 +60,9 @@ class _MainScreenState extends State<MainScreen> {
         ),
         BlocProvider<GetNoteListBloc>(
           create: (context) => GetNoteListBloc(NoteRepositoryImpl()),
+        ),
+        BlocProvider<DeleteNoteBloc>(
+          create: (context) => DeleteNoteBloc(NoteRepositoryImpl()),
         ),
       ],
       child: WillPopScope(

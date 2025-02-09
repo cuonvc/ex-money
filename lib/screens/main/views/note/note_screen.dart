@@ -1,7 +1,19 @@
+import 'dart:developer';
+
+import 'package:ex_money/screens/main/blocs/delete_note/delete_note_bloc.dart';
+import 'package:ex_money/screens/main/blocs/get_note_list/get_note_list_bloc.dart';
+import 'package:ex_money/screens/main/blocs/save_note/save_note_bloc.dart';
+import 'package:ex_money/screens/main/blocs/update_expense/update_expense_bloc.dart';
+import 'package:ex_money/screens/main/views/note/note_detail_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
+import 'package:ex_money/widgets/dialog_confirm.dart';
+import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:ex_money/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repository/repository.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
@@ -11,78 +23,201 @@ class NoteScreen extends StatefulWidget {
 }
 
 class _NoteScreenState extends State<NoteScreen> {
+
+  List<NoteModel> dataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<GetNoteListBloc>().add(const GetNoteListEv());
+  }
+
+  Future<List<NoteModel>> doSaveNote(BuildContext ctx, NoteModel? newData, List<NoteModel> list) async {
+    NoteModel? noteUpdated = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext ctx) => BlocProvider(
+          create: (ctx) => SaveNoteBloc(NoteRepositoryImpl()),
+          child: NoteDetailScreen(data: newData,),
+        ),
+      ),
+    );
+
+    //chỗ này cần xử lý sort lại list sau khi thêm
+    //bên detail cần trả về response để có id phân loại trong trường hợp blank 2 item
+    //
+    if (noteUpdated != null) {
+      bool isEqual = false;
+      for (int i = 0; i < list.length; i++) {
+        if (list[i].id == noteUpdated.id) {
+          isEqual = true;
+          list[i] = noteUpdated;
+        }
+      }
+
+      //new item
+      if (!isEqual) {
+        list.add(noteUpdated);
+      }
+
+      list.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    }
+    return list;
+  }
+  
   @override
   Widget build(BuildContext context) {
-
-    int length = 7;
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Wrap(
-        spacing: ConstantSize.hozPadScreen / 2,
-        runSpacing: ConstantSize.hozPadScreen / 2,
-        children: List.generate(length + 2, (index) { //nhớ + 2 cho vị trí cuối cho nó nhô lên
-          return (index == length + 1 || index == length + 2)
-              ? SizedBox(width: MediaQuery.sizeOf(context).width, height: 150,)
-              : Container(
-                width: MediaQuery.sizeOf(context).width / 2 - ConstantSize.hozPadScreen - ConstantSize.hozPadScreen / 4 - 6,
-                height: 200, //tạm
-                padding: const EdgeInsets.all(8),
-                margin: (index == 0 || index == 1) ? const EdgeInsets.only(top: 3) : (index % 2 == 0 ? const EdgeInsets.only(left: 3) : const EdgeInsets.only(right: 3)),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        // offset: const Offset(0, 10), // changes position of shadow
-                      ),
-                    ]
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            "Đây là tiêu đề ghi chú có xuống dòng Đây là tiêu đề ghi chú có xuống dòng",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: cText
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                            "Đây là nội dung phần đầu ghi chú Đây là nội dung phần đầu ghi chú Đây là nội dung phần đầu ghi chú Đây là nội dung phần đầu ghi chú Đây là nội dung phần đầu ghi chú Đây là nội dung phần đầu ghi chú",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: cText
-                          ),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+    return BlocBuilder<GetNoteListBloc, GetNoteListState>(
+        builder: (context, state) {
+          if (state is GetNoteListLoading) {
+            return const Center(child: Loading(loadingColor: null),);
+          } else if (state is GetNoteListSuccess) {
+            dataList = state.list;
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<GetNoteListBloc>().add(const GetNoteListEv());
+              },
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: Colors.white,
+                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                  title: const Text(
+                    "Ghi chú nhanh",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
                     ),
-                    Text(
-                      "${dateTimeFormated(DateTime.now(), false)}",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w300,
-                          color: cTextDisable
-                      ),
+                  ),
+                  actions: [
+                    GestureDetector(
+                      onTap: () async {
+                        List<NoteModel> afterSync = await doSaveNote(context, null, dataList);
+                        setState(() {
+                          dataList = afterSync;
+                        });
+                      },
+                      child: const Icon(Icons.add, color: cPrimary,),
                     )
                   ],
                 ),
-          );
-        }),
-      ),
-    );
+                body: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Wrap(
+                      spacing: ConstantSize.hozPadScreen / 2,
+                      runSpacing: ConstantSize.hozPadScreen / 2,
+                      children: List.generate(dataList.length, (index) {
+                        double marginLR = 3;
+                        double itemWidth =
+                            MediaQuery.sizeOf(context).width / 2 //chia đôi screen
+                                - ConstantSize.hozPadScreen      //bỏ mép screen
+                                - ConstantSize.hozPadScreen / 4  //khoảng cách giữa 2 item = hozPadScreen/2 -> 1 nửa khoảng cách = hozPadScreen/4
+                                - marginLR;                      //margin left or right
+                        NoteModel item = dataList[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            List<NoteModel> afterSync = await doSaveNote(context, item, dataList);
+                            setState(() {
+                              dataList = afterSync;
+                            });
+                          },
+                          child: GestureDetector(
+                            onLongPress: () async {
+                              bool confirmed = await showDialogConfirm(context, "Xóa ghi chú", "Bạn có chắc chắn muốn xóa bản ghi chú này?", null, null);
+                              if (confirmed) {
+                                context.read<DeleteNoteBloc>().add(DeleteNoteEv(id: item.id!));
+                                setState(() {
+                                  dataList.removeWhere((e) => e.id == item.id);
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: itemWidth,
+                              height: 200, //tạm
+                              padding: const EdgeInsets.all(8),
+                              margin: index % 2 == 0 ? EdgeInsets.only(left: marginLR) : EdgeInsets.only(right: marginLR),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      // offset: const Offset(0, 10), // changes position of shadow
+                                    ),
+                                  ]
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.title,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: cText
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4,),
+                                      Text(
+                                        item.content,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: cText
+                                        ),
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    dateTimeFormatedFromStr(item.updatedAt, false),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w300,
+                                        color: cTextDisable
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ) /* : (isLoading ? const Center(child: Loading(loadingColor: null),) : const Center(child: Text("Chưa có ghi chú nào"),)) */
+                )
+              ),
+            );
+          } else if (state is GetNoteListFailure) {
+            showDialogResponse(context, false, "Ghi chú", state.message);
+            return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<GetNoteListBloc>().add(const GetNoteListEv());
+                },
+                child: const Center(child: Text("Chưa có ghi chú nào"),)
+            );
+          } else {
+            return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<GetNoteListBloc>().add(const GetNoteListEv());
+                },
+                child: const Center(child: Text("Chưa có ghi chú nào"),)
+            );
+          }
+        },
+      );
   }
 }
