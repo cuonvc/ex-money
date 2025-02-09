@@ -106,12 +106,13 @@ class _NoteScreenState extends State<NoteScreen> {
                 body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 200 /*height of item*/),
                     child: Wrap(
                       spacing: ConstantSize.hozPadScreen / 2,
                       runSpacing: ConstantSize.hozPadScreen / 2,
                       children: List.generate(dataList.length, (index) {
                         double marginLR = 3;
+                        double itemHeight = 200;
                         double itemWidth =
                             MediaQuery.sizeOf(context).width / 2 //chia đôi screen
                                 - ConstantSize.hozPadScreen      //bỏ mép screen
@@ -137,7 +138,7 @@ class _NoteScreenState extends State<NoteScreen> {
                             },
                             child: Container(
                               width: itemWidth,
-                              height: 200, //tạm
+                              height: itemHeight, //tạm
                               padding: const EdgeInsets.all(8),
                               margin: index % 2 == 0 ? EdgeInsets.only(left: marginLR) : EdgeInsets.only(right: marginLR),
                               decoration: BoxDecoration(
@@ -154,17 +155,17 @@ class _NoteScreenState extends State<NoteScreen> {
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        item.title,
-                                        style: const TextStyle(
+                                        item.title.isNotEmpty ? item.title : "Ghi chú trống",
+                                        style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
-                                            color: cText
+                                            color: item.title.isNotEmpty ? cText : cTextDisable
                                         ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
