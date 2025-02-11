@@ -102,9 +102,9 @@ class _MemberTabState extends State<MemberTab> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const CircleAvatar(
+                            CircleAvatar(
                               radius: 18,
-                              backgroundImage: AssetImage("assets/images/profile/avt.png"), //test, nếu chay thật thì đoạn này lấy link từ back (sử dụng NetworkImage)
+                              backgroundImage: currentMember.avatarUrl != null ? NetworkImage(currentMember.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                             ),
                             const SizedBox(width: 10,),
                             Text(currentMember.name),

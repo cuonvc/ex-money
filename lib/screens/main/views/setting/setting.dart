@@ -163,10 +163,10 @@ class _SettingState extends State<Setting> {
                         Text(userInfo.email)
                       ],
                     ),
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 25,
                       backgroundColor: Colors.transparent,
-                      backgroundImage: AssetImage('assets/images/profile/avt.png'),
+                      backgroundImage: userInfo.avatarUrl != null ? NetworkImage(userInfo.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                     )
                   ],
                 ),

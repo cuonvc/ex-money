@@ -143,10 +143,10 @@ class _HomeState extends State<HomeScreen> {
                                         border: Border.all(color: cPrimary, width: 4),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
-                                      child: const CircleAvatar(
+                                      child: CircleAvatar(
                                         radius: 20,
                                         backgroundColor: Colors.transparent,
-                                        backgroundImage: AssetImage('assets/images/profile/avt.png'),
+                                        backgroundImage: response.user.avatarUrl != null ? NetworkImage(response.user.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                                       ),
                                     ),
                                     const SizedBox(width: 14,),
