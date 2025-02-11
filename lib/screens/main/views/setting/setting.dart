@@ -84,7 +84,7 @@ class _SettingState extends State<Setting> {
                 nameController.text = userInfo.name;
               });
             } else if (state is AccountSettingFailure) {
-              showDialogResponse(context, false, "Cập nhật thông tin tài khoản", "Có lỗi xảy ra");
+              showDialogResponse(context, false, "Cập nhật thông tin tài khoản", state.message);
             }
           },
         ),

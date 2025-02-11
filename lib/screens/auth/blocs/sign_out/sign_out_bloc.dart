@@ -18,7 +18,7 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
       final prefs= await SharedPreferencesWithCache.create(
         cacheOptions: const SharedPreferencesWithCacheOptions(allowList: null),
       );
-      final partOfPrefKey = CachedPrefKey.signInRespPref;
+      // final partOfPrefKey = CachedPrefKey.signInRespPref;
 
       try {
         emit(SignOutLoading());
@@ -26,7 +26,7 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
         HttpResponse response = await userRepository.signOut();
         if (response.code == 0) {
 
-          await prefs.remove(partOfPrefKey);
+          await prefs.clear();
           emit(SignOutSuccess());
         } else {
           emit(SignOutFailure(message: response.message));

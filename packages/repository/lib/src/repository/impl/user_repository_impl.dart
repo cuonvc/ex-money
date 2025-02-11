@@ -23,6 +23,18 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future oAuthSignIn(String token, String provider) async {
+    try {
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await authController.handleOAuthSignIn(token, provider)).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log('Error login via OAuth $provider - ${e.toString()}');
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
+  @override
   Future<void> renewAccessToken() async {
     try {
       Map<String, dynamic> refreshTokenData = await getRefreshTokenDataFromDisk();

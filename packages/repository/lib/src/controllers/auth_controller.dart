@@ -21,6 +21,19 @@ class AuthController {
     );
   }
 
+  Future<dynamic> handleOAuthSignIn(String token, String provider) async {
+
+    Map<String, dynamic> deviceInfo = await getDeviceInfo();
+
+    return http.post(
+        Uri.parse('$domain/api/auth/oauth2/validate?locale=vi'),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'provider': provider, 'token': token, 'deviceInfo': deviceInfo})
+    );
+  }
+
   Future<dynamic> renewAccessToken(String refreshToken) async {
     return http.get(
         Uri.parse('$domain/api/auth/token/renew?refresh_token=$refreshToken'),

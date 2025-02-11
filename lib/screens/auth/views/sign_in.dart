@@ -43,7 +43,10 @@ class _SignInState extends State<SignIn> {
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
         if (state is SignInSuccess) {
-          Navigator.pushNamed(context, NavigatePath.homePath);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            NavigatePath.homePath, (route) => false,
+          );
         } else if (state is SignInLoading) {
           setState(() {
             isLoading = true;
