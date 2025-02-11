@@ -82,7 +82,7 @@ flutter:
   assets:
    - assets/images/logo/
    - assets/images/auth/
-   - assets/images/test/
+   - assets/images/profile/
    - assets/images/category/
    - assets/images/animation/
 
