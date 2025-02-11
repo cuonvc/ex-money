@@ -18,4 +18,13 @@ class SignInResponse {
       user: UserResponse.fromMap(data[2])
     );
   }
+
+  static List<dynamic> toMap(SignInResponse data) {
+
+    return [
+      data.accessTokenData,
+      data.refreshTokenData,
+      UserResponse.toMap(data.user)
+    ];
+  }
 }

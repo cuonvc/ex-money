@@ -23,6 +23,8 @@ class NavigatePath {
   static String signInPath = "/auth/sign_in";
   static String signUpPath = "/auth/sign_up";
   static String homePath = "/home";
+  static String settingPath = "/setting";
+  static String passwordChangePath = "/passwordChange";
   static String expenseAll = "/expense/all";
   static String expenseDetailPath = "/expense/detail";
   static String categoryListPath = "/category/list";

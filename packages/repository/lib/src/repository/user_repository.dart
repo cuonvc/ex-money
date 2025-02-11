@@ -3,4 +3,8 @@ import 'package:repository/repository.dart';
 abstract class UserRepository {
   Future<dynamic> signIn(SignInModel signModel);
   Future<void> renewAccessToken();
+  Future<dynamic> updateProfile(String name);
+  Future<dynamic> turnNotification(bool on);
+  Future<dynamic> changePassword(String oldPassword, String newPassword, String passwordConfirm);
+  Future<dynamic> signOut();
 }

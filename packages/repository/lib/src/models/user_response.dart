@@ -8,6 +8,7 @@ class UserResponse {
   late String? modifiedAt;
   late String status;
   late String? deviceToken;
+  late bool notificationOn;
 
   UserResponse({
     required this.id,
@@ -18,7 +19,8 @@ class UserResponse {
     required this.createdAt,
     required this.modifiedAt,
     required this.status,
-    required this.deviceToken
+    required this.deviceToken,
+    required this.notificationOn
   });
 
   static UserResponse fromMap(Map<String, dynamic> map) {
@@ -31,7 +33,8 @@ class UserResponse {
       createdAt: map['createdAt'],
       modifiedAt: map['modifiedAt'],
       status: map['status'],
-      deviceToken: map['deviceToken']
+      deviceToken: map['deviceToken'],
+      notificationOn: map['notificationOn']
     );
   }
 
@@ -45,7 +48,8 @@ class UserResponse {
       'createdAt': data.createdAt,
       'modifiedAt': data.modifiedAt,
       'status': data.status,
-      'deviceToken': data.deviceToken
+      'deviceToken': data.deviceToken,
+      'notificationOn': data.notificationOn
     };
   }
 
@@ -59,7 +63,8 @@ class UserResponse {
         createdAt: '',
         modifiedAt: '',
         status: '',
-        deviceToken: ''
+        deviceToken: '',
+        notificationOn: true
     );
   }
 }

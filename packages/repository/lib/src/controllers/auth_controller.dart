@@ -13,9 +13,8 @@ class AuthController {
     signInModel.deviceInfo = deviceInfo;
 
     return http.post(
-        Uri.parse('$domain/api/auth/sign-in'),
+        Uri.parse('$domain/api/auth/sign-in?locale=vi'),
         headers: {
-          'Accept-Language': 'vi', //required
           'Content-Type': 'application/json'
         },
         body: jsonEncode(signInModel.toMap())
@@ -25,6 +24,58 @@ class AuthController {
   Future<dynamic> renewAccessToken(String refreshToken) async {
     return http.get(
         Uri.parse('$domain/api/auth/token/renew?refresh_token=$refreshToken'),
+    );
+  }
+
+  Future<dynamic> updateProfile(String name) async {
+
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+
+    return http.put(
+        Uri.parse('$domain/api/user/account/edit?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'name': name})
+    );
+  }
+
+  Future<dynamic> turnNotification(bool on) async {
+
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+
+    return http.put(
+        Uri.parse('$domain/api/notification/turn?on=$on&locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}'
+        }
+    );
+  }
+
+  Future<dynamic> changePassword(String oldPassword, String newPassword, String passwordConfirm) async {
+
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+
+    return http.put(
+        Uri.parse('$domain/api/user/password-change?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'oldPassword': oldPassword, 'newPassword': newPassword, 'retypePassword': passwordConfirm})
+    );
+  }
+
+  Future<dynamic> handleSignOut() async {
+
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+
+    return http.post(
+        Uri.parse('$domain/api/auth/sign-out?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}'
+        }
     );
   }
 }

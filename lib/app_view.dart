@@ -6,6 +6,8 @@ import 'package:ex_money/screens/main/views/category_detail/category_detail.dart
 import 'package:ex_money/screens/main/views/expense/expense_all.dart';
 import 'package:ex_money/screens/main/views/expense_detail/expense_detail.dart';
 import 'package:ex_money/screens/main/views/main_screen.dart';
+import 'package:ex_money/screens/main/views/setting/password_change.dart';
+import 'package:ex_money/screens/main/views/setting/setting.dart';
 import 'package:ex_money/screens/main/views/splash_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,8 @@ class AppView extends StatelessWidget {
         NavigatePath.signInPath: (context) => const SignIn(),
         NavigatePath.signUpPath: (context) => const SignUp(),
         NavigatePath.homePath: (context) => const MainScreen(),
+        NavigatePath.settingPath: (context) => const Setting(),
+        NavigatePath.passwordChangePath: (context) => const PasswordChange(),
         NavigatePath.expenseAll: (context) => const ExpenseAll(),
         NavigatePath.expenseDetailPath: (context) => const ExpenseDetail(detail: null,),
         NavigatePath.categoryListPath: (context) => const CategoryAll(walletId: null,),

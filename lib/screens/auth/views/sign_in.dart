@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_text_field.dart';
+import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -47,8 +48,11 @@ class _SignInState extends State<SignIn> {
           setState(() {
             isLoading = true;
           });
-        } else {
-          log("Login faileddd");
+        } else if (state is SignInFailure) {
+          setState(() {
+            isLoading = false;
+          });
+          showDialogResponse(context, false, "Đăng nhập thất bại", state.message);
         }
       },
       child: GestureDetector(

@@ -1,9 +1,13 @@
 import 'dart:developer';
 
+import 'package:ex_money/screens/auth/blocs/account_setting/account_setting_bloc.dart';
+import 'package:ex_money/screens/auth/blocs/notification_turn/notification_turn_bloc.dart';
+import 'package:ex_money/screens/auth/blocs/sign_out/sign_out_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_home_overview/home_overview_bloc.dart';
 import 'package:ex_money/screens/main/blocs/mark_read_notification/mark_read_notification_bloc.dart';
+import 'package:ex_money/screens/main/views/setting/setting.dart';
 import 'package:ex_money/screens/main/views/stats/stats_line_chart.dart';
 import 'package:ex_money/utils/utils.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
@@ -110,46 +114,69 @@ class _HomeState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                                children: [
-                                  DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: cPrimary, width: 4),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: const CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage: AssetImage('assets/images/profile/avt.png'),
-                                    ),
+                            GestureDetector(
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute<SignInModel>(
+                                      builder: (BuildContext ctx) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (ctx) => AccountSettingBloc(UserRepositoryImpl()),
+                                          ),
+                                          BlocProvider(
+                                            create: (ctx) => NotificationTurnBloc(UserRepositoryImpl()),
+                                          ),
+                                          BlocProvider(
+                                            create: (ctx) => SignOutBloc(UserRepositoryImpl()),
+                                          )
+                                        ],
+                                        child: const Setting(),
+                                      )
                                   ),
-                                  const SizedBox(width: 14,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        DateTime.now().hour < 12
-                                            ? "Chào buổi sáng"
-                                            : (DateTime.now().hour > 12 && DateTime.now().hour < 18
-                                              ? "Chào buổi chiều"
-                                              : "Chào buổi tối"
-                                            ),
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: cText
-                                        ),
+                                );
+                              },
+                              child: Row(
+                                  children: [
+                                    DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: cPrimary, width: 4),
+                                        borderRadius: BorderRadius.circular(50),
                                       ),
-                                      Text(
-                                        response.user.name,
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: cText
-                                        ),
+                                      child: const CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: AssetImage('assets/images/profile/avt.png'),
                                       ),
-                                    ],
-                                  )
-                                ]
+                                    ),
+                                    const SizedBox(width: 14,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DateTime.now().hour < 12
+                                              ? "Chào buổi sáng"
+                                              : (DateTime.now().hour > 12 && DateTime.now().hour < 18
+                                                ? "Chào buổi chiều"
+                                                : "Chào buổi tối"
+                                              ),
+                                          style: const TextStyle(
+                                              fontSize: 10,
+                                              color: cText
+                                          ),
+                                        ),
+                                        Text(
+                                          response.user.name,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: cText
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ]
+                              ),
                             ),
                             GestureDetector(
                               onTap: () async {
