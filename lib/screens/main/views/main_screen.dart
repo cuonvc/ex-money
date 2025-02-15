@@ -9,6 +9,7 @@ import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/screens/main/views/note/note_screen.dart';
 import 'package:ex_money/screens/main/views/voice/voice.dart';
 import 'package:ex_money/screens/main/views/wallet_list/wallet_list_screen.dart';
+import 'package:ex_money/utils/android_native.dart';
 import 'package:ex_money/widgets/expense_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,17 @@ class _MainScreenState extends State<MainScreen> {
   static const int _voiceIndex = 1;
   static const int _walletIndex = 2;
   static const int _noteIndex = 3;
+
+  static String navigationMode = AndroidNavigationMode.gestureMode;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getNavigationMode().then((String onValue) {
+      navigationMode = onValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +104,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          floatingActionButtonLocation: CustomFABLocation(offsetY: 2),
+          floatingActionButtonLocation: CustomFABLocation(offsetY: 2, navigationMode: navigationMode),
           floatingActionButton: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: SizedBox(
@@ -276,9 +288,10 @@ class _MainScreenState extends State<MainScreen> {
 
 //from chatGPT
 class CustomFABLocation extends FloatingActionButtonLocation {
+  final String navigationMode;
   final double offsetY; // Allows customization of vertical positioning
 
-  CustomFABLocation({this.offsetY = 0});
+  CustomFABLocation({this.offsetY = 0, required this.navigationMode});
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
@@ -288,7 +301,7 @@ class CustomFABLocation extends FloatingActionButtonLocation {
     // Default positioning with manual adjustment for BottomAppBar height
     final double fabY = scaffoldGeometry.scaffoldSize.height -
         scaffoldGeometry.floatingActionButtonSize.height -
-        60 - // Approximate height of the BottomAppBar
+        (navigationMode.compareTo(AndroidNavigationMode.gestureMode) == 0 ? 70 : 100) - // Approximate height of the BottomAppBar
         offsetY; // Custom offset for elevation
 
     return Offset(fabX, fabY);

@@ -32,6 +32,11 @@ class NavigatePath {
   static String categoryDetailPath = "category/detail";
 }
 
+class AndroidNavigationMode {
+  static String buttonMode = "button";
+  static String gestureMode = "gesture";
+}
+
 class WalletUserChange {
   static String wallet_user_change_add = "ADD";
   static String wallet_user_change_remove = "REMOVE";
