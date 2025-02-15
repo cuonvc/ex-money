@@ -25,6 +25,12 @@ class _StatsPieChartState extends State<StatsPieChart> {
     Map<String, double> categoryMapPercent = {};
     Map<String, Color> categoryMapColor = {};
 
+    if (expenses.isEmpty) {
+      String key = "Chưa có chi tiêu";
+      categoryMapPercent.addEntries([MapEntry(key, 100.toDouble())]);
+      categoryMapColor.addEntries([MapEntry(key, Colors.grey)]);
+    }
+
     for (ExpenseResponse exp in expenses) {
       double plusPercent = exp.amount / totalAmount * 100;
       if (categoryMapPercent.containsKey(exp.parentCategoryName)) {

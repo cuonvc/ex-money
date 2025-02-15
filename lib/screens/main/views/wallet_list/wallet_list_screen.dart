@@ -38,7 +38,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
   int currentWalletIndex = 0;
   late double cardHeight = 0;
   final double statsHeight = 300;
-  WalletResponse currentWallet = WalletResponse.empty();
+  // WalletResponse currentWallet = WalletResponse.empty();
 
   final ScrollController _walletScrollController = ScrollController();
   final ScrollController _tabScrollController = ScrollController();
@@ -92,10 +92,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
           walletList = state.walletList;
           walletCount = walletList.length;
           pageController = PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1);
-          //init screen
-          if (currentWallet.id == 0) {
-            currentWallet = walletList[0];
-          }
+
           return RefreshIndicator(
             onRefresh: () async {
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
@@ -158,7 +155,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                     onPageChanged: (int index) {
                       setState(() {
                         currentWalletIndex = index;
-                        currentWallet = walletList[index];
+                        // currentWallet = walletList[index];
                       });
                     },
                     itemBuilder: (context, idx) {
@@ -191,7 +188,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${toAmountFormat(currentWallet.balance)} VND",
+                                      "${toAmountFormat(walletList[currentWalletIndex].balance)} VND",
                                       style: const TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w900
@@ -210,7 +207,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                               color: Colors.green,
                                             ),
                                             const SizedBox(width: 6,),
-                                            Text("Hạn mức ${toAmountFormat(currentWallet.expenseLimit)}")
+                                            Text("Hạn mức ${toAmountFormat(walletList[currentWalletIndex].expenseLimit)}")
                                           ],
                                         ),
                                         Row(
@@ -222,7 +219,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                               size: 24,
                                             ),
                                             const SizedBox(width: 6,),
-                                            Text("Đã chi ${toAmountFormat(currentWallet.totalExpense)}")
+                                            Text("Đã chi ${toAmountFormat(walletList[currentWalletIndex].totalExpense)}")
                                           ],
                                         ),
                                       ],
@@ -232,7 +229,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      currentWallet.name,
+                                      walletList[currentWalletIndex].name,
                                       style: const TextStyle(fontSize: 14, color: cTextDisable, fontWeight: FontWeight.bold),
                                     )
                                   ],
@@ -253,7 +250,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                     children: [
                       SizedBox(
                         height: 300,
-                        child: StatsPieChart(expenses: currentWallet.expenses,)
+                        child: StatsPieChart(expenses: walletList[currentWalletIndex].expenses,)
                       ),
                       SizedBox(
                         height: MediaQuery.sizeOf(context).height - cardHeight,
@@ -310,8 +307,8 @@ class _WalletListScreenState extends State<WalletListScreen> {
                               visible: accountTab,
                               child: Expanded(child: MemberTab(
                                 _tabScrollController,
-                                currentWallet,
-                                key: ValueKey(currentWallet),
+                                walletList[currentWalletIndex],
+                                key: ValueKey(walletList[currentWalletIndex]),
                               ),),
                             ),
                             // wallet info tab

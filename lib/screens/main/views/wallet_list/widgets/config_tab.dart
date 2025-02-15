@@ -115,6 +115,7 @@ class _ConfigTabState extends State<ConfigTab> {
                                   title: Center(child: Text("Thiết lập hạn mức", style: titleStyle(),)),
                                   content: SizedBox(
                                     height: MediaQuery.sizeOf(context).height * 0.4,
+                                    width: MediaQuery.sizeOf(context).width + 0.2,
                                     child: ListView(
                                       children: [
                                         Column(
