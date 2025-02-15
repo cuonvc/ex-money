@@ -8,8 +8,9 @@ import '../../../blocs/wallet_change_user/wallet_change_user_bloc.dart';
 import 'add_user_to_wallet.dart';
 
 class MemberTab extends StatefulWidget {
+  final ScrollController scrollController;
   final WalletResponse wallet;
-  const MemberTab({Key? key, required this.wallet}) : super(key: key);
+  const MemberTab(this.scrollController, this.wallet, {super.key});
 
   @override
   State<MemberTab> createState() => _MemberTabState();
@@ -77,8 +78,15 @@ class _MemberTabState extends State<MemberTab> {
 
           Expanded(
             child: ListView.builder(
-              itemCount: currentWallet.members.length,
+              controller: widget.scrollController,
+              itemCount: currentWallet.members.length + 2,
               itemBuilder: (context3, index3) {
+                if (index3 >= currentWallet.members.length) {
+                  return Container(
+                    height: ConstantSize.heightBottomBar + 50,
+                    color: Colors.transparent,
+                  );
+                }
                 accountExpandedList.addAll(List.generate(currentWallet.members.length, (_) => false));
                 UserResponse currentMember = currentWallet.members[index3];
                 bool isOwner = currentMember.id == currentWallet.ownerUserId;

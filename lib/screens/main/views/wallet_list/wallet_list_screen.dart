@@ -41,9 +41,27 @@ class _WalletListScreenState extends State<WalletListScreen> {
   WalletResponse currentWallet = WalletResponse.empty();
 
   final ScrollController _walletScrollController = ScrollController();
-  final ScrollController _expenseScrollController = ScrollController();
+  final ScrollController _tabScrollController = ScrollController();
 
   PageController pageController = PageController(initialPage: 0);
+
+  void executeScrollingAction() {
+    double currentPosition = _tabScrollController.position.pixels;
+    double minPosition = _tabScrollController.position.minScrollExtent;
+    if (currentPosition == minPosition) {
+      _walletScrollController.animateTo(
+        _walletScrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (currentPosition > minPosition) { // > 0
+      _walletScrollController.animateTo(
+        _walletScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
 
   @override
@@ -51,23 +69,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
     super.initState();
 
     // Add listener to the child ScrollController
-    _expenseScrollController.addListener(() {
-      double currentPosition = _expenseScrollController.position.pixels;
-      double minPosition = _expenseScrollController.position.minScrollExtent;
-      if (currentPosition == minPosition) {
-        _walletScrollController.animateTo(
-          _walletScrollController.position.minScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      } else if (currentPosition > minPosition) { // > 0
-        _walletScrollController.animateTo(
-          _walletScrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+    _tabScrollController.addListener(() => executeScrollingAction());
   }
 
 
@@ -75,7 +77,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
   void dispose() {
     super.dispose();
     _walletScrollController.dispose();
-    _expenseScrollController.dispose();
+    _tabScrollController.dispose();
   }
 
   @override
@@ -292,23 +294,27 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                 ),
                               ],
                             ),
-                            //expenses tab
+                            // expenses tab
                             Visibility(
                               visible: expenseTab,
                               child: Expanded(
                                 child: ExpenseList(
                                   walletList[currentWalletIndex].expenses,
                                   true,
-                                  _expenseScrollController
+                                  _tabScrollController
                                 ),
                               ),
                             ),
-                            //member tab
+                            // member tab
                             Visibility(
                               visible: accountTab,
-                              child: Expanded(child: MemberTab(wallet: currentWallet, key: ValueKey(currentWallet),),),
+                              child: Expanded(child: MemberTab(
+                                _tabScrollController,
+                                currentWallet,
+                                key: ValueKey(currentWallet),
+                              ),),
                             ),
-                            //wallet info tab
+                            // wallet info tab
                             Visibility(
                               visible: configTab,
                                 child:  MultiBlocProvider(
@@ -323,8 +329,11 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                       create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
                                     ),
                                   ],
-                                  child: ConfigTab(wallet: walletList[currentWalletIndex],),
-                                )
+                                  child: ConfigTab(
+                                    _tabScrollController,
+                                    walletList[currentWalletIndex]
+                                  ),
+                                ),
                               // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
                             )
                           ],

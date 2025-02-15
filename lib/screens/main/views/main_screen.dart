@@ -141,7 +141,7 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.white,
               shadowColor: Colors.black,
               shape: const CircularNotchedRectangle(),
-              height: 70,
+              height: ConstantSize.heightBottomBar,
               notchMargin: 6,
               clipBehavior: Clip.antiAlias,
               child: Row(

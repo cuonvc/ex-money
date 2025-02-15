@@ -60,8 +60,14 @@ class _ExpenseListState extends State<ExpenseList> {
             padding: const EdgeInsets.only(top: 10),
             child: expenseList.isEmpty ? const Center(child: Text("Không có chi tiêu nào..."),) : ListView.builder(
               controller: widget.expenseScrollController,
-              itemCount: expenseList.length,
+              itemCount: expenseList.length + 1,
               itemBuilder: (ctx, int i) {
+                if (i >= expenseList.length) {
+                  return Container(
+                    height: ConstantSize.heightBottomBar + 50,
+                    color: Colors.transparent,
+                  );
+                }
                 ExpenseResponse expense = expenseList[i];
                 return ExpenseItem(expense: expense);
               },

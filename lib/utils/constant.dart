@@ -16,6 +16,7 @@ class ConstantSize {
   static const double hozPadScreen = 20;
   static const double buttonHeight = 44;
   static const double borderButton = 16;
+  static const double heightBottomBar = 70;
 }
 
 class NavigatePath {

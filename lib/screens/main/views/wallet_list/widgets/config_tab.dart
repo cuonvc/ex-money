@@ -17,8 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../blocs/wallet_setting/wallet_setting_bloc.dart';
 
 class ConfigTab extends StatefulWidget {
+  final ScrollController scrollController;
   WalletResponse wallet;
-  ConfigTab({super.key, required this.wallet});
+  ConfigTab(this.scrollController, this.wallet, {super.key});
 
   @override
   State<ConfigTab> createState() => _ConfigTabState();
@@ -276,8 +277,15 @@ class _ConfigTabState extends State<ConfigTab> {
                   const SizedBox(height: 10,),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: widget.wallet.schedulers.length,
+                      controller: widget.scrollController,
+                      itemCount: widget.wallet.schedulers.length + 1,
                       itemBuilder: (ctx, idx) {
+                        if (idx >= widget.wallet.schedulers.length) {
+                          return Container(
+                            height: ConstantSize.heightBottomBar + 50,
+                            color: Colors.transparent,
+                          );
+                        }
                         ExpenseSchedulerResponse item = widget.wallet.schedulers[idx];
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
