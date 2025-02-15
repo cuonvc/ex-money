@@ -168,7 +168,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: walletCount >= 2 ? 6 : 0, vertical: 10),
+                            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                             // width: fullWidth,
                             height: cardHeight,
