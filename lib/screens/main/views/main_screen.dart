@@ -145,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
               notchMargin: 6,
               clipBehavior: Clip.antiAlias,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget> [
                   Flexible(
                     child: SizedBox(
@@ -201,6 +201,11 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                       ),
+                    ),
+                  ),
+                  Flexible(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 5,
                     ),
                   ),
                   Flexible(
