@@ -16,7 +16,10 @@ class OverviewRepositoryImpl implements OverviewRepository {
       if (rp.statusCode == 401) {
         await userRepository.renewAccessToken();
         rp = await overviewController.getHomeOverviewController(month, year);
+      } else if (rp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(await rp.bodyBytes));
       return HttpResponse.toObject(mapResponse);

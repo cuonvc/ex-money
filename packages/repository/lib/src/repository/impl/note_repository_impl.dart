@@ -17,7 +17,10 @@ class NoteRepositoryImpl implements NoteRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await noteController.getNoteList();
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -34,7 +37,10 @@ class NoteRepositoryImpl implements NoteRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await noteController.saveNote(id, data);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -51,7 +57,10 @@ class NoteRepositoryImpl implements NoteRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await noteController.deleteNote(id);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);

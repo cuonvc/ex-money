@@ -16,7 +16,10 @@ class TaskRepositoryImpl extends TaskRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await taskController.expenseSchedulerCreate(request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -33,7 +36,10 @@ class TaskRepositoryImpl extends TaskRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await taskController.expenseSchedulerUpdate(id, request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);

@@ -16,7 +16,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.getExpenseList(walletId, keyword, categoryId, createdById, startDate, endDate);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -33,7 +36,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.getExpenseResourceForEdit(walletId);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -50,7 +56,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.addExpense(request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -67,7 +76,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.updateExpense(id, request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -84,7 +96,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.deleteExpense(id);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -101,7 +116,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.getExpenseResourceForFilter(walletId);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -118,7 +136,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await expenseController.getConfirmExpenseFromSpeech(text);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);

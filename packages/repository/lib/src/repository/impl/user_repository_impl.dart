@@ -13,8 +13,12 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<dynamic> signIn(SignInModel signModel) async {
     try {
+      dynamic resp = await authController.handleSignIn(signModel);
+      if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await authController.handleSignIn(signModel)).bodyBytes));
+          utf8.decode((resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error login - ${e.toString()}');
@@ -25,8 +29,12 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future oAuthSignIn(String token, String provider) async {
     try {
+      dynamic resp = await authController.handleOAuthSignIn(token, provider);
+      if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await authController.handleOAuthSignIn(token, provider)).bodyBytes));
+          utf8.decode((resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error login via OAuth $provider - ${e.toString()}');
@@ -58,8 +66,12 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future signOut() async {
     try {
+      dynamic resp = await authController.handleSignOut();
+      if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
       final Map<String, dynamic> mapResponse = jsonDecode(
-          utf8.decode((await authController.handleSignOut()).bodyBytes));
+          utf8.decode((resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error sign out - ${e.toString()}');
@@ -74,6 +86,8 @@ class UserRepositoryImpl implements UserRepository {
       if (resp.statusCode == 401) {
         await this.renewAccessToken();
         resp = await authController.updateProfile(name);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
 
       final Map<String, dynamic> mapResponse = jsonDecode(
@@ -92,6 +106,8 @@ class UserRepositoryImpl implements UserRepository {
       if (resp.statusCode == 401) {
         await this.renewAccessToken();
         resp = await authController.turnNotification(on);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
 
       final Map<String, dynamic> mapResponse = jsonDecode(
@@ -110,6 +126,8 @@ class UserRepositoryImpl implements UserRepository {
       if (resp.statusCode == 401) {
         await this.renewAccessToken();
         resp = await authController.changePassword(oldPassword, newPassword, passwordConfirm);
+      } else if (resp.statusCode == 401) {
+        return HttpResponse.notFound();
       }
 
       final Map<String, dynamic> mapResponse = jsonDecode(

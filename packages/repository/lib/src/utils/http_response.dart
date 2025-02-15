@@ -32,4 +32,14 @@ class HttpResponse {
         data: []
     );
   }
+
+  static HttpResponse notFound() {
+    return HttpResponse(
+        code: 1,
+        status: '',
+        statusCode: 404,
+        message: 'Ops...Server đang tắt rồi!',
+        data: []
+    );
+  }
 }

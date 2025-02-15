@@ -18,7 +18,10 @@ class WalletRepositoryImpl implements WalletRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await walletController.createWallet(name, description);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -35,7 +38,10 @@ class WalletRepositoryImpl implements WalletRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await walletController.getWalletList();
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(resp.bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -52,7 +58,10 @@ class WalletRepositoryImpl implements WalletRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await walletController.changeUser(action, email, walletId);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       HttpResponse response = HttpResponse.toObject(mapResponse);
@@ -77,7 +86,10 @@ class WalletRepositoryImpl implements WalletRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await walletController.setting(walletId, request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       HttpResponse response = HttpResponse.toObject(mapResponse);

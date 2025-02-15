@@ -16,7 +16,10 @@ class CategoryRepositoryImpl extends CategoryRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await categoryController.getCategoryList(walletId);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -33,7 +36,10 @@ class CategoryRepositoryImpl extends CategoryRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await categoryController.saveCategory(id, request);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
@@ -50,7 +56,10 @@ class CategoryRepositoryImpl extends CategoryRepository {
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
         resp = await categoryController.deleteCategory(id);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
       }
+
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode((await resp).bodyBytes));
       return HttpResponse.toObject(mapResponse);
