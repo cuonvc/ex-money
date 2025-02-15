@@ -124,7 +124,7 @@ class _NoteScreenState extends State<NoteScreen> {
                       )
                     ],
                   ),
-                  body: SingleChildScrollView(
+                  body: dataList.isNotEmpty ? SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 200 /*height of item*/),
@@ -225,7 +225,7 @@ class _NoteScreenState extends State<NoteScreen> {
                         }),
                       ),
                     ) /* : (isLoading ? const Center(child: Loading(loadingColor: null),) : const Center(child: Text("Chưa có ghi chú nào"),)) */
-                  )
+                  ) : const Center(child: Text("Chưa có ghi chú nào"),)
                 ),
               ),
             );
