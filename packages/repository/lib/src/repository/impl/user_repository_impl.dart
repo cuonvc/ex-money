@@ -11,6 +11,38 @@ class UserRepositoryImpl implements UserRepository {
   final authController = AuthController();
 
   @override
+  Future signUp(SignUpModel model) async {
+    try {
+      dynamic resp = await authController.handleSignUp(model);
+      if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((resp).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log('Error to signup - ${e.toString()}');
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
+  @override
+  Future activeAccount(SignUpModel model, String activeCode) async {
+    try {
+      dynamic resp = await authController.handleActiveAccount(model, activeCode);
+      if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((resp).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log('Error to Active account - ${e.toString()}');
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
+  @override
   Future<dynamic> signIn(SignInModel signModel) async {
     try {
       dynamic resp = await authController.handleSignIn(signModel);

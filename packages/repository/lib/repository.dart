@@ -21,6 +21,7 @@ export 'src/repository/impl/task_repository_impl.dart';
 export 'src/repository/note_repository.dart';
 export 'src/repository/impl/note_repository_impl.dart';
 export 'src/models/sign_in_model.dart';
+export 'src/models/sign_up_model.dart';
 export 'src/models/user_response.dart';
 export 'src/models/expense_response.dart';
 export 'src/models/note_model.dart';

@@ -1,6 +1,8 @@
 import 'package:repository/repository.dart';
 
 abstract class UserRepository {
+  Future<dynamic> signUp(SignUpModel model);
+  Future<dynamic> activeAccount(SignUpModel model, String activeCode);
   Future<dynamic> signIn(SignInModel signModel);
   Future<dynamic> oAuthSignIn(String token, String provider);
   Future<void> renewAccessToken();

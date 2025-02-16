@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:ex_money/screens/auth/views/sign_up.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_text_field.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
@@ -14,6 +15,7 @@ import 'package:repository/repository.dart';
 
 import '../../../widgets/button_view.dart';
 import '../blocs/sign_in_block/sign_in_bloc.dart';
+import '../blocs/sign_up/sign_up_bloc.dart';
 import '../widgets/widget_base.dart';
 
 class SignIn extends StatefulWidget {
@@ -40,142 +42,156 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInBloc, SignInState>(
-      listener: (context, state) {
-        if (state is SignInSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            NavigatePath.homePath, (route) => false,
-          );
-        } else if (state is SignInLoading) {
-          setState(() {
-            isLoading = true;
-          });
-        } else if (state is SignInFailure) {
-          setState(() {
-            isLoading = false;
-          });
-          showDialogResponse(context, false, "Đăng nhập thất bại", state.message);
-        }
-      },
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          body: Container(
-            color: Colors.white,
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset('assets/images/logo/1.png'),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Đăng nhập",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 18,),
-                          BaseTextField(
-                            controller: emailInput,
-                            inputType: TextInputType.emailAddress,
-                            icon: Icons.person,
-                            hintText: "Nhập địa chỉ email",
-                            passwordField: false,
-                          ),
-                          const SizedBox(height: 18,),
-                          BaseTextField(
-                            controller: passwordInput,
-                            inputType: TextInputType.visiblePassword,
-                            icon: Icons.key,
-                            hintText: "Nhập mật khẩu",
-                            passwordField: true,
-                          ),
-                          // credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
-                          const SizedBox(height: 16,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
+    return PopScope(
+      canPop: false,
+      child: BlocListener<SignInBloc, SignInState>(
+        listener: (context, state) {
+          if (state is SignInSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              NavigatePath.homePath, (route) => false,
+            );
+          } else if (state is SignInLoading) {
+            setState(() {
+              isLoading = true;
+            });
+          } else if (state is SignInFailure) {
+            setState(() {
+              isLoading = false;
+            });
+            showDialogResponse(context, false, "Đăng nhập thất bại", state.message);
+          }
+        },
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            body: Container(
+              color: Colors.white,
+              child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset('assets/images/logo/1.png'),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Đăng nhập",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 18,),
+                            BaseTextField(
+                              controller: emailInput,
+                              inputType: TextInputType.emailAddress,
+                              icon: Icons.person,
+                              hintText: "Nhập địa chỉ email",
+                              passwordField: false,
+                            ),
+                            const SizedBox(height: 18,),
+                            BaseTextField(
+                              controller: passwordInput,
+                              inputType: TextInputType.visiblePassword,
+                              icon: Icons.key,
+                              hintText: "Nhập mật khẩu",
+                              passwordField: true,
+                            ),
+                            // credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
+                            const SizedBox(height: 16,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
 
-                                },
-                                child: const Text("Quên mật khẩu?", style: TextStyle(color: cPrimary),),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16,),
-                          isLoading
-                              ? buttonLoading(true, Colors.white)
-                              : GestureDetector(
-                                onTap: () {
-                                  signInModel.email = emailInput.text;
-                                  signInModel.password = passwordInput.text;
-                                  context.read<SignInBloc>().add(SignInEv(signInModel));
-                                }, child: buttonView(true, "Đăng nhập", null),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 14),
-                            child: Text(
-                              "Hoặc đăng nhập với",
-                              style: TextStyle(
-                                  color: cTextMediumBlur,
-                                  fontWeight: FontWeight.w500
+                                  },
+                                  child: const Text("Quên mật khẩu?", style: TextStyle(color: cPrimary),),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16,),
+                            isLoading
+                                ? buttonLoading(true, Colors.white)
+                                : GestureDetector(
+                                  onTap: () {
+                                    signInModel.email = emailInput.text;
+                                    signInModel.password = passwordInput.text;
+                                    context.read<SignInBloc>().add(SignInEv(signInModel));
+                                  }, child: buttonView(true, "Đăng nhập", null),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              child: Text(
+                                "Hoặc đăng nhập với",
+                                style: TextStyle(
+                                    color: cTextMediumBlur,
+                                    fontWeight: FontWeight.w500
+                                ),
                               ),
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
 
-                                },
-                                child: oAuthSelectionBtn(Colors.white, "Google", 14, "google", 28),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-
-                                },
-                                child: oAuthSelectionBtn(Colors.white, "Github", 14, "github", 64),
-                              )
-                            ],
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "Bạn chưa có tài khoản? ",
+                                  },
+                                  child: oAuthSelectionBtn(
+                                      MediaQuery.sizeOf(context).width - ConstantSize.hozPadScreen * 2, Colors.white,
+                                      "Google", 14, "google", 28
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(context, NavigatePath.signUpPath);
-                                    },
-                                    child: const Text("Đăng ký", style: TextStyle(color: cPrimary),),
-                                  )
-                                ],
-                              )
-                          )
-                        ],
-                      ),
-                    ],
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //
+                                //   },
+                                //   child: oAuthSelectionBtn(Colors.white, "Github", 14, "github", 64),
+                                // )
+                              ],
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Bạn chưa có tài khoản? ",
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (BuildContext ctx) => BlocProvider(
+                                                  create: (context) => SignUpBloc(UserRepositoryImpl()),
+                                                  child: const SignUp(),
+                                                )
+                                            )
+                                        );
+                                      },
+                                      child: const Text("Đăng ký", style: TextStyle(color: cPrimary),),
+                                    )
+                                  ],
+                                )
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )
+                ],
+              )
+            ),
           ),
         ),
       ),

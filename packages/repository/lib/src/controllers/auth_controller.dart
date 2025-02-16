@@ -7,6 +7,29 @@ import 'package:repository/src/utils/utils.dart';
 import '../utils/constant.dart';
 
 class AuthController {
+
+  Future<dynamic> handleSignUp(SignUpModel signUpModel) async {
+
+    return http.post(
+        Uri.parse('$domain/api/auth/sign-up?locale=vi'),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(SignUpModel.toMap(signUpModel))
+    );
+  }
+
+  Future<dynamic> handleActiveAccount(SignUpModel signUpModel, String activeCode) async {
+
+    return http.post(
+        Uri.parse('$domain/api/auth/sign-up/validate-email?otpCode=$activeCode&locale=vi'),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(SignUpModel.toMap(signUpModel))
+    );
+  }
+
   Future<dynamic> handleSignIn(SignInModel signInModel) async {
 
     Map<String, dynamic> deviceInfo = await getDeviceInfo();

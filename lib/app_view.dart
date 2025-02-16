@@ -1,4 +1,5 @@
 import 'package:ex_money/screens/auth/blocs/oauth_sign_in/oauth_sign_in_bloc.dart';
+import 'package:ex_money/screens/auth/views/active_account.dart';
 import 'package:ex_money/screens/auth/views/auth_selection.dart';
 import 'package:ex_money/screens/auth/views/sign_in.dart';
 import 'package:ex_money/screens/auth/views/sign_up.dart';
@@ -48,6 +49,7 @@ class AppView extends StatelessWidget {
         ),
         NavigatePath.signInPath: (context) => const SignIn(),
         NavigatePath.signUpPath: (context) => const SignUp(),
+        NavigatePath.activeAccountPath: (context) => const ActiveAccount(model: null, limitTime: 0, message: ""),
         NavigatePath.homePath: (context) => const MainScreen(),
         NavigatePath.settingPath: (context) => const Setting(),
         NavigatePath.passwordChangePath: (context) => const PasswordChange(),

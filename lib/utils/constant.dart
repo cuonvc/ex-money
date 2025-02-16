@@ -23,6 +23,7 @@ class NavigatePath {
   static String authSelectionPath = "/auth/selection";
   static String signInPath = "/auth/sign_in";
   static String signUpPath = "/auth/sign_up";
+  static String activeAccountPath = "auth/active_account";
   static String homePath = "/home";
   static String settingPath = "/setting";
   static String passwordChangePath = "/passwordChange";
