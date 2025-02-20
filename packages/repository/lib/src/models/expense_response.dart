@@ -20,6 +20,7 @@ class ExpenseResponse {
   late String createdBy;
   late String? updatedAt;
   late String? updatedBy;
+  late bool isDelete = false;
 
   ExpenseResponse({
     required this.id,
