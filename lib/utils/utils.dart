@@ -4,6 +4,7 @@ import 'package:ex_money/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:repository/repository.dart';
 
 String dateTimeFormated(DateTime dateTime, bool getTime) {
   DateTime now = DateTime.now();
@@ -165,4 +166,22 @@ String getTimeIntervalDesc(MapEntry<String, int> intervalMapValue) {
   }
 
   return desc;
+}
+
+List<ExpenseResponse> rebuildExpenseList(List<ExpenseResponse> currentList, ExpenseResponse? newData) {
+  if (newData == null) {
+    return currentList;
+  } else if (newData.isDelete) {
+    currentList.removeWhere((item) => item.id == newData.id);
+  }
+  for (int i = 0; i < currentList.length; i++) {
+    if (currentList[i].id == newData.id) {
+      currentList.removeWhere((item) => item.id == newData.id); //xóa vị trí hiện tại để add vào vị trí đầu
+      break;
+    }
+  }
+  if (!newData.isDelete) {
+    currentList.insert(0, newData);
+  }
+  return currentList;
 }

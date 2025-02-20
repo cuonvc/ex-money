@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:ex_money/screens/main/blocs/add_expense/add_expense_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_confirm_expense_from_speech/get_confirm_expense_from_speech_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
-import 'package:ex_money/screens/main/views/home/home_screen.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:ex_money/widgets/expense_edit.dart';
@@ -14,7 +13,8 @@ import 'package:repository/repository.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class Voice extends StatefulWidget {
-  const Voice({super.key});
+  final Function(ExpenseResponse) onExpenseAdd;
+  const Voice({super.key, required this.onExpenseAdd});
 
   @override
   State<Voice> createState() => _VoiceState();
@@ -79,7 +79,7 @@ class _VoiceState extends State<Voice> {
                     );
 
                     if (newExpense != null) {
-                      Navigator.pushNamed(context, NavigatePath.homePath, arguments: newExpense);
+                      widget.onExpenseAdd(newExpense);
                     }
                   }
                 } else if (state is GetConfirmExpenseFromSpeechFailure) {
@@ -179,7 +179,7 @@ class _VoiceState extends State<Voice> {
             return const Center(child: Loading(loadingColor: null,),);
           } else {
             // showDialogResponse(context, false, "Có lỗi xảy ra", "Không thể lấy thông tin");
-            return Scaffold(
+            return const Scaffold(
               body: Center(child: Text("Không thể lấy thông tin"),),
             );
           }

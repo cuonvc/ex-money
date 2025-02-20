@@ -40,6 +40,7 @@ class _HomeState extends State<HomeScreen> {
   final ScrollController _expenseScrollController = ScrollController();
 
   List<NotificationResponse> notificationList = [];
+  List<ExpenseResponse> expenseList = [];
 
 
   @override
@@ -74,9 +75,14 @@ class _HomeState extends State<HomeScreen> {
     _expenseScrollController.dispose();
   }
 
+  void onExpenseUpdate(ExpenseResponse? expense) {
+    setState(() {
+      expenseList = rebuildExpenseList(expenseList, expense);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ExpenseResponse? expenseAdd = ModalRoute.of(context)!.settings.arguments as ExpenseResponse?;
     return BlocBuilder<HomeOverviewBloc, HomeOverviewState>(
       builder: (context, state) {
         if (state is HomeOverviewFailure) {
@@ -87,7 +93,7 @@ class _HomeState extends State<HomeScreen> {
           );
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
-          List<ExpenseResponse> expenseList = response.ownerExpenses;
+          expenseList = response.ownerExpenses;
           notificationList = response.notifications;
           int unseenNotiCount = notificationList.where((item) => !item.seen).length;
 
@@ -317,7 +323,7 @@ class _HomeState extends State<HomeScreen> {
 
                         SizedBox(
                             height: MediaQuery.of(context).size.height - 40,
-                            child: ExpenseList(expenseList, true, _expenseScrollController, null)
+                            child: ExpenseList(expenseList, true, _expenseScrollController, widget.newExpense, onExpenseUpdate)
                         ),
                       ],
                     ),

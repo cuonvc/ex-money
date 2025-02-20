@@ -11,13 +11,15 @@ import 'package:repository/repository.dart';
 class ExpenseList extends StatefulWidget {
   final ScrollController expenseScrollController;
   final List<ExpenseResponse> expenseList;
-  final ExpenseResponse? newExpense;
+  final ExpenseResponse? newExpense; //just create new
+  final Function(ExpenseResponse?) onExpenseUpdate;
   final bool selectAllBtn;
 
   const ExpenseList(this.expenseList,
       this.selectAllBtn,
       this.expenseScrollController,
       this.newExpense,
+      this.onExpenseUpdate,
       {super.key});
 
   @override
@@ -26,31 +28,28 @@ class ExpenseList extends StatefulWidget {
 
 class _ExpenseListState extends State<ExpenseList> {
 
-  List<ExpenseResponse> rebuildExpenseList(List<ExpenseResponse> currentList, ExpenseResponse? newData) {
-    bool updated = false;
-    if (newData == null) {
-      return currentList;
-    } else if (newData.isDelete) {
-      currentList.removeWhere((item) => item.id == newData.id);
-    }
-    for (int i = 0; i < currentList.length; i++) {
-      if (currentList[i].id == newData.id) {
-        currentList[i] = newData;
-        updated = true;
-        break;
+  bool isContains() {
+    if (widget.newExpense != null) {
+      for (ExpenseResponse item in widget.expenseList) {
+        if (item.id == widget.newExpense!.id) {
+          return true;
+        }
       }
+      return false;
     }
-    if (!updated) {
-      currentList.add(newData);
-    }
-    return currentList;
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
 
     List<ExpenseResponse> expenseList = widget.expenseList;
-    rebuildExpenseList(expenseList, widget.newExpense);
+    // expenseList = rebuildExpenseList(expenseList, widget.newExpense);
+
+    // chỉ update list khi tạo mới, còn xóa hay sửa thì gọi call back
+    if (widget.newExpense != null && !isContains()) {
+      expenseList = rebuildExpenseList(expenseList, widget.newExpense);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,8 +110,7 @@ class _ExpenseListState extends State<ExpenseList> {
                           )
                       ),
                     );
-
-                    rebuildExpenseList(expenseList, expUpdated);
+                    widget.onExpenseUpdate(expUpdated);
                   },
                   child: ExpenseItem(expense: expense)
                 );

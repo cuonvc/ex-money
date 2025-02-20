@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   int screenIndex = 0;
   late Color selectedTab = cPrimary;
   Color unselectedTab = Colors.grey;
-  ExpenseResponse? expenseAdd;
+  ExpenseResponse? newExpense;
 
   //static screen index
   static const int _homeIndex = 0;
@@ -50,6 +50,15 @@ class _MainScreenState extends State<MainScreen> {
     getNavigationMode().then((String onValue) {
       navigationMode = onValue;
     });
+  }
+
+  void updateExpense(ExpenseResponse? expense) {
+    if (expense != null) {
+      setState(() {
+        newExpense = expense;
+        screenIndex = 0;
+      });
+    }
   }
 
   @override
@@ -94,11 +103,11 @@ class _MainScreenState extends State<MainScreen> {
               padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
               child: IndexedStack(
                 index: screenIndex,
-                  children: const [
-                    HomeScreen(),
-                    Voice(),
-                    WalletListScreen(),
-                    NoteScreen(),
+                  children: [
+                    HomeScreen(newExpense: newExpense,),
+                    Voice(onExpenseAdd: updateExpense,),
+                    const WalletListScreen(),
+                    const NoteScreen(),
                   ]
               ),
             ),
@@ -139,6 +148,7 @@ class _MainScreenState extends State<MainScreen> {
                               );
                             }
                         );
+                        updateExpense(newExpense);
                       },
                     );
                   } else {

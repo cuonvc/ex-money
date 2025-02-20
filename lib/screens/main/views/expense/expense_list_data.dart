@@ -8,6 +8,12 @@ import 'package:repository/repository.dart';
 class ExpenseListData extends StatelessWidget {
   const ExpenseListData({super.key});
 
+  void onExpenseUpdate(ExpenseResponse? expense) {
+    // setState(() {
+    //   rebuildExpenseList(expenseList, expense);
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetExpenseBloc, GetExpenseState>(
@@ -16,7 +22,7 @@ class ExpenseListData extends StatelessWidget {
             return const Center(child: Loading(loadingColor: null,),);
           } else if (state is GetExpenseSuccess) {
             List<ExpenseResponse> expenseList = state.data;
-            return ExpenseList(expenseList, false, ScrollController(), null);
+            return ExpenseList(expenseList, false, ScrollController(), null, onExpenseUpdate);
           } else if (state is GetExpenseFailure) {
             return Center(child: Text(state.message),);
           } else {
