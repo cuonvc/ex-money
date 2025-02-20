@@ -298,7 +298,8 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                 child: ExpenseList(
                                   walletList[currentWalletIndex].expenses,
                                   true,
-                                  _tabScrollController
+                                  _tabScrollController,
+                                  null
                                 ),
                               ),
                             ),

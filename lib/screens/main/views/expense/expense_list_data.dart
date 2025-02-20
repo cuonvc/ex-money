@@ -16,7 +16,7 @@ class ExpenseListData extends StatelessWidget {
             return const Center(child: Loading(loadingColor: null,),);
           } else if (state is GetExpenseSuccess) {
             List<ExpenseResponse> expenseList = state.data;
-            return ExpenseList(expenseList, false, ScrollController());
+            return ExpenseList(expenseList, false, ScrollController(), null);
           } else if (state is GetExpenseFailure) {
             return Center(child: Text(state.message),);
           } else {

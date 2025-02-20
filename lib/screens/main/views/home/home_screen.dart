@@ -23,8 +23,8 @@ import '../../blocs/get_wallet_list/get_wallet_list_bloc.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  // final ExpenseResponse? newExpense;
-  const HomeScreen({super.key});
+  final ExpenseResponse? newExpense;
+  const HomeScreen({super.key, this.newExpense});
 
   @override
   State<HomeScreen> createState() => _HomeState();
@@ -88,9 +88,6 @@ class _HomeState extends State<HomeScreen> {
         } else if (state is HomeOverviewSuccess) {
           final HomeOverviewResponse response = state.data;
           List<ExpenseResponse> expenseList = response.ownerExpenses;
-          if (expenseAdd != null) {
-            expenseList.add(expenseAdd);
-          }
           notificationList = response.notifications;
           int unseenNotiCount = notificationList.where((item) => !item.seen).length;
 
@@ -320,7 +317,7 @@ class _HomeState extends State<HomeScreen> {
 
                         SizedBox(
                             height: MediaQuery.of(context).size.height - 40,
-                            child: ExpenseList(expenseList, true, _expenseScrollController)
+                            child: ExpenseList(expenseList, true, _expenseScrollController, null)
                         ),
                       ],
                     ),

@@ -14,7 +14,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../blocs/delete_expense/delete_expense_bloc.dart';
+import '../../../blocs/update_expense/update_expense_bloc.dart';
 import '../../../blocs/wallet_setting/wallet_setting_bloc.dart';
+import '../../expense_detail/expense_detail.dart';
 
 class ConfigTab extends StatefulWidget {
   final ScrollController scrollController;
@@ -32,6 +35,7 @@ class _ConfigTabState extends State<ConfigTab> {
   final warningLevel2Controller = TextEditingController();
   final warningLevel3Controller = TextEditingController();
   bool isLoading = false;
+  bool isDeleted = false;
   bool schedulerLoading = false;
   UserResponse currentUser = UserResponse.empty();
   // late num walletId;
@@ -288,7 +292,7 @@ class _ConfigTabState extends State<ConfigTab> {
                           );
                         }
                         ExpenseSchedulerResponse item = widget.wallet.schedulers[idx];
-                        return Column(
+                        return isDeleted ? const Text("") : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -297,8 +301,35 @@ class _ConfigTabState extends State<ConfigTab> {
                             ),
                             GestureDetector(
                               child: ExpenseItem(expense: item.data),
+                              onTap: () async {
+                                ExpenseResponse? expUpdated = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext ctx) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (ctx) => UpdateExpenseBloc(ExpenseRepositoryImpl()),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) => DeleteExpenseBloc(ExpenseRepositoryImpl()),
+                                          ),
+                                        ],
+                                        child: ExpenseDetail(detail: item.data,),
+                                      )
+                                  ),
+                                );
+
+                                if (expUpdated != null) {
+                                  setState(() {
+                                    if (expUpdated.isDelete) {
+                                      isDeleted = true;
+                                    } else {
+                                      item.data = expUpdated;
+                                    }
+                                  });
+                                }
+                              },
                               onLongPress: () async {
-                                log("Editing opened");
                                 ExpenseSchedulerResponse? response = await showDialog(
                                     context: context,
                                     builder: (BuildContext ctx) {

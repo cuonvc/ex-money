@@ -11,11 +11,13 @@ import 'package:repository/repository.dart';
 class ExpenseList extends StatefulWidget {
   final ScrollController expenseScrollController;
   final List<ExpenseResponse> expenseList;
+  final ExpenseResponse? newExpense;
   final bool selectAllBtn;
 
   const ExpenseList(this.expenseList,
       this.selectAllBtn,
       this.expenseScrollController,
+      this.newExpense,
       {super.key});
 
   @override
@@ -23,10 +25,32 @@ class ExpenseList extends StatefulWidget {
 }
 
 class _ExpenseListState extends State<ExpenseList> {
+
+  List<ExpenseResponse> rebuildExpenseList(List<ExpenseResponse> currentList, ExpenseResponse? newData) {
+    bool updated = false;
+    if (newData == null) {
+      return currentList;
+    } else if (newData.isDelete) {
+      currentList.removeWhere((item) => item.id == newData.id);
+    }
+    for (int i = 0; i < currentList.length; i++) {
+      if (currentList[i].id == newData.id) {
+        currentList[i] = newData;
+        updated = true;
+        break;
+      }
+    }
+    if (!updated) {
+      currentList.add(newData);
+    }
+    return currentList;
+  }
+
   @override
   Widget build(BuildContext context) {
 
     List<ExpenseResponse> expenseList = widget.expenseList;
+    rebuildExpenseList(expenseList, widget.newExpense);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +93,29 @@ class _ExpenseListState extends State<ExpenseList> {
                   );
                 }
                 ExpenseResponse expense = expenseList[i];
-                return ExpenseItem(expense: expense);
+                return GestureDetector(
+                  onTap: () async {
+                    ExpenseResponse? expUpdated = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext ctx) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (ctx) => UpdateExpenseBloc(ExpenseRepositoryImpl()),
+                              ),
+                              BlocProvider(
+                                create: (context) => DeleteExpenseBloc(ExpenseRepositoryImpl()),
+                              ),
+                            ],
+                            child: ExpenseDetail(detail: expense,),
+                          )
+                      ),
+                    );
+
+                    rebuildExpenseList(expenseList, expUpdated);
+                  },
+                  child: ExpenseItem(expense: expense)
+                );
               },
             ),
           ),
