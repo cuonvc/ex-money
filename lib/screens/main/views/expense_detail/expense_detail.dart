@@ -109,7 +109,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     }
 
     void onBackScreen(BuildContext ctx, ExpenseResponse expense) {
-      Navigator.pop(context, response);
+      Navigator.pop(context, expense);
     }
 
 
@@ -144,9 +144,12 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
             } else if (state is DeleteExpenseSuccess) {
               setState(() {
                 isLoading = false;
+                if (response != null) {
+                  response?.isDelete = true;
+                }
               });
               await showDialogResponse(context, true, "Xóa chi tiêu", state.message);
-              Navigator.pop(context, null);
+              Navigator.pop(context, response);
             } else if (state is DeleteExpenseFailure) {
               setState(() {
                 isLoading = false;
