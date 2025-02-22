@@ -32,7 +32,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         titleController.text = noteData.title;
       }
       if (noteData.content.isNotEmpty) {
-        contentController.text = noteData.title;
+        contentController.text = noteData.content;
       }
     }
   }
@@ -64,7 +64,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               icon: const Icon(Icons.arrow_back_ios_new))
               : null,
           automaticallyImplyLeading: false,
-          title: Text(noteData.updatedAt.isNotEmpty ? "Cập nhật lần cuối: ${dateTimeFormatedFromStr(noteData.updatedAt, false)}" : "", style: TextStyle(fontSize: 12, color: cTextDisable),),
+          title: Text(noteData.updatedAt.isNotEmpty ? "Cập nhật lần cuối: ${dateTimeFormatedFromStr(noteData.updatedAt, false)}" : "", style: const TextStyle(fontSize: 12, color: cTextDisable),),
           centerTitle: true,
         ),
         body: Padding(
