@@ -8,6 +8,7 @@ class WalletResponse {
   late num id;
   late String status;
   late num ownerUserId;
+  late num currentUserId;
   late List<UserResponse> members;
   late List<ExpenseSchedulerResponse> schedulers;
   late String name;
@@ -31,6 +32,7 @@ class WalletResponse {
     required this.id,
     required this.status,
     required this.ownerUserId,
+    required this.currentUserId,
     required this.members,
     required this.schedulers,
     required this.name,
@@ -78,6 +80,7 @@ class WalletResponse {
       id: map['id'],
       status: map['status'],
       ownerUserId: map['ownerUserId'],
+      currentUserId: map['currentUserId'],
       members: members,
       schedulers: schedulers,
       name: map['name'],
@@ -104,6 +107,7 @@ class WalletResponse {
       id: 0,
       status: '',
       ownerUserId: 0,
+      currentUserId: 0,
       members: [],
       schedulers: [],
       name: '',

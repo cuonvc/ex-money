@@ -39,6 +39,7 @@ class _MemberTabState extends State<MemberTab> {
 
   @override
   Widget build(BuildContext context) {
+    bool isOwner = currentWallet.currentUserId == currentWallet.ownerUserId;
     return BlocProvider(
       create: (_) => WalletChangeUserBloc(WalletRepositoryImpl()),
       child: Column(
@@ -66,11 +67,14 @@ class _MemberTabState extends State<MemberTab> {
                     });
                   }
                 },
-                child: const Row(
-                  children: [
-                    Icon(Icons.add, color: cPrimary,),
-                    Text("Thêm thành viên", style: TextStyle(color: cPrimary),)
-                  ],
+                child: Visibility(
+                  visible: isOwner,
+                  child: const Row(
+                    children: [
+                      Icon(Icons.add, color: cPrimary,),
+                      Text("Thêm thành viên", style: TextStyle(color: cPrimary),)
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -89,12 +93,12 @@ class _MemberTabState extends State<MemberTab> {
                 }
                 accountExpandedList.addAll(List.generate(currentWallet.members.length, (_) => false));
                 UserResponse currentMember = currentWallet.members[index3];
-                bool isOwner = currentMember.id == currentWallet.ownerUserId;
+                bool currentIsOwner = currentMember.id == currentWallet.ownerUserId;
                 return Column(
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (!isOwner) {
+                        if (!currentIsOwner) {
                           setState(() {
                             if (!accountExpandedList[index3]) {
                               accountExpandedList.clear();
@@ -116,18 +120,20 @@ class _MemberTabState extends State<MemberTab> {
                             ),
                             const SizedBox(width: 10,),
                             Text(currentMember.name),
-                            !isOwner ? AnimatedRotation(
-                              turns: accountExpandedList[index3] ? 0.75 : 0.5,
-                              duration: const Duration(milliseconds: 200),
-                              child: const Icon(
-                                Icons.keyboard_arrow_left,
-                                color: Colors.grey,
-                                size: 26,
-                              )
+                            !currentIsOwner ? (
+                                isOwner ? AnimatedRotation(
+                                    turns: accountExpandedList[index3] ? 0.75 : 0.5,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_left,
+                                      color: Colors.grey,
+                                      size: 26,
+                                    )
+                                ) : const Text("")
                             ) : Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(width: 1, color: cPrimary)
@@ -144,7 +150,7 @@ class _MemberTabState extends State<MemberTab> {
                         duration: const Duration(milliseconds: 200),
                         curve: Curves.linear,
                         child: Visibility(
-                          visible: accountExpandedList[index3] && !isOwner,
+                          visible: accountExpandedList[index3] && !currentIsOwner && isOwner,
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 16),
                             padding: const EdgeInsets.all(10),
