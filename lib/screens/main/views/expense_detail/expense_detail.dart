@@ -174,7 +174,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                 ? IconButton(onPressed: () => onBackScreen(context, response!), icon: const Icon(Icons.arrow_back_ios_new))
                 : null,
             title: const Text(
-              "Chi tiết chi chi tiêu",
+              "Chi tiết chi tiêu",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             centerTitle: true,
