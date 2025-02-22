@@ -80,6 +80,7 @@ class _HomeState extends State<HomeScreen> {
     setState(() {
       expenseList = rebuildExpenseList(expenseList, expense);
     });
+    context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true)); //reload ẩn
   }
 
   @override

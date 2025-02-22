@@ -81,9 +81,10 @@ class _WalletListScreenState extends State<WalletListScreen> {
   }
 
   void onExpenseUpdate(ExpenseResponse? expense) {
-    // setState(() {
-    //   rebuildExpenseList(expenseList, expense);
-    // });
+    if (expense != null) {
+      context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true)); //đoạn này xử lý realtime hơi khó nên thôi load lại
+      context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true)); //reload ẩn
+    }
   }
 
   void onResetNewExpense() {

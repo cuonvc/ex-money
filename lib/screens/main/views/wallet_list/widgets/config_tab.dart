@@ -35,7 +35,6 @@ class _ConfigTabState extends State<ConfigTab> {
   final warningLevel2Controller = TextEditingController();
   final warningLevel3Controller = TextEditingController();
   bool isLoading = false;
-  bool isDeleted = false;
   bool schedulerLoading = false;
   UserResponse currentUser = UserResponse.empty();
   // late num walletId;
@@ -266,7 +265,7 @@ class _ConfigTabState extends State<ConfigTab> {
 
                           setState(() {
                             if (response != null) {
-                              widget.wallet.schedulers.add(response);
+                              widget.wallet.schedulers.insert(0, response);
                             }
                           });
                         },
@@ -292,7 +291,7 @@ class _ConfigTabState extends State<ConfigTab> {
                           );
                         }
                         ExpenseSchedulerResponse item = widget.wallet.schedulers[idx];
-                        return isDeleted ? const Text("") : Column(
+                        return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -322,7 +321,9 @@ class _ConfigTabState extends State<ConfigTab> {
                                 if (expUpdated != null) {
                                   setState(() {
                                     if (expUpdated.isDelete) {
-                                      isDeleted = true;
+                                      setState(() {
+                                        widget.wallet.schedulers.removeWhere((element) => element.data.id == expUpdated.id);
+                                      });
                                     } else {
                                       item.data = expUpdated;
                                     }

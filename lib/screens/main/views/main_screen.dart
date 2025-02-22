@@ -155,6 +155,7 @@ class _MainScreenState extends State<MainScreen> {
                             }
                         );
                         updateExpense(newExpense);
+                        context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true)); //reload ẩn
                       },
                     );
                   } else {
