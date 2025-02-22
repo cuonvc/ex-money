@@ -5,6 +5,7 @@ import 'package:ex_money/screens/auth/views/sign_up.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_text_field.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -13,7 +14,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
+import '../../../utils/auth_service.dart';
 import '../../../widgets/button_view.dart';
+import '../../../widgets/full_loading.dart';
+import '../blocs/oauth_sign_in/oauth_sign_in_bloc.dart';
 import '../blocs/sign_in_block/sign_in_bloc.dart';
 import '../blocs/sign_up/sign_up_bloc.dart';
 import '../widgets/widget_base.dart';
@@ -44,24 +48,42 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: BlocListener<SignInBloc, SignInState>(
-        listener: (context, state) {
-          if (state is SignInSuccess) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              NavigatePath.homePath, (route) => false,
-            );
-          } else if (state is SignInLoading) {
-            setState(() {
-              isLoading = true;
-            });
-          } else if (state is SignInFailure) {
-            setState(() {
-              isLoading = false;
-            });
-            showDialogResponse(context, false, "Đăng nhập thất bại", state.message);
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<SignInBloc, SignInState>(
+              listener: (context, state) {
+                if (state is SignInSuccess) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    NavigatePath.homePath, (route) => false,
+                  );
+                } else if (state is SignInLoading) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                } else if (state is SignInFailure) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  showDialogResponse(context, false, "Đăng nhập thất bại", state.message);
+                }
+              },
+          ),
+          BlocListener<OAuthSignInBloc, OAuthSignInState>(
+            listener: (context, state) {
+              if (state is OAuthSignInLoading) {
+                showBlurLoading(context);
+              } else if (state is OAuthSignInFailure) {
+                showDialogResponse(context, false, "Đăng nhập Google", state.message);
+              } else if (state is OAuthSignInSuccess) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  NavigatePath.homePath, (route) => false,
+                );
+              }
+            },
+          ),
+        ],
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
@@ -147,8 +169,13 @@ class _SignInState extends State<SignIn> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
-                                  onTap: () {
-
+                                  onTap: () async {
+                                    UserCredential cred = await AuthService().signInWithGoogle();
+                                    log(cred.additionalUserInfo?.profile?['email']);
+                                    String? accessToken = cred.credential?.accessToken;
+                                    if (accessToken != null) {
+                                      context.read<OAuthSignInBloc>().add(OAuthSignInEv(token: accessToken, provider: "GOOGLE"));
+                                    }
                                   },
                                   child: oAuthSelectionBtn(
                                       MediaQuery.sizeOf(context).width - ConstantSize.hozPadScreen * 2, Colors.white,
@@ -198,7 +225,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
         ),
-      ),
+),
     );
   }
 }

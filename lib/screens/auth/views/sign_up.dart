@@ -12,6 +12,7 @@ import 'package:repository/repository.dart';
 
 import '../../../widgets/button_view.dart';
 import '../../../widgets/full_loading.dart';
+import '../blocs/oauth_sign_in/oauth_sign_in_bloc.dart';
 import '../blocs/sign_in_block/sign_in_bloc.dart';
 import '../blocs/sign_up/sign_up_bloc.dart';
 
@@ -122,8 +123,15 @@ class _SignUpState extends State<SignUp> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (BuildContext ctx) => BlocProvider(
-                                                create: (context) => SignInBloc(UserRepositoryImpl()),
+                                              builder: (BuildContext ctx) => MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider(
+                                                    create: (ctx) => SignInBloc(UserRepositoryImpl()),
+                                                  ),
+                                                  BlocProvider(
+                                                    create: (ctx) => OAuthSignInBloc(UserRepositoryImpl()),
+                                                  )
+                                                ],
                                                 child: const SignIn(),
                                               )
                                           )

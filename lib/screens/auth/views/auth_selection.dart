@@ -62,6 +62,9 @@ class _AuthSelectionState extends State<AuthSelection> {
                                 providers: [
                                   BlocProvider(
                                     create: (ctx) => SignInBloc(UserRepositoryImpl()),
+                                  ),
+                                  BlocProvider(
+                                    create: (ctx) => OAuthSignInBloc(UserRepositoryImpl()),
                                   )
                                 ],
                                 child: const SignIn(),
