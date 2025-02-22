@@ -13,6 +13,7 @@ class ExpenseList extends StatefulWidget {
   final List<ExpenseResponse> expenseList;
   final ExpenseResponse? newExpense; //just create new
   final Function(ExpenseResponse?) onExpenseUpdate;
+  final VoidCallback resetNewExpense;
   final bool selectAllBtn;
 
   const ExpenseList(this.expenseList,
@@ -20,6 +21,7 @@ class ExpenseList extends StatefulWidget {
       this.expenseScrollController,
       this.newExpense,
       this.onExpenseUpdate,
+      this.resetNewExpense,
       {super.key});
 
   @override
@@ -39,6 +41,14 @@ class _ExpenseListState extends State<ExpenseList> {
     }
     return false;
   }
+
+  // @override
+  // void didUpdateWidget(covariant ExpenseList oldWidget) {
+  //   // TODO: implement didUpdateWidget
+  //   super.didUpdateWidget(oldWidget);
+  //   // Ensure resetNewExpense is called AFTER widget rebuilds
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +121,10 @@ class _ExpenseListState extends State<ExpenseList> {
                       ),
                     );
                     widget.onExpenseUpdate(expUpdated);
+                    // call back to the main screen để clear newExpense sau khi add (case thêm mới)
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      widget.resetNewExpense();
+                    });
                   },
                   child: ExpenseItem(expense: expense)
                 );

@@ -61,6 +61,12 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  void resetNewExpense() {
+    setState(() {
+      newExpense = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -104,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
               child: IndexedStack(
                 index: screenIndex,
                   children: [
-                    HomeScreen(newExpense: newExpense,),
+                    HomeScreen(newExpense: newExpense, resetNewExpense: resetNewExpense),
                     Voice(onExpenseAdd: updateExpense,),
                     const WalletListScreen(),
                     const NoteScreen(),

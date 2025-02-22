@@ -86,6 +86,10 @@ class _WalletListScreenState extends State<WalletListScreen> {
     // });
   }
 
+  void onResetNewExpense() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     double fullHeight = MediaQuery.sizeOf(context).height;
@@ -305,8 +309,9 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                   walletList[currentWalletIndex].expenses,
                                   true,
                                   _tabScrollController,
-                                    null,
-                                    onExpenseUpdate
+                                  null,
+                                  onExpenseUpdate,
+                                  onResetNewExpense
                                 ),
                               ),
                             ),

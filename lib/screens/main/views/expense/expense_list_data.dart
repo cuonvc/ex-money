@@ -14,6 +14,10 @@ class ExpenseListData extends StatelessWidget {
     // });
   }
 
+  void onResetNewExpense() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetExpenseBloc, GetExpenseState>(
@@ -22,7 +26,7 @@ class ExpenseListData extends StatelessWidget {
             return const Center(child: Loading(loadingColor: null,),);
           } else if (state is GetExpenseSuccess) {
             List<ExpenseResponse> expenseList = state.data;
-            return ExpenseList(expenseList, false, ScrollController(), null, onExpenseUpdate);
+            return ExpenseList(expenseList, false, ScrollController(), null, onExpenseUpdate, onResetNewExpense);
           } else if (state is GetExpenseFailure) {
             return Center(child: Text(state.message),);
           } else {

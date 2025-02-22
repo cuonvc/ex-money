@@ -24,7 +24,8 @@ import '../../blocs/get_wallet_list/get_wallet_list_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   final ExpenseResponse? newExpense;
-  const HomeScreen({super.key, this.newExpense});
+  final VoidCallback resetNewExpense;
+  const HomeScreen({this.newExpense, required this.resetNewExpense, super.key});
 
   @override
   State<HomeScreen> createState() => _HomeState();
@@ -323,7 +324,7 @@ class _HomeState extends State<HomeScreen> {
 
                         SizedBox(
                             height: MediaQuery.of(context).size.height - 40,
-                            child: ExpenseList(expenseList, true, _expenseScrollController, widget.newExpense, onExpenseUpdate)
+                            child: ExpenseList(expenseList, true, _expenseScrollController, widget.newExpense, onExpenseUpdate, widget.resetNewExpense)
                         ),
                       ],
                     ),
