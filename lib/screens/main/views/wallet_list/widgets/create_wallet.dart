@@ -74,7 +74,7 @@ class _CreateWalletState extends State<CreateWallet> {
                       child: Text("Tên ví"),
                     ),
                     BaseTextField(controller: walletNameController, inputType: TextInputType.text, icon: null,
-                        hintText: "Tên ví của bạn", passwordField: false
+                        hintText: "Tên ví của bạn", passwordField: false, isValidNumber: false, numberValid: null,
                     ),
                   ],
                 ),

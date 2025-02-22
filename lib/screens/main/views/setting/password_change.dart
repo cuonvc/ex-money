@@ -76,11 +76,11 @@ class _PasswordChangeState extends State<PasswordChange> {
           child: ListView(
             children: [
               const SizedBox(height: 20,),
-              BaseTextField(controller: oldPasswordController, inputType: TextInputType.text, icon: null, hintText: "Mật khẩu hiện tại", passwordField: true),
+              BaseTextField(controller: oldPasswordController, inputType: TextInputType.text, icon: null, hintText: "Mật khẩu hiện tại", passwordField: true, isValidNumber: false, numberValid: null,),
               const SizedBox(height: 26,),
-              BaseTextField(controller: newPasswordController, inputType: TextInputType.text, icon: null, hintText: "Mật khẩu mới", passwordField: true),
+              BaseTextField(controller: newPasswordController, inputType: TextInputType.text, icon: null, hintText: "Mật khẩu mới", passwordField: true, isValidNumber: false, numberValid: null,),
               const SizedBox(height: 26,),
-              BaseTextField(controller: newPasswordConfirmController, inputType: TextInputType.text, icon: null, hintText: "Nhập lại mật khẩu mới", passwordField: true),
+              BaseTextField(controller: newPasswordConfirmController, inputType: TextInputType.text, icon: null, hintText: "Nhập lại mật khẩu mới", passwordField: true, isValidNumber: false, numberValid: null,),
               const SizedBox(height: 40,),
               const Text("Quên mật khẩu? chưa làm", style: TextStyle(color: cPrimary),),
               const SizedBox(height: 40,),

@@ -8,6 +8,8 @@ class BaseTextField extends StatefulWidget {
   final IconData? icon;
   final String? hintText;
   final bool passwordField;
+  final bool isValidNumber;
+  final double? numberValid;
 
   const BaseTextField({
     super.key,
@@ -15,7 +17,9 @@ class BaseTextField extends StatefulWidget {
     required this.inputType,
     required this.icon,
     required this.hintText,
-    required this.passwordField
+    required this.passwordField,
+    required this.isValidNumber,
+    required this.numberValid
   });
 
   @override
@@ -65,6 +69,15 @@ class _BaseTextFieldState extends State<BaseTextField> {
         // filled: true,
         fillColor: Colors.white,
       ),
+      onChanged: (value) {
+        if (widget.isValidNumber && widget.numberValid != null) {
+          double percent = double.tryParse(value) ?? 0;
+          if (percent > widget.numberValid!) {
+            widget.controller.text = widget.numberValid!.toInt().toString(); // Limit value to 100
+            widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+          }
+        }
+      },
     );
   }
 }

@@ -131,7 +131,9 @@ class _ConfigTabState extends State<ConfigTab> {
                                                 icon: null,
                                                 hintText: '',
                                                 // hintText: widget.wallet.expenseLimit == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseLimit),
-                                                passwordField: false
+                                                passwordField: false,
+                                                isValidNumber: false,
+                                                numberValid: null,
                                             ),
                                           ],
                                         ),
@@ -146,7 +148,9 @@ class _ConfigTabState extends State<ConfigTab> {
                                                 icon: null,
                                                 hintText: '',
                                                 // hintText: widget.wallet.expenseWarningLevel1 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel1),
-                                                passwordField: false
+                                                passwordField: false,
+                                                isValidNumber: true,
+                                                numberValid: 100,
                                             ),
                                           ],
                                         ),
@@ -161,7 +165,9 @@ class _ConfigTabState extends State<ConfigTab> {
                                                 icon: null,
                                                 hintText: '',
                                                 // hintText: widget.wallet.expenseWarningLevel2 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel2),
-                                                passwordField: false
+                                                passwordField: false,
+                                                isValidNumber: true,
+                                                numberValid: 100,
                                             ),
                                           ],
                                         ),
@@ -176,7 +182,9 @@ class _ConfigTabState extends State<ConfigTab> {
                                                 icon: null,
                                                 hintText: '',
                                                 // hintText: widget.wallet.expenseWarningLevel3 == null ? "Chưa thiết lập" : toAmountFormat(widget.wallet.expenseWarningLevel3),
-                                                passwordField: false
+                                                passwordField: false,
+                                                isValidNumber: true,
+                                                numberValid: 100,
                                             ),
                                           ],
                                         )

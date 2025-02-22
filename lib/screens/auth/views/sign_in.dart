@@ -97,6 +97,8 @@ class _SignInState extends State<SignIn> {
                               icon: Icons.person,
                               hintText: "Nhập địa chỉ email",
                               passwordField: false,
+                              isValidNumber: false,
+                              numberValid: null,
                             ),
                             const SizedBox(height: 18,),
                             BaseTextField(
@@ -105,6 +107,8 @@ class _SignInState extends State<SignIn> {
                               icon: Icons.key,
                               hintText: "Nhập mật khẩu",
                               passwordField: true,
+                              isValidNumber: false,
+                              numberValid: null,
                             ),
                             // credInputFiled(passwordInput, TextInputType.visiblePassword, true, Icons.key, "Nhập mật khẩu"),
                             const SizedBox(height: 16,),

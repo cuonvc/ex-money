@@ -72,6 +72,8 @@ class _AddUserToWalletState extends State<AddUserToWallet> {
                     icon: null,
                     hintText: "Nhập email người dùng",
                     passwordField: false,
+                    isValidNumber: false,
+                    numberValid: null,
                   ),
                 ),
                 Padding(
