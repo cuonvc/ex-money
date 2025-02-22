@@ -99,7 +99,10 @@ class UserRepositoryImpl implements UserRepository {
   Future signOut() async {
     try {
       dynamic resp = await authController.handleSignOut();
-      if (resp.statusCode == 404) {
+      if (resp.statusCode == 401) {
+        await this.renewAccessToken();
+        resp = await authController.handleSignOut();
+      } else if (resp.statusCode == 404) {
         return HttpResponse.notFound();
       }
       final Map<String, dynamic> mapResponse = jsonDecode(

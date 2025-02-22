@@ -122,6 +122,7 @@ class _ExpenseListState extends State<ExpenseList> {
                     );
                     widget.onExpenseUpdate(expUpdated);
                     // call back to the main screen để clear newExpense sau khi add (case thêm mới)
+                    //mục đích cần clear là vì cái newExpense cứ maãi cached ở đấy nên sẽ ảnh hưởng đến rebuild state
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       widget.resetNewExpense();
                     });
