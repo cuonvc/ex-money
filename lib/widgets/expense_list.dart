@@ -30,17 +30,17 @@ class ExpenseList extends StatefulWidget {
 
 class _ExpenseListState extends State<ExpenseList> {
 
-  bool isContains() {
-    if (widget.newExpense != null) {
-      for (ExpenseResponse item in widget.expenseList) {
-        if (item.id == widget.newExpense!.id) {
-          return true;
-        }
-      }
-      return false;
-    }
-    return false;
-  }
+  // bool isContains() {
+  //   if (widget.newExpense != null) {
+  //     for (ExpenseResponse item in widget.expenseList) {
+  //       if (item.id == widget.newExpense!.id) {
+  //         return true;
+  //       }
+  //     }
+  //     return false;
+  //   }
+  //   return false;
+  // }
 
   // @override
   // void didUpdateWidget(covariant ExpenseList oldWidget) {
@@ -57,9 +57,9 @@ class _ExpenseListState extends State<ExpenseList> {
     // expenseList = rebuildExpenseList(expenseList, widget.newExpense);
 
     // chỉ update list khi tạo mới, còn xóa hay sửa thì gọi call back
-    if (widget.newExpense != null && !isContains()) {
-      expenseList = rebuildExpenseList(expenseList, widget.newExpense);
-    }
+    // if (widget.newExpense != null && !isContains()) {
+    //   expenseList = rebuildExpenseList(expenseList, widget.newExpense);
+    // }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

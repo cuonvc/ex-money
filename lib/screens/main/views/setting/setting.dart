@@ -16,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../blocs/get_home_overview/home_overview_bloc.dart';
+
 class Setting extends StatefulWidget {
   const Setting({super.key});
 
@@ -61,8 +63,7 @@ class _SettingState extends State<Setting> {
     }
   }
 
-  Future<void> fetchSearch(String displayName) async {
-    log("Display name save -> $displayName");
+  Future<void> fetchSaveDispName(String displayName) async {
     context.read<AccountSettingBloc>().add(
         AccountSettingEv(name: displayName.trim())
     );
@@ -83,6 +84,7 @@ class _SettingState extends State<Setting> {
                 userInfo = state.data;
                 nameController.text = userInfo.name;
               });
+              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
             } else if (state is AccountSettingFailure) {
               showDialogResponse(context, false, "Cập nhật thông tin tài khoản", state.message);
             }
@@ -166,7 +168,7 @@ class _SettingState extends State<Setting> {
                     CircleAvatar(
                       radius: 25,
                       backgroundColor: Colors.transparent,
-                      backgroundImage: userInfo.avatarUrl != null ? NetworkImage(userInfo.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
+                      backgroundImage: (userInfo.avatarUrl != null && userInfo.avatarUrl!.isNotEmpty) ? NetworkImage(userInfo.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                     )
                   ],
                 ),
@@ -199,7 +201,7 @@ class _SettingState extends State<Setting> {
                       icon: null,
                       hintText: "",
                       submitBtn: false,
-                      fetchMethod: fetchSearch,
+                      fetchMethod: fetchSaveDispName,
                     ),
                   ],
                 ),

@@ -12,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+import '../../blocs/get_home_overview/home_overview_bloc.dart';
+
 class Voice extends StatefulWidget {
   final Function(ExpenseResponse) onExpenseAdd;
   const Voice({super.key, required this.onExpenseAdd});
@@ -78,9 +80,10 @@ class _VoiceState extends State<Voice> {
                         }
                     );
 
-                    if (newExpense != null) {
-                      widget.onExpenseAdd(newExpense);
-                    }
+                    // if (newExpense != null) {
+                    //   widget.onExpenseAdd(newExpense);
+                    // }
+                    context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
                   }
                 } else if (state is GetConfirmExpenseFromSpeechFailure) {
                   showDialogResponse(context, false, "Có lỗi xảy ra", "Không thể trích xuất thông tin");

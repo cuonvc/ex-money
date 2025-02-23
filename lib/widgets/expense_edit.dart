@@ -395,7 +395,7 @@ class _ExpenseEditState extends State<ExpenseEdit> {
                   context: context,
                   locale: const Locale("vi"),
                   initialDate: selectedDateTime,
-                  firstDate: DateTime.now().add(Duration(days: -1)),
+                  firstDate: DateTime.now().add(Duration(days: -365)),
                   lastDate: DateTime.now().add(Duration(days: 365))
               );
 

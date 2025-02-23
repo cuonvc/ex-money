@@ -23,9 +23,9 @@ import '../../blocs/get_wallet_list/get_wallet_list_bloc.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  final ExpenseResponse? newExpense;
+  ExpenseResponse? newExpense;
   final VoidCallback resetNewExpense;
-  const HomeScreen({this.newExpense, required this.resetNewExpense, super.key});
+  HomeScreen({this.newExpense, required this.resetNewExpense, super.key});
 
   @override
   State<HomeScreen> createState() => _HomeState();
@@ -40,6 +40,7 @@ class _HomeState extends State<HomeScreen> {
   final ScrollController _homeScrollController = ScrollController();
   final ScrollController _expenseScrollController = ScrollController();
 
+  HomeOverviewResponse? response;
   List<NotificationResponse> notificationList = [];
   List<ExpenseResponse> expenseList = [];
 
@@ -82,6 +83,12 @@ class _HomeState extends State<HomeScreen> {
     });
     context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true)); //reload ẩn
   }
+
+  // void onResetNewExpense() {
+  //   setState(() {
+  //     widget.newExpense = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +141,9 @@ class _HomeState extends State<HomeScreen> {
                                           ),
                                           BlocProvider(
                                             create: (ctx) => SignOutBloc(UserRepositoryImpl()),
+                                          ),
+                                          BlocProvider(
+                                            create: (ctx) => HomeOverviewBloc(OverviewRepositoryImpl()),
                                           )
                                         ],
                                         child: const Setting(),
@@ -151,7 +161,7 @@ class _HomeState extends State<HomeScreen> {
                                       child: CircleAvatar(
                                         radius: 20,
                                         backgroundColor: Colors.transparent,
-                                        backgroundImage: response.user.avatarUrl != null ? NetworkImage(response.user.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
+                                        backgroundImage: (response.user.avatarUrl != null && response.user.avatarUrl!.isNotEmpty) ? NetworkImage(response.user.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                                       ),
                                     ),
                                     const SizedBox(width: 14,),
