@@ -291,7 +291,7 @@ class _HomeState extends State<HomeScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                showBubbleComparePrevMonth(context, -150000);
+                                showBubbleComparePrevMonth(context, response.moreThanLastMonth);
                               },
                               child: Container(
                                 key: comparePrevMonthKey,
@@ -300,7 +300,7 @@ class _HomeState extends State<HomeScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,),
+                                        response.moreThanLastMonth > 0 ? const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,) : const Icon(Icons.arrow_downward_rounded, color: Colors.green, size: 12,),
                                         Text(
                                           " ${toAmountFormat(response.moreThanLastMonth)}",
                                           style: const TextStyle(fontSize: 12, color: Colors.red),
