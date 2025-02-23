@@ -7,6 +7,11 @@ import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
+import '../../../blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
+import '../../../blocs/get_home_overview/home_overview_bloc.dart';
+import '../../../blocs/get_wallet_list/get_wallet_list_bloc.dart';
+
 class CreateWallet extends StatefulWidget {
   const CreateWallet({super.key});
 
@@ -30,8 +35,12 @@ class _CreateWalletState extends State<CreateWallet> {
             isLoading = true;
           });
         } else if (state is CreateWalletSuccess) {
+          // context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+          // context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+          // context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+          // context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
           Navigator.pop(context, state.wallet);
-          showDialogResponse(context, true, "Tạo ví", "Đã tạo thành công");
+          showDialogResponse(context, true, "Tạo ví", state.message);
         } else if (state is CreateWalletFailure) {
           Navigator.pop(context, null);
           showDialogResponse(context, false, "Tạo ví", state.message);

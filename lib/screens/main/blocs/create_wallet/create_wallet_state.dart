@@ -19,8 +19,10 @@ final class CreateWalletFailure extends CreateWalletState {
 
 final class CreateWalletSuccess extends CreateWalletState {
   final WalletResponse wallet;
+  final String message;
 
   const CreateWalletSuccess({
-    required this.wallet
+    required this.wallet,
+    required this.message
   });
 }

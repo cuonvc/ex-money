@@ -116,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     HomeScreen(newExpense: newExpense, resetNewExpense: resetNewExpense),
                     Voice(onExpenseAdd: updateExpense,),
-                    const WalletListScreen(),
+                    WalletListScreen(),
                     const NoteScreen(),
                   ]
               ),
