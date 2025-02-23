@@ -26,6 +26,17 @@ class WalletController {
     );
   }
 
+  Future<dynamic> deleteWallet(num id) async {
+    Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
+
+    return http.delete(
+        Uri.parse('$domain/api/wallet/$id?locale=vi'),
+        headers: {
+          'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}'
+        },
+    );
+  }
+
   Future<dynamic> getWalletList() async {
     Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
     return http.get(

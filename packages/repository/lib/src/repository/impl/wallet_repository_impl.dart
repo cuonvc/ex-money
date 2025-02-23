@@ -32,6 +32,26 @@ class WalletRepositoryImpl implements WalletRepository {
   }
 
   @override
+  Future<dynamic> deleteWallet(num id) async {
+    try {
+      var resp = await walletController.deleteWallet(id);
+      if (resp.statusCode == 401) {
+        await userRepository.renewAccessToken();
+        resp = await walletController.deleteWallet(id);
+      } else if (resp.statusCode == 404) {
+        return HttpResponse.notFound();
+      }
+
+      final Map<String, dynamic> mapResponse = jsonDecode(
+          utf8.decode((await resp).bodyBytes));
+      return HttpResponse.toObject(mapResponse);
+    } catch (e) {
+      log('Error to delete wallet - ${e.toString()}');
+      return HttpResponse.toError(e.toString(), null);
+    }
+  }
+
+  @override
   Future<dynamic> getWalletList() async {
     try {
       var resp = await walletController.getWalletList();

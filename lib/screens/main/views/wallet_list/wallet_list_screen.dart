@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ex_money/screens/main/blocs/create_expense_scheduler/create_expense_scheduler_bloc.dart';
 import 'package:ex_money/screens/main/blocs/create_wallet/create_wallet_bloc.dart';
+import 'package:ex_money/screens/main/blocs/delete_wallet/delete_wallet_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_expense_filter_resource/get_expense_filter_resource_bloc.dart';
 import 'package:ex_money/screens/main/blocs/get_wallet_list/get_wallet_list_bloc.dart';
@@ -13,8 +14,11 @@ import 'package:ex_money/screens/main/views/wallet_list/widgets/member_tab.dart'
 import 'package:ex_money/screens/main/views/wallet_list/widgets/config_tab.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/utils/utils.dart';
+import 'package:ex_money/widgets/dialog_confirm.dart';
+import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:ex_money/widgets/expense_list.dart';
 import 'package:ex_money/widgets/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
@@ -104,256 +108,287 @@ class _WalletListScreenState extends State<WalletListScreen> {
           walletCount = walletList.length;
           pageController = PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1);
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
-              context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
-              context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
-              context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+          return BlocListener<DeleteWalletBloc, DeleteWalletState>(
+            listener: (context, state) async {
+              if (state is DeleteWalletFailure) {
+                await showDialogResponse(context, false, "Xóa ví", state.message);
+                context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+                context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+                context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+                context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+              } else if (state is DeleteWalletSuccess) {
+                await showDialogResponse(context, true, "Xóa ví", state.message);
+                context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+                context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+                context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+                context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+              }
             },
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Tất cả ví ($walletCount)",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        WalletResponse? newWallet = await showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (BuildContext context) {
-                              return BlocProvider(
-                                create: (ctx) => CreateWalletBloc(WalletRepositoryImpl()),
-                                child: const CreateWallet()
-                              );
-                            },
-                            isScrollControlled: true
-                        );
-                        if (newWallet != null) {
-                          context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
-                          context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
-                          context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
-                          context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
-                        }
-                        setState(() {
+            child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+                context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+                context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+                context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+              },
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Tất cả ví ($walletCount)",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          WalletResponse? newWallet = await showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return BlocProvider(
+                                  create: (ctx) => CreateWalletBloc(WalletRepositoryImpl()),
+                                  child: const CreateWallet()
+                                );
+                              },
+                              isScrollControlled: true
+                          );
                           if (newWallet != null) {
-                            walletCount++;
-                            pageController.animateToPage(walletCount - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                            context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+                            context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+                            context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+                            context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
                           }
+                          setState(() {
+                            if (newWallet != null) {
+                              walletCount++;
+                              pageController.animateToPage(walletCount - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                            }
+                          });
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(Icons.add, color: cPrimary,),
+                            Text("Thêm ví mới", style: TextStyle(color: cPrimary),)
+                          ],
+                        ),
+                      )//sau sẽ thêm bộ lọc
+                    ],
+                  ),
+                  const SizedBox(height: 14,),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height / 4,
+                    child: PageView.builder(
+                      itemCount: walletCount,
+                      scrollDirection: Axis.horizontal,
+                      controller: pageController,
+                      onPageChanged: (int index) {
+                        setState(() {
+                          currentWalletIndex = index;
+                          // currentWallet = walletList[index];
                         });
                       },
-                      child: const Row(
-                        children: [
-                          Icon(Icons.add, color: cPrimary,),
-                          Text("Thêm ví mới", style: TextStyle(color: cPrimary),)
-                        ],
-                      ),
-                    )//sau sẽ thêm bộ lọc
-                  ],
-                ),
-                const SizedBox(height: 14,),
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height / 4,
-                  child: PageView.builder(
-                    itemCount: walletCount,
-                    scrollDirection: Axis.horizontal,
-                    controller: pageController,
-                    onPageChanged: (int index) {
-                      setState(() {
-                        currentWalletIndex = index;
-                        // currentWallet = walletList[index];
-                      });
-                    },
-                    itemBuilder: (context, idx) {
-                      // currentWallet = walletList[currentWalletIndex];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            // width: fullWidth,
-                            height: cardHeight,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.all(Radius.circular(18)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 2,
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3), // changes position of shadow
-                                  ),
-                                ]
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${toAmountFormat(walletList[currentWalletIndex].balance)} VND",
-                                      style: const TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w900
-                                      ),
-                                    ),
-
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const Icon(
-                                              Icons.circle_sharp,
-                                              size: 24,
-                                              color: Colors.green,
-                                            ),
-                                            const SizedBox(width: 6,),
-                                            Text("Hạn mức ${toAmountFormat(walletList[currentWalletIndex].expenseLimit)}")
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const Icon(
-                                              Icons.trending_down,
-                                              color: Colors.red,
-                                              size: 24,
-                                            ),
-                                            const SizedBox(width: 6,),
-                                            Text("Đã chi ${toAmountFormat(walletList[currentWalletIndex].totalExpense)}")
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      walletList[currentWalletIndex].name,
-                                      style: const TextStyle(fontSize: 14, color: cTextDisable, fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-
-                //khi pageView bên trên kéo qua lại, Bloc sẽ reload data dưới này, không call lại API
-                Expanded(
-                  child: ListView(
-                    controller: _walletScrollController,
-                    children: [
-                      SizedBox(
-                        height: 300,
-                        child: StatsPieChart(expenses: walletList[currentWalletIndex].expenses,)
-                      ),
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height - cardHeight,
-                        child: Column(
+                      itemBuilder: (context, idx) {
+                        // currentWallet = walletList[currentWalletIndex];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      expenseTab = true;
-                                      accountTab = false;
-                                      configTab = false;
-                                    });
-                                  },
-                                  child: tabTitle("GD gần đây", expenseTab),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      expenseTab = false;
-                                      accountTab = true;
-                                      configTab = false;
-                                    });
-                                  },
-                                  child: tabTitle("Thành viên", accountTab),
-                                ),
-                                TextButton(
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              // width: fullWidth,
+                              height: cardHeight,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(Radius.circular(18)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ]
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "${toAmountFormat(walletList[currentWalletIndex].balance)} VND",
+                                            style: const TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w900
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              bool confirmed = await showDialogConfirm(context, "Xóa ví", "Bạn có chắc chắc muốn xóa ${walletList[currentWalletIndex].name}?", null, "Xóa");
+                                              if (confirmed) {
+                                                context.read<DeleteWalletBloc>().add(DeleteWalletEv(id: walletList[currentWalletIndex].id));
+                                              }
+                                            },
+                                            child: const Icon(CupertinoIcons.delete, size: 18, color: cTextDisable,),
+                                          )
+                                        ],
+                                      ),
+
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const Icon(
+                                                Icons.circle_sharp,
+                                                size: 24,
+                                                color: Colors.green,
+                                              ),
+                                              const SizedBox(width: 6,),
+                                              Text("Hạn mức ${toAmountFormat(walletList[currentWalletIndex].expenseLimit)}")
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const Icon(
+                                                Icons.trending_down,
+                                                color: Colors.red,
+                                                size: 24,
+                                              ),
+                                              const SizedBox(width: 6,),
+                                              Text("Đã chi ${toAmountFormat(walletList[currentWalletIndex].totalExpense)}")
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        walletList[currentWalletIndex].name,
+                                        style: const TextStyle(fontSize: 14, color: cTextDisable, fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+
+                  //khi pageView bên trên kéo qua lại, Bloc sẽ reload data dưới này, không call lại API
+                  Expanded(
+                    child: ListView(
+                      controller: _walletScrollController,
+                      children: [
+                        SizedBox(
+                          height: 300,
+                          child: StatsPieChart(expenses: walletList[currentWalletIndex].expenses,)
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height - cardHeight,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        expenseTab = true;
+                                        accountTab = false;
+                                        configTab = false;
+                                      });
+                                    },
+                                    child: tabTitle("GD gần đây", expenseTab),
+                                  ),
+                                  TextButton(
                                     onPressed: () {
                                       setState(() {
                                         expenseTab = false;
-                                        accountTab = false;
-                                        configTab = true;
+                                        accountTab = true;
+                                        configTab = false;
                                       });
                                     },
-                                    child: tabTitle("Thiết lập", configTab)
-                                ),
-                              ],
-                            ),
-                            // expenses tab
-                            Visibility(
-                              visible: expenseTab,
-                              child: Expanded(
-                                child: ExpenseList(
-                                  walletList[currentWalletIndex].expenses,
-                                  true,
-                                  _tabScrollController,
-                                  null,
-                                  onExpenseUpdate,
-                                  onResetNewExpense
-                                ),
+                                    child: tabTitle("Thành viên", accountTab),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          expenseTab = false;
+                                          accountTab = false;
+                                          configTab = true;
+                                        });
+                                      },
+                                      child: tabTitle("Thiết lập", configTab)
+                                  ),
+                                ],
                               ),
-                            ),
-                            // member tab
-                            Visibility(
-                              visible: accountTab,
-                              child: Expanded(child: MemberTab(
-                                _tabScrollController,
-                                walletList[currentWalletIndex],
-                                key: ValueKey(walletList[currentWalletIndex]),
-                              ),),
-                            ),
-                            // wallet info tab
-                            Visibility(
-                              visible: configTab,
-                                child:  MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider(
-                                        create: (ctx) => WalletSettingBloc(WalletRepositoryImpl()),
-                                    ),
-                                    BlocProvider(
-                                      create: (context) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
-                                    ),
-                                    BlocProvider(
-                                      create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
-                                    ),
-                                  ],
-                                  child: ConfigTab(
+                              // expenses tab
+                              Visibility(
+                                visible: expenseTab,
+                                child: Expanded(
+                                  child: ExpenseList(
+                                    walletList[currentWalletIndex].expenses,
+                                    true,
                                     _tabScrollController,
-                                    walletList[currentWalletIndex]
+                                    null,
+                                    onExpenseUpdate,
+                                    onResetNewExpense
                                   ),
                                 ),
-                              // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                              ),
+                              // member tab
+                              Visibility(
+                                visible: accountTab,
+                                child: Expanded(child: MemberTab(
+                                  _tabScrollController,
+                                  walletList[currentWalletIndex],
+                                  key: ValueKey(walletList[currentWalletIndex]),
+                                ),),
+                              ),
+                              // wallet info tab
+                              Visibility(
+                                visible: configTab,
+                                  child:  MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                          create: (ctx) => WalletSettingBloc(WalletRepositoryImpl()),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => CreateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => UpdateExpenseSchedulerBloc(TaskRepositoryImpl()),
+                                      ),
+                                    ],
+                                    child: ConfigTab(
+                                      _tabScrollController,
+                                      walletList[currentWalletIndex]
+                                    ),
+                                  ),
+                                // child: ConfigTab(walletId: walletList[currentWalletIndex].id, expenseLimit: walletList[currentWalletIndex].expenseLimit,),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         } else if (state is GetWalletListFailure) {
