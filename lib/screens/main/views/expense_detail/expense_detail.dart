@@ -261,7 +261,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                         descriptionController.clear();
                       });
                     },
-                    child: isLoading ? buttonLoading(false, null) : (!isEditing ? buttonView(true, "Sửa", null) : buttonView(false, "Hủy", null)),
+                    child: isLoading ? buttonLoading(false, null) : (!isEditing ? buttonView(false, "Sửa", null) : buttonView(false, "Hủy", null)),
                   ),
                   Visibility(
                     visible: isEditing,
