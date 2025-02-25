@@ -9,18 +9,22 @@ class BaseTextFieldSubmit extends StatefulWidget {
   TextEditingController controller;
   TextInputType inputType;
   IconData? icon;
+  IconData? submitIcon;
   String hintText;
   bool submitBtn;
   final fetchMethod;
+  bool fetchRealtime;
 
   BaseTextFieldSubmit({
     super.key,
     required this.controller,
     required this.inputType,
     required this.icon,
+    required this.submitIcon,
     required this.hintText,
     required this.submitBtn,
-    required this.fetchMethod
+    required this.fetchMethod,
+    required this.fetchRealtime
   });
 
   @override
@@ -59,7 +63,9 @@ class _BaseTextFieldSubmitState extends State<BaseTextFieldSubmit> {
         setState(() {
           isTyping = value.isNotEmpty;
         });
-        onChangeFetch(controller.text, fetchMethod, true);
+        if (widget.fetchRealtime) {
+          onChangeFetch(controller.text, fetchMethod, true);
+        }
       },
 
       keyboardType: inputType,
@@ -85,7 +91,7 @@ class _BaseTextFieldSubmitState extends State<BaseTextFieldSubmit> {
           onTap: () => onChangeFetch(controller.text, fetchMethod, false),
           child: Container(
               padding: const EdgeInsets.all(4),
-              child: const Icon(Icons.arrow_forward_rounded, color: cPrimary,)
+              child: Icon(widget.submitIcon ?? Icons.arrow_forward_rounded, color: cPrimary,)
           ),
         ) : const Text(""),
         hintText: hintText,

@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../widgets/base_text_field.dart';
 import '../../blocs/get_home_overview/home_overview_bloc.dart';
 
 class Setting extends StatefulWidget {
@@ -63,11 +64,12 @@ class _SettingState extends State<Setting> {
     }
   }
 
-  Future<void> fetchSaveDispName(String displayName) async {
-    context.read<AccountSettingBloc>().add(
-        AccountSettingEv(name: displayName.trim())
-    );
-  }
+  //bỏ đi vì auto save không thể để validate đc
+  // Future<void> fetchSaveDispName(String displayName) async {
+  //   context.read<AccountSettingBloc>().add(
+  //       AccountSettingEv(name: displayName.trim())
+  //   );
+  // }
 
   void onBackScreen(BuildContext ctx) {
     Navigator.pop(ctx);
@@ -195,13 +197,14 @@ class _SettingState extends State<Setting> {
                   children: [
                     const Text("Tên hiển thị", style: TextStyle(color: cTextDisable, fontSize: 12),),
                     const SizedBox(height: 6,),
-                    BaseTextFieldSubmit(
+                    BaseTextField(
                       controller: nameController,
                       inputType: TextInputType.text,
                       icon: null,
                       hintText: "",
-                      submitBtn: false,
-                      fetchMethod: fetchSaveDispName,
+                      passwordField: false,
+                      isValidNumber: false,
+                      numberValid: null,
                     ),
                   ],
                 ),

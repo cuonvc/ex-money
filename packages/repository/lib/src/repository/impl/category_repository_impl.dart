@@ -10,12 +10,12 @@ class CategoryRepositoryImpl extends CategoryRepository {
   final userRepository = UserRepositoryImpl();
 
   @override
-  Future getCategoryList(num? walletId) async {
+  Future getCategoryList(num? walletId, String keyword) async {
     try {
-      var resp = await categoryController.getCategoryList(walletId);
+      var resp = await categoryController.getCategoryList(walletId, keyword);
       if (resp.statusCode == 401) {
         await userRepository.renewAccessToken();
-        resp = await categoryController.getCategoryList(walletId);
+        resp = await categoryController.getCategoryList(walletId, keyword);
       } else if (resp.statusCode == 404) {
         return HttpResponse.notFound();
       }

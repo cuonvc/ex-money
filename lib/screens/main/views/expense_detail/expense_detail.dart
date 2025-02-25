@@ -379,7 +379,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext ctx) => BlocProvider(
-                  create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: detail.walletId, isReload: false)),
+                  create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: detail.walletId, keyword: '', isReload: false, isCache: false)),
                   child: CategoryAll(walletId: detail.walletId,),
                 )
             )

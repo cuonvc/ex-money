@@ -10,11 +10,15 @@ sealed class GetCategoryEvent extends Equatable {
 class GetCategoryEv extends GetCategoryEvent {
   ExpenseCategoryResponse? category;
   final num? walletId;
+  final String keyword;
   final bool isReload;
+  final bool isCache;
 
   GetCategoryEv({
     required this.walletId,
-    required this.isReload
+    required this.keyword,
+    required this.isReload,
+    required this.isCache
   });
 
   @override

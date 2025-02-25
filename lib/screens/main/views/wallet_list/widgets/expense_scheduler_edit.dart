@@ -254,7 +254,7 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext ctx) => BlocProvider(
-                          create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: numberFromString(walletId), isReload: false)),
+                          create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: numberFromString(walletId), keyword: '', isReload: false, isCache: false)),
                           child: CategoryAll(walletId: id,)
                       )
                   )

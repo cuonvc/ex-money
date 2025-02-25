@@ -21,6 +21,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
       );
       final partOfPrefKey = "${CachedPrefKey.categoryListPref}${event.walletId}";
       final isReload = event.isReload;
+      final isCache = event.isCache;
 
       try {
         final Object? listCategory = prefs.get(partOfPrefKey);
@@ -31,15 +32,17 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
         }
 
         wallets = [];
-        if (listCategory == null || isReload) {
+        if (listCategory == null || isReload || isCache) {
           emit(GetCategoryLoading());
-          HttpResponse response = await categoryRepository.getCategoryList(event.walletId);
+          HttpResponse response = await categoryRepository.getCategoryList(event.walletId, event.keyword);
           if (response.code == 0) {
             List<ExpenseCategoryResponse> data = ExpenseCategoryResponse.fromList(response.data[0]);
             emit(GetCategorySuccess(data, wallets));
 
-            List<Map<String, dynamic>> json = ExpenseCategoryResponse.listToMap(data);
-            await prefs.setString(partOfPrefKey, jsonEncode(json));
+            if (isCache) {
+              List<Map<String, dynamic>> json = ExpenseCategoryResponse.listToMap(data);
+              await prefs.setString(partOfPrefKey, jsonEncode(json));
+            }
           } else {
             emit(GetCategoryFailure(response.message));
           }

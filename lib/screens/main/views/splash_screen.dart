@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
           create: (context) => GetWalletListBloc(WalletRepositoryImpl())..add(GetWalletListEv(isReload: true)),
         ),
         BlocProvider(
-          create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: null, isReload: true)),
+          create: (context) => GetCategoryBloc(CategoryRepositoryImpl())..add(GetCategoryEv(walletId: null, keyword: '', isReload: true, isCache: true)),
         ),
         BlocProvider(
           create: (context) => GetExpenseEditResourceBloc(ExpenseRepositoryImpl())..add(GetExpenseEditResourceEv(walletId: null, isReload: true)),

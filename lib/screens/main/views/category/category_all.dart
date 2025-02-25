@@ -72,7 +72,7 @@ class _CategoryAllState extends State<CategoryAll> {
                   );
 
                   if (res != null) {
-                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: data, isReload: true));
+                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: data, keyword: '', isReload: true, isCache: true));
                   }
                 },
                 icon: const Icon(Icons.add, color: cPrimary,)
@@ -96,9 +96,11 @@ class _CategoryAllState extends State<CategoryAll> {
                         controller: keywordController,
                         inputType: TextInputType.text,
                         icon: Icons.search,
+                        submitIcon: null,
                         hintText: "Tên, mô tả danh mục",
                         submitBtn: true,
-                        fetchMethod: fetchSearch
+                        fetchMethod: fetchSearch,
+                        fetchRealtime: true,
                     ),
                     Expanded(child: ListView(children: _buildCategoryList(list),))
                   ],
@@ -131,6 +133,14 @@ class _CategoryAllState extends State<CategoryAll> {
 
   Future<void> fetchSearch(String keyword) async {
     log("Keyword searching -> $keyword");
+    context.read<GetCategoryBloc>().add(
+        GetCategoryEv(
+          walletId: widget.walletId,
+          keyword: keyword,
+          isReload: true,
+          isCache: false
+        )
+    );
   }
 }
 
@@ -205,7 +215,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                   );
 
                   if (res != null) {
-                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, isReload: true));
+                    context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, keyword: '', isReload: true, isCache: true));
                   }
                 },
               ),
@@ -255,7 +265,7 @@ class _ParentCategoryTileState extends State<ParentCategoryTile> {
                           );
 
                           if (res != null) {
-                            context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, isReload: true));
+                            context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.category.refId, keyword: '', isReload: true, isCache: true));
                           }
                         },
                       ),

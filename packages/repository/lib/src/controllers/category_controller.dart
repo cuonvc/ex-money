@@ -6,13 +6,13 @@ import 'package:repository/src/utils/utils.dart';
 
 class CategoryController {
 
-  Future<dynamic> getCategoryList(num? walletId) async {
+  Future<dynamic> getCategoryList(num? walletId, String keyword) async {
     String id = walletId == null ? "" : walletId.toString();
 
     Map<String, dynamic> accessTokenData = await getAccessTokenDataFromDisk();
 
     return http.get(
-        Uri.parse('$domain/api/category?save_type=WALLET&ref_id=$id&locale=vi'),
+        Uri.parse('$domain/api/category?walletId=$id&keyword=$keyword&locale=vi'),
         headers: {
           // 'Accept-Language': 'vi', //required
           'Authorization': '${accessTokenData['tokenType']} ${accessTokenData['token']}'
