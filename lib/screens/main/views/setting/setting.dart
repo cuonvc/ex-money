@@ -8,6 +8,7 @@ import 'package:ex_money/screens/auth/blocs/sign_out/sign_out_bloc.dart';
 import 'package:ex_money/screens/main/views/setting/password_change.dart';
 import 'package:ex_money/utils/constant.dart';
 import 'package:ex_money/widgets/base_text_field_submit.dart';
+import 'package:ex_money/widgets/button_view.dart';
 import 'package:ex_money/widgets/dialog_confirm.dart';
 import 'package:ex_money/widgets/dialog_response.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,6 +32,7 @@ class _SettingState extends State<Setting> {
   TextEditingController nameController = TextEditingController();
   bool notificationOn = false;
   bool signOutLoading = false;
+  bool saveInfoLoading = false;
   late UserResponse userInfo = UserResponse.empty();
 
   @override
@@ -81,13 +83,19 @@ class _SettingState extends State<Setting> {
       listeners: [
         BlocListener<AccountSettingBloc, AccountSettingState>(
           listener: (context, state) {
-            if (state is AccountSettingSuccess) {
+            if (state is AccountSettingLoading) {
+              setState(() {
+                saveInfoLoading = true;
+              });
+            } else if (state is AccountSettingSuccess) {
               setState(() {
                 userInfo = state.data;
                 nameController.text = userInfo.name;
+                saveInfoLoading = false;
               });
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
             } else if (state is AccountSettingFailure) {
+              saveInfoLoading = false;
               showDialogResponse(context, false, "Cập nhật thông tin tài khoản", state.message);
             }
           },
@@ -206,6 +214,15 @@ class _SettingState extends State<Setting> {
                       isValidNumber: false,
                       numberValid: null,
                     ),
+                    const SizedBox(height: 20,),
+                    GestureDetector(
+                      onTap: () {
+                        context.read<AccountSettingBloc>().add(
+                            AccountSettingEv(name: nameController.text.trim())
+                        );
+                      },
+                      child: saveInfoLoading ? buttonLoading(false, null) : buttonView(false, "Lưu thông tin", null),
+                    )
                   ],
                 ),
                 const SizedBox(
