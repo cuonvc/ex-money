@@ -45,6 +45,7 @@ class _CategoryAllState extends State<CategoryAll> {
       child: Scaffold(
         backgroundColor: cBackground,
         appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
           backgroundColor: cBackground,
           leading: ModalRoute.of(context)!.canPop
               ? IconButton(onPressed: () => onBackScreen(context), icon: const Icon(Icons.arrow_back_ios_new))
@@ -79,37 +80,42 @@ class _CategoryAllState extends State<CategoryAll> {
             )
           ],
         ),
-        body: BlocBuilder<GetCategoryBloc, GetCategoryState>(
-          builder: (context, state) {
-            if (state is GetCategoryFailure) {
-              return Center(child: Text(state.message),);
-            } else if (state is GetCategoryLoading) {
-              return const Center(child: Loading(loadingColor: null,),);
-            } else if (state is GetCategorySuccess) {
-              List<ExpenseCategoryResponse> list = state.data;
-              walletNameList = state.walletListInfo;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
-                child: Column(
-                  children: [
-                    BaseTextFieldSubmit(
-                        controller: keywordController,
-                        inputType: TextInputType.text,
-                        icon: Icons.search,
-                        submitIcon: null,
-                        hintText: "Tên, mô tả danh mục",
-                        submitBtn: true,
-                        fetchMethod: fetchSearch,
-                        fetchRealtime: true,
-                    ),
-                    Expanded(child: ListView(children: _buildCategoryList(list),))
-                  ],
-                ),
-              );
-            } else {
-              return const Center(child: Text("Ops! Có lỗi xảy ra"),);
-            }
+        body: RefreshIndicator(
+          onRefresh: () async {
+            context.read<GetCategoryBloc>().add(GetCategoryEv(walletId: widget.walletId, keyword: '', isReload: true, isCache: true));
           },
+          child: BlocBuilder<GetCategoryBloc, GetCategoryState>(
+            builder: (context, state) {
+              if (state is GetCategoryFailure) {
+                return Center(child: Text(state.message),);
+              } else if (state is GetCategoryLoading) {
+                return const Center(child: Loading(loadingColor: null,),);
+              } else if (state is GetCategorySuccess) {
+                List<ExpenseCategoryResponse> list = state.data;
+                walletNameList = state.walletListInfo;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: ConstantSize.hozPadScreen),
+                  child: Column(
+                    children: [
+                      BaseTextFieldSubmit(
+                          controller: keywordController,
+                          inputType: TextInputType.text,
+                          icon: Icons.search,
+                          submitIcon: null,
+                          hintText: "Tên, mô tả danh mục",
+                          submitBtn: true,
+                          fetchMethod: fetchSearch,
+                          fetchRealtime: true,
+                      ),
+                      Expanded(child: ListView(children: _buildCategoryList(list),))
+                    ],
+                  ),
+                );
+              } else {
+                return const Center(child: Text("Ops! Có lỗi xảy ra"),);
+              }
+            },
+          ),
         ),
       ),
     );
