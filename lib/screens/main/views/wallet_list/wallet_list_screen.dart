@@ -108,49 +108,49 @@ class _WalletListScreenState extends State<WalletListScreen> {
     double fullHeight = MediaQuery.sizeOf(context).height;
     cardHeight = fullHeight / 5;
     return MultiBlocListener(
-  listeners: [
-    BlocListener<GetWalletListBloc, GetWalletListState>(
-      listener: (context, state) {
-        if (state is GetWalletListLoading) {
-          setState(() {
-            isLoading = true;
-          });
-        } else if (state is GetWalletListSuccess) {
-          setState(() {
-            isLoading = false;
-            walletList = state.walletList;
-            walletCount = walletList.length;
-            pageController = PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1);
-          });
+      listeners: [
+        BlocListener<GetWalletListBloc, GetWalletListState>(
+          listener: (context, state) {
+            if (state is GetWalletListLoading) {
+              setState(() {
+                isLoading = true;
+              });
+            } else if (state is GetWalletListSuccess) {
+              setState(() {
+                isLoading = false;
+                walletList = state.walletList;
+                walletCount = walletList.length;
+                pageController = PageController(viewportFraction: walletCount >= 2 ? 0.9 : 1);
+              });
 
-        } else if (state is GetWalletListFailure) {
-          setState(() {
-            isLoading = false;
-          });
-          showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
-        }
-      },
-    ),
-    BlocListener<DeleteWalletBloc, DeleteWalletState>(
-      listener: (ctx, state) async {
-        if (state is DeleteWalletFailure) {
-          await showDialogResponse(ctx, false, "Xóa ví", state.message);
-          onRefresh(ctx);
-        } else if (state is DeleteWalletSuccess) {
-          await showDialogResponse(context, true, "Xóa ví", state.message);
-          onRefresh(ctx);
-          setState(() {
-            currentWalletIndex = 0;
-            // if (currentWalletIndex >= walletList.length) {
-            //   currentWalletIndex = walletList.isNotEmpty ? walletList.length - 1 : 0;
-            // }
-          });
-        }
-      },
+            } else if (state is GetWalletListFailure) {
+              setState(() {
+                isLoading = false;
+              });
+              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+            }
+          },
+        ),
+        BlocListener<DeleteWalletBloc, DeleteWalletState>(
+          listener: (ctx, state) async {
+            if (state is DeleteWalletFailure) {
+              await showDialogResponse(ctx, false, "Xóa ví", state.message);
+              onRefresh(ctx);
+            } else if (state is DeleteWalletSuccess) {
+              await showDialogResponse(context, true, "Xóa ví", state.message);
+              onRefresh(ctx);
+              setState(() {
+                currentWalletIndex = 0;
+                // if (currentWalletIndex >= walletList.length) {
+                //   currentWalletIndex = walletList.isNotEmpty ? walletList.length - 1 : 0;
+                // }
+              });
+            }
+          },
 
-    )
-  ],
-  child: isLoading || walletList.isEmpty ? const Center(child: Loading(loadingColor: null,),) : RefreshIndicator(
+        )
+      ],
+      child: isLoading || walletList.isEmpty ? const Center(child: Loading(loadingColor: null,),) : RefreshIndicator(
         onRefresh: () async {
           onRefresh(context);
         },
@@ -227,6 +227,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                 },
                 itemBuilder: (context, idx) {
                   // currentWallet = walletList[currentWalletIndex];
+                  bool isOwner = walletList[currentWalletIndex].currentUserId == walletList[currentWalletIndex].ownerUserId;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -271,7 +272,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
                                           context.read<DeleteWalletBloc>().add(DeleteWalletEv(id: walletList[currentWalletIndex].id));
                                         }
                                       },
-                                      child: const Icon(CupertinoIcons.delete, size: 18, color: cTextDisable,),
+                                      child: isOwner && !walletList[currentWalletIndex].isDefault ? const Icon(CupertinoIcons.delete, size: 18, color: cTextDisable,) : const Text(""),
                                     )
                                   ],
                                 ),
