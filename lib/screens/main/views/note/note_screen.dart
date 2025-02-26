@@ -24,6 +24,7 @@ class NoteScreen extends StatefulWidget {
 
 class _NoteScreenState extends State<NoteScreen> {
 
+  bool isLoading = false;
   List<NoteModel> dataList = [];
 
   @override
@@ -75,56 +76,76 @@ class _NoteScreenState extends State<NoteScreen> {
   
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetNoteListBloc, GetNoteListState>(
-        builder: (context, state) {
+    return BlocListener<GetNoteListBloc, GetNoteListState>(
+        listener: (context, state) async {
           if (state is GetNoteListLoading) {
-            return const Center(child: Loading(loadingColor: null),);
+            setState(() {
+              isLoading = true;
+            });
           } else if (state is GetNoteListSuccess) {
-            dataList = state.list;
-            return BlocListener<SaveNoteBloc, SaveNoteState>(
-              listener: (context, state) {
-                if (state is SaveNoteInitial || state is SaveNoteLoading) {
+            setState(() {
+              isLoading = false;
+              dataList = state.list;
+            });
+          } else if (state is GetNoteListFailure) {
+            setState(() {
+              isLoading = false;
+            });
+            if (state.statusCode == 403) {
+              await showDialogToRedirectLogin(context, state.message);
+            } else {
+              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+            }
+          }
+        },
+        child: isLoading ? const Center(child: Loading(loadingColor: null,),) : BlocListener<SaveNoteBloc, SaveNoteState>(
+          listener: (context, state) async {
+            if (state is SaveNoteInitial || state is SaveNoteLoading) {
 
-                } else if (state is SaveNoteSuccess) {
-                  List<NoteModel> listUpdated = doChangeView(dataList, state.data);
-                  setState(() {
-                    dataList = listUpdated;
-                  });
-                } else if (state is SaveNoteFailure) {
-                  showDialogResponse(context, false, "Lưu ghi chú", state.message);
-                }
-              },
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  context.read<GetNoteListBloc>().add(const GetNoteListEv());
-                },
-                child: Scaffold(
+            } else if (state is SaveNoteSuccess) {
+              List<NoteModel> listUpdated = doChangeView(dataList, state.data);
+              setState(() {
+                dataList = listUpdated;
+              });
+            } else if (state is SaveNoteFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
+            }
+          },
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<GetNoteListBloc>().add(const GetNoteListEv());
+            },
+            child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  surfaceTintColor: Colors.transparent,
                   backgroundColor: Colors.white,
-                  appBar: AppBar(
-                    surfaceTintColor: Colors.transparent,
-                    backgroundColor: Colors.white,
-                    automaticallyImplyLeading: false,
-                    centerTitle: true,
-                    title: const Text(
-                      "Ghi chú nhanh",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                      ),
+                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                  title: const Text(
+                    "Ghi chú nhanh",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
                     ),
-                    actions: [
-                      GestureDetector(
-                        onTap: () async {
-                          await doSaveNote(context, null);
-                          // setState(() {
-                          //   dataList = afterSync;
-                          // });
-                        },
-                        child: const Icon(Icons.add, color: cPrimary,),
-                      )
-                    ],
                   ),
-                  body: dataList.isNotEmpty ? SingleChildScrollView(
+                  actions: [
+                    GestureDetector(
+                      onTap: () async {
+                        await doSaveNote(context, null);
+                        // setState(() {
+                        //   dataList = afterSync;
+                        // });
+                      },
+                      child: const Icon(Icons.add, color: cPrimary,),
+                    )
+                  ],
+                ),
+                body: dataList.isNotEmpty ? SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 200 /*height of item*/),
@@ -225,27 +246,10 @@ class _NoteScreenState extends State<NoteScreen> {
                         }),
                       ),
                     ) /* : (isLoading ? const Center(child: Loading(loadingColor: null),) : const Center(child: Text("Chưa có ghi chú nào"),)) */
-                  ) : const Center(child: Text("Chưa có ghi chú nào"),)
-                ),
-              ),
-            );
-          } else if (state is GetNoteListFailure) {
-            showDialogResponse(context, false, "Ghi chú", state.message);
-            return RefreshIndicator(
-                onRefresh: () async {
-                  context.read<GetNoteListBloc>().add(const GetNoteListEv());
-                },
-                child: const Center(child: Text("Chưa có ghi chú nào"),)
-            );
-          } else {
-            return RefreshIndicator(
-                onRefresh: () async {
-                  context.read<GetNoteListBloc>().add(const GetNoteListEv());
-                },
-                child: const Center(child: Text("Chưa có ghi chú nào"),)
-            );
-          }
-        },
-      );
+                ) : const Center(child: Text("Chưa có ghi chú nào"),)
+            ),
+          ),
+        ),
+    );
   }
 }

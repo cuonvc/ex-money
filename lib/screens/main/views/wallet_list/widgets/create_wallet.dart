@@ -29,7 +29,7 @@ class _CreateWalletState extends State<CreateWallet> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CreateWalletBloc, CreateWalletState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is CreateWalletLoading) {
           setState(() {
             isLoading = true;
@@ -42,8 +42,14 @@ class _CreateWalletState extends State<CreateWallet> {
           Navigator.pop(context, state.wallet);
           showDialogResponse(context, true, "Tạo ví", state.message);
         } else if (state is CreateWalletFailure) {
-          Navigator.pop(context, null);
-          showDialogResponse(context, false, "Tạo ví", state.message);
+          if (state.statusCode == 403) {
+            await showDialogToRedirectLogin(context, state.message);
+          } else {
+            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+          }
+          setState(() {
+            isLoading = false;
+          });
         }
       },
       child: DraggableScrollableSheet(

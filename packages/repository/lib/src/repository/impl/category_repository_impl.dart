@@ -25,7 +25,7 @@ class CategoryRepositoryImpl extends CategoryRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get category error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -45,7 +45,7 @@ class CategoryRepositoryImpl extends CategoryRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Save category error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -65,7 +65,7 @@ class CategoryRepositoryImpl extends CategoryRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Delete category error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

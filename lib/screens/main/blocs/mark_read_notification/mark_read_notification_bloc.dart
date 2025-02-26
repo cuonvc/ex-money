@@ -48,11 +48,11 @@ class MarkReadNotificationBloc extends Bloc<MarkReadNotificationEvent, MarkReadN
             }
           }
         } else {
-          emit(MarkReadNotificationFailure(message: response.message));
+          emit(MarkReadNotificationFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Mark read notification failed: $e");
-        emit(MarkReadNotificationFailure(message: e.toString()));
+        emit(MarkReadNotificationFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

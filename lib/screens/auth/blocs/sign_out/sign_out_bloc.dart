@@ -29,11 +29,11 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
           await prefs.clear();
           emit(SignOutSuccess());
         } else {
-          emit(SignOutFailure(message: response.message));
+          emit(SignOutFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to Log out");
-        emit(SignOutFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(SignOutFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

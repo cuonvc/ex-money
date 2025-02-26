@@ -31,11 +31,11 @@ class OAuthSignInBloc extends Bloc<OAuthSignInEvent, OAuthSignInState> {
           await prefs.setString(partOfPrefKey, jsonEncode(response.data));
           emit(OAuthSignInSuccess(response: signInResponse));
         } else {
-          emit(OAuthSignInFailure(message: response.message));
+          emit(OAuthSignInFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to Login via ${event.provider}");
-        emit(OAuthSignInFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(OAuthSignInFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

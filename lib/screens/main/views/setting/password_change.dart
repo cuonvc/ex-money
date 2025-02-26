@@ -28,7 +28,7 @@ class _PasswordChangeState extends State<PasswordChange> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<PasswordChangeBloc, PasswordChangeState>(
-  listener: (context, state) {
+  listener: (context, state) async {
     if (state is PasswordChangeLoading || state is PasswordChangeInitial) {
       setState(() {
         isLoading = true;
@@ -45,7 +45,11 @@ class _PasswordChangeState extends State<PasswordChange> {
       setState(() {
         isLoading = false;
       });
-      showDialogResponse(context, false, "Thay đổi mật khẩu", state.message);
+      if (state.statusCode == 403) {
+        await showDialogToRedirectLogin(context, state.message);
+      } else {
+        showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+      }
     }
   },
   child: PopScope(

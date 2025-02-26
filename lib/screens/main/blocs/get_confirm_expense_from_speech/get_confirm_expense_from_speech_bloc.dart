@@ -20,11 +20,11 @@ class GetConfirmExpenseFromSpeechBloc extends Bloc<GetConfirmExpenseFromSpeechEv
           ExpenseConfirmResponse expense = ExpenseConfirmResponse.fromMap(response.data[0]);
           emit(GetConfirmExpenseFromSpeechSuccess(message: response.message, response: expense));
         } else {
-          emit(GetConfirmExpenseFromSpeechFailure(message: response.message));
+          emit(GetConfirmExpenseFromSpeechFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to create expense");
-        emit(GetConfirmExpenseFromSpeechFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(GetConfirmExpenseFromSpeechFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

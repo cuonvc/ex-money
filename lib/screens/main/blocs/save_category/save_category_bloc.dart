@@ -20,11 +20,11 @@ class SaveCategoryBloc extends Bloc<SaveCategoryEvent, SaveCategoryState> {
           ExpenseCategoryResponse category = ExpenseCategoryResponse.fromMap(response.data[0]);
           emit(SaveCategorySuccess(message: "Đã cập nhật danh mục", response: category));
         } else {
-          emit(SaveCategoryFailure(message: response.message));
+          emit(SaveCategoryFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to save category");
-        emit(SaveCategoryFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(SaveCategoryFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

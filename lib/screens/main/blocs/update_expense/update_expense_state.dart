@@ -10,9 +10,11 @@ sealed class UpdateExpenseState extends Equatable {
 final class UpdateExpenseInitial extends UpdateExpenseState {}
 final class UpdateExpenseLoading extends UpdateExpenseState {}
 final class UpdateExpenseFailure extends UpdateExpenseState {
+  final int statusCode;
   final String message;
 
   const UpdateExpenseFailure({
+    required this.statusCode,
     required this.message
   });
 }

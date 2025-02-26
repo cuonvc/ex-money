@@ -20,11 +20,11 @@ class ActiveAccountBloc extends Bloc<ActiveAccountEvent, ActiveAccountState> {
         if (response.code == 0) {
           emit(ActiveAccountSuccess(message: response.message));
         } else {
-          emit(ActiveAccountFailure(message: response.message));
+          emit(ActiveAccountFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to Sign up");
-        emit(ActiveAccountFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(ActiveAccountFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

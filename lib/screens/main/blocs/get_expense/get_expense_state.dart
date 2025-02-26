@@ -8,9 +8,13 @@ sealed class GetExpenseState extends Equatable {
 final class GetExpenseInitial extends GetExpenseState {}
 final class GetExpenseLoading extends GetExpenseState {}
 final class GetExpenseFailure extends GetExpenseState {
+  final int statusCode;
   final String message;
 
-  const GetExpenseFailure(this.message);
+  const GetExpenseFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class GetExpenseSuccess extends GetExpenseState {
   final List<ExpenseResponse> data;

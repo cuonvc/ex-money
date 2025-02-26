@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
+import '../../../widgets/dialog_response.dart';
 import '../blocs/get_category/get_category_bloc.dart';
 import '../blocs/get_expense_edit_resource/get_expense_edit_resource_bloc.dart';
 
@@ -83,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void checking(Equatable state) {
+  Future<void> checking(Equatable state) async {
     log("====================> Init resource");
     if (state is HomeOverviewSuccess || state is GetWalletListSuccess || state is GetCategorySuccess
         || state is GetExpenseEditResourceSuccess || state is GetExpenseFilterResourceSuccess) {
@@ -101,10 +102,12 @@ class _SplashScreenState extends State<SplashScreen> {
     } else if (state is HomeOverviewFailure || state is GetWalletListFailure || state is GetCategoryFailure
         || state is GetExpenseEditResourceFailure || state is GetExpenseFilterResourceFailure) {
 
-      // setState(() {
-      //   isLoading = false;
-      // });
-      Navigator.pushNamed(context, NavigatePath.authSelectionPath);
+      int statusCode = (state as dynamic).statusCode;
+      String message = (state as dynamic).message;
+      if (statusCode == 403) {
+        await showDialogToRedirectLogin(context, message);
+        Navigator.pushNamed(context, NavigatePath.authSelectionPath);
+      }
     }
   }
 }

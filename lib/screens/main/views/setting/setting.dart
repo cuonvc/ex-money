@@ -82,7 +82,7 @@ class _SettingState extends State<Setting> {
     return MultiBlocListener(
       listeners: [
         BlocListener<AccountSettingBloc, AccountSettingState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AccountSettingLoading) {
               setState(() {
                 saveInfoLoading = true;
@@ -95,20 +95,30 @@ class _SettingState extends State<Setting> {
               });
               context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
             } else if (state is AccountSettingFailure) {
-              saveInfoLoading = false;
-              showDialogResponse(context, false, "Cập nhật thông tin tài khoản", state.message);
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
+              setState(() {
+                saveInfoLoading = false;
+              });
             }
           },
         ),
         BlocListener<NotificationTurnBloc, NotificationTurnState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is NotificationTurnFailure) {
-              showDialogResponse(context, false, "Bật / tắt thông báo", "Có lỗi xảy ra");
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
             }
           },
         ),
         BlocListener<SignOutBloc, SignOutState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is SignOutLoading || state is SignOutInitial) {
               setState(() {
                 signOutLoading = true;
@@ -117,7 +127,11 @@ class _SettingState extends State<Setting> {
               setState(() {
                 signOutLoading = false;
               });
-              showDialogResponse(context, false, "Đăng xuất tài khoản", "Có lỗi xảy ra");
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
             } else {
               setState(() {
                 signOutLoading = false;

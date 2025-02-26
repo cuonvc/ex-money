@@ -25,7 +25,7 @@ class TaskRepositoryImpl extends TaskRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Create expense scheduler error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -45,7 +45,7 @@ class TaskRepositoryImpl extends TaskRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Update expense scheduler error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

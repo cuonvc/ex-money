@@ -38,7 +38,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error to Active account - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(e.toString(), 403);
     }
   }
 
@@ -54,7 +54,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error login - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(e.toString(), 403);
     }
   }
 
@@ -70,7 +70,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error login via OAuth $provider - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(e.toString(), 403);
     }
   }
 
@@ -85,6 +85,9 @@ class UserRepositoryImpl implements UserRepository {
       final partOfPrefKey = CachedPrefKey.signInRespPref;
 
       var rp = await authController.renewAccessToken(refreshTokenData['token']);
+      if (rp.statusCode == 401 || rp.statusCode == 403) {
+        log('---------> Refresh token expired');
+      }
       final Map<String, dynamic> mapResponse = jsonDecode(
           utf8.decode(await rp.bodyBytes));
       HttpResponse response = HttpResponse.toObject(mapResponse);
@@ -130,7 +133,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Update profile error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -150,7 +153,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Turn notification error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -170,7 +173,7 @@ class UserRepositoryImpl implements UserRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Change password error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 }

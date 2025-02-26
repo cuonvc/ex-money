@@ -20,11 +20,11 @@ class WalletChangeUserBloc extends Bloc<WalletChangeUserEvent, WalletChangeUserS
           WalletResponse walletResponse = WalletResponse.fromMap(response.data[0]);
           emit(WalletChangeUserSuccess(response: walletResponse));
         } else {
-          emit(WalletChangeUserFailure(message: response.message));
+          emit(WalletChangeUserFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Fail to change user wallet: ${e}");
-        emit(WalletChangeUserFailure(message: e.toString()));
+        emit(WalletChangeUserFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

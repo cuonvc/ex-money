@@ -26,7 +26,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Mark read notification error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

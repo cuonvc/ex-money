@@ -10,9 +10,13 @@ sealed class GetExpenseFilterResourceState extends Equatable {
 final class GetExpenseFilterResourceInitial extends GetExpenseFilterResourceState {}
 final class GetExpenseFilterResourceLoading extends GetExpenseFilterResourceState {}
 final class GetExpenseFilterResourceFailure extends GetExpenseFilterResourceState {
+  final int statusCode;
   final String message;
 
-  const GetExpenseFilterResourceFailure(this.message);
+  const GetExpenseFilterResourceFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class GetExpenseFilterResourceSuccess extends GetExpenseFilterResourceState {
   final ExpenseFilterResource resource;

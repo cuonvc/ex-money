@@ -64,28 +64,41 @@ class _ExpenseSchedulerEditState extends State<ExpenseSchedulerEdit> {
     return MultiBlocListener(
   listeners: [
     BlocListener<CreateExpenseSchedulerBloc, CreateExpenseSchedulerState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if(state is CreateExpenseSchedulerLoading) {
             setState(() {
               isLoading = true;
             });
           } else if (state is CreateExpenseSchedulerFailure) {
-            Navigator.pop(context, null);
-            showDialogResponse(context, false, "Lên lịch chi tiêu", state.message);
+            if (state.statusCode == 403) {
+              await showDialogToRedirectLogin(context, state.message);
+            } else {
+              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+            }
+            setState(() {
+              isLoading = false;
+            });
           } else if (state is CreateExpenseSchedulerSuccess) {
             Navigator.pop(context, state.response);
           }
         },
     ),
     BlocListener<UpdateExpenseSchedulerBloc, UpdateExpenseSchedulerState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if(state is UpdateExpenseSchedulerLoading) {
           setState(() {
             isLoading = true;
           });
         } else if (state is UpdateExpenseSchedulerFailure) {
           Navigator.pop(context, null);
-          showDialogResponse(context, false, "Lên lịch chi tiêu", state.message);
+          if (state.statusCode == 403) {
+            await showDialogToRedirectLogin(context, state.message);
+          } else {
+            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+          }
+          setState(() {
+            isLoading = false;
+          });
         } else if (state is UpdateExpenseSchedulerSuccess) {
           Navigator.pop(context, state.response);
         }

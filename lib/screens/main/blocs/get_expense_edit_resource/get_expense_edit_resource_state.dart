@@ -21,9 +21,13 @@ sealed class GetExpenseEditResourceState extends Equatable {
 final class GetExpenseEditResourceInitial extends GetExpenseEditResourceState {}
 final class GetExpenseEditResourceLoading extends GetExpenseEditResourceState {}
 final class GetExpenseEditResourceFailure extends GetExpenseEditResourceState {
+  final int statusCode;
   final String message;
 
-  const GetExpenseEditResourceFailure(this.message);
+  const GetExpenseEditResourceFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class GetExpenseEditResourceSuccess extends GetExpenseEditResourceState {
   final ExpenseEditResource resource;

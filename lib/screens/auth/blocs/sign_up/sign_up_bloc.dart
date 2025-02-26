@@ -24,11 +24,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
           emit(SignUpSuccess(email: email, limitTime: timeLimit, message: message));
         } else {
-          emit(SignUpFailure(message: response.message));
+          emit(SignUpFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to Sign up");
-        emit(SignUpFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(SignUpFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

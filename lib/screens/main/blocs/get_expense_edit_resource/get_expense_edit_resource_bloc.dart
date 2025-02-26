@@ -33,7 +33,7 @@ class GetExpenseEditResourceBloc extends Bloc<GetExpenseEditResourceEvent, GetEx
             Map<String, dynamic> json = response.data[0];
             await prefs.setString(partOfPrefKey, jsonEncode(json));
           } else {
-            emit(GetExpenseEditResourceFailure(response.message));
+            emit(GetExpenseEditResourceFailure(statusCode: response.statusCode, message: response.message));
           }
         } else {
           log("Trigger expense edit resource from disk");
@@ -43,7 +43,7 @@ class GetExpenseEditResourceBloc extends Bloc<GetExpenseEditResourceEvent, GetEx
         }
       } catch (e) {
         log("Get expense resource for edit failure: $e");
-        emit(GetExpenseEditResourceFailure(e.toString()));
+        emit(GetExpenseEditResourceFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

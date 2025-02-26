@@ -10,9 +10,11 @@ sealed class WalletSettingState extends Equatable {
 final class WalletSettingInitial extends WalletSettingState {}
 final class WalletSettingLoading extends WalletSettingState {}
 final class WalletSettingFailure extends WalletSettingState {
+  final int statusCode;
   final String message;
 
   const WalletSettingFailure({
+    required this.statusCode,
     required this.message
   });
 }

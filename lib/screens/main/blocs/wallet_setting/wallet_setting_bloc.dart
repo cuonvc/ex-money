@@ -20,11 +20,11 @@ class WalletSettingBloc extends Bloc<WalletSettingEvent, WalletSettingState> {
           WalletResponse wallet = WalletResponse.fromMap(response.data[0]);
           emit(WalletSettingSuccess(response: wallet));
         } else {
-          emit(WalletSettingFailure(message: response.message));
+          emit(WalletSettingFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to change expense limit");
-        emit(WalletSettingFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(WalletSettingFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

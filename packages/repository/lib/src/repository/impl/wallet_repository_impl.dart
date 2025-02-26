@@ -27,7 +27,7 @@ class WalletRepositoryImpl implements WalletRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -47,7 +47,7 @@ class WalletRepositoryImpl implements WalletRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error to delete wallet - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -67,7 +67,7 @@ class WalletRepositoryImpl implements WalletRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -94,8 +94,7 @@ class WalletRepositoryImpl implements WalletRepository {
         return response;
       }
     } catch (e) {
-      log('Error cached - ${e.toString()}');
-      rethrow;
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -140,8 +139,7 @@ class WalletRepositoryImpl implements WalletRepository {
         return response;
       }
     } catch (e) {
-      log('Error cached - ${e.toString()}');
-      rethrow;
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

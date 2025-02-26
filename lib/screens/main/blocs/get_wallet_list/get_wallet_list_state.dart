@@ -10,9 +10,13 @@ sealed class GetWalletListState extends Equatable {
 final class GetWalletListInitial extends GetWalletListState {}
 final class GetWalletListLoading extends GetWalletListState {}
 final class GetWalletListFailure extends GetWalletListState {
+  final int statusCode;
   final String message;
 
-  const GetWalletListFailure(this.message);
+  const GetWalletListFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class GetWalletListSuccess extends GetWalletListState {
   final List<WalletResponse> walletList;

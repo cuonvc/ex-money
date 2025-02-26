@@ -10,9 +10,11 @@ sealed class SignUpState extends Equatable {
 final class SignUpInitial extends SignUpState {}
 final class SignUpLoading extends SignUpState {}
 final class SignUpFailure extends SignUpState {
+  final int statusCode;
   final String message;
 
   const SignUpFailure({
+    required this.statusCode,
     required this.message
   });
 }

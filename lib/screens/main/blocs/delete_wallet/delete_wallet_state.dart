@@ -10,9 +10,11 @@ sealed class DeleteWalletState extends Equatable {
 final class DeleteWalletInitial extends DeleteWalletState {}
 final class DeleteWalletLoading extends DeleteWalletState {}
 final class DeleteWalletFailure extends DeleteWalletState {
+  final int statusCode;
   final String message;
 
   const DeleteWalletFailure({
+    required this.statusCode,
     required this.message
   });
 }

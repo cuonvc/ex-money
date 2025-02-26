@@ -19,11 +19,11 @@ class AddExpenseBloc extends Bloc<AddExpenseEvent, AddExpenseState> {
           ExpenseResponse expense = ExpenseResponse.fromMap(response.data[0]);
           emit(AddExpenseSuccess(expense: expense));
         } else {
-          emit(AddExpenseFailure(message: response.message));
+          emit(AddExpenseFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to create expense");
-        emit(AddExpenseFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(AddExpenseFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

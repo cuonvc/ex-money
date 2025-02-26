@@ -24,7 +24,7 @@ class _AddUserToWalletState extends State<AddUserToWallet> {
   Widget build(BuildContext context) {
     final walletIdData = widget.walletId;
     return BlocListener<WalletChangeUserBloc, WalletChangeUserState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is WalletChangeUserLoading) {
           setState(() {
             isLoading = true;
@@ -33,9 +33,14 @@ class _AddUserToWalletState extends State<AddUserToWallet> {
           Navigator.pop(context, state.response);
           showDialogResponse(context, true, "Thêm thành viên", "Đã gửi yêu cầu");
         } else if (state is WalletChangeUserFailure) {
-          String message = state.message;
-          Navigator.pop(context, null);
-          showDialogResponse(context, true, "Thêm thành viên", message);
+          if (state.statusCode == 403) {
+            await showDialogToRedirectLogin(context, state.message);
+          } else {
+            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+          }
+          setState(() {
+            isLoading = false;
+          });
         }
       },
       child: ConstrainedBox(

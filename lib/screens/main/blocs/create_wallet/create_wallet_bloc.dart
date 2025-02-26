@@ -51,11 +51,11 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
           WalletResponse wallet = WalletResponse.fromMap(response.data[0]);
           emit(CreateWalletSuccess(wallet: wallet, message: response.message));
         } else {
-          emit(CreateWalletFailure(message: response.message));
+          emit(CreateWalletFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Faild to create wallet - ${e.toString()}");
-        emit(CreateWalletFailure(message: e.toString()));
+        emit(CreateWalletFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

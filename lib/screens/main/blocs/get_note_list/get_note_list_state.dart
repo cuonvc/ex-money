@@ -10,9 +10,11 @@ sealed class GetNoteListState extends Equatable {
 final class GetNoteListInitial extends GetNoteListState {}
 final class GetNoteListLoading extends GetNoteListState {}
 final class GetNoteListFailure extends GetNoteListState {
+  final int statusCode;
   final String message;
 
   const GetNoteListFailure({
+    required this.statusCode,
     required this.message
   });
 }

@@ -75,17 +75,23 @@ class _ConfigTabState extends State<ConfigTab> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<WalletSettingBloc, WalletSettingState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is WalletSettingLoading) {
-          isLoading = true;
-        } else if (state is WalletSettingFailure) {
-          isLoading = false;
-          Navigator.pop(context);
-          showDialogResponse(context, false, "Thiết lập ví", state.message);
-        } else if (state is WalletSettingSuccess) {
-          isLoading = false;
-          Navigator.pop(context);
           setState(() {
+            isLoading = true;
+          });
+        } else if (state is WalletSettingFailure) {
+          if (state.statusCode == 403) {
+            await showDialogToRedirectLogin(context, state.message);
+          } else {
+            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+          }
+          setState(() {
+            isLoading = false;
+          });
+        } else if (state is WalletSettingSuccess) {
+          setState(() {
+            isLoading = false;
             widget.wallet = state.response;
           });
           showDialogResponse(context, true, "Thiết lập ví", "Đã cập nhật");

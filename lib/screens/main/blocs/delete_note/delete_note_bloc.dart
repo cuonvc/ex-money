@@ -19,11 +19,11 @@ class DeleteNoteBloc extends Bloc<DeleteNoteEvent, DeleteNoteState> {
         if (response.code == 0) {
           emit(DeleteNoteSuccess(id: event.id));
         } else {
-          emit(DeleteNoteFailure(message: response.message));
+          emit(DeleteNoteFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to delete note");
-        emit(DeleteNoteFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(DeleteNoteFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

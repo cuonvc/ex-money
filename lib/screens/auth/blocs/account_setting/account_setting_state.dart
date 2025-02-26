@@ -10,9 +10,11 @@ sealed class AccountSettingState extends Equatable {
 final class AccountSettingInitial extends AccountSettingState {}
 final class AccountSettingLoading extends AccountSettingState {}
 final class AccountSettingFailure extends AccountSettingState {
+  final int statusCode;
   final String message;
 
   const AccountSettingFailure({
+    required this.statusCode,
     required this.message
   });
 }

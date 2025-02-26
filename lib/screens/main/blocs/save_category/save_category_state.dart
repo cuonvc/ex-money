@@ -10,9 +10,11 @@ sealed class SaveCategoryState extends Equatable {
 final class SaveCategoryInitial extends SaveCategoryState {}
 final class SaveCategoryLoading extends SaveCategoryState {}
 final class SaveCategoryFailure extends SaveCategoryState {
+  final int statusCode;
   final String message;
 
   const SaveCategoryFailure({
+    required this.statusCode,
     required this.message
   });
 }

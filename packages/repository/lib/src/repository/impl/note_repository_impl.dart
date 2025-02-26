@@ -26,7 +26,7 @@ class NoteRepositoryImpl implements NoteRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get Note list error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -46,7 +46,7 @@ class NoteRepositoryImpl implements NoteRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Save note error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -66,7 +66,7 @@ class NoteRepositoryImpl implements NoteRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Delete note error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

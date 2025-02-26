@@ -20,11 +20,11 @@ class UpdateExpenseBloc extends Bloc<UpdateExpenseEvent, UpdateExpenseState> {
           ExpenseResponse expense = ExpenseResponse.fromMap(response.data[0]);
           emit(UpdateExpenseSuccess(message: "Đã cập nhật chi tiêu", response: expense));
         } else {
-          emit(UpdateExpenseFailure(message: response.message));
+          emit(UpdateExpenseFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to update expense");
-        emit(UpdateExpenseFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(UpdateExpenseFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

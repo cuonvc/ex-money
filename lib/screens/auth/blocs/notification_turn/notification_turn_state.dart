@@ -10,9 +10,11 @@ sealed class NotificationTurnState extends Equatable {
 final class NotificationTurnInitial extends NotificationTurnState {}
 final class NotificationTurnLoading extends NotificationTurnState {}
 final class NotificationTurnFailure extends NotificationTurnState {
+  final int statusCode;
   final String message;
 
   const NotificationTurnFailure({
+    required this.statusCode,
     required this.message
   });
 }

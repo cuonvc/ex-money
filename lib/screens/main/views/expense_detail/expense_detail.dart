@@ -116,7 +116,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     return MultiBlocListener(
       listeners: [
         BlocListener<UpdateExpenseBloc, UpdateExpenseState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is UpdateExpenseLoading) {
               setState(() {
                 isLoading = true;
@@ -128,10 +128,14 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               });
               showDialogResponse(context, true, "Chỉnh sửa chi tiêu", state.message);
             } else if (state is UpdateExpenseFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
               setState(() {
                 isLoading = false;
               });
-              showDialogResponse(context, false, "Chỉnh sửa chi tiêu", state.message);
             }
           },
         ),
@@ -151,10 +155,14 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               await showDialogResponse(context, true, "Xóa chi tiêu", state.message);
               Navigator.pop(context, response);
             } else if (state is DeleteExpenseFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
               setState(() {
                 isLoading = false;
               });
-              showDialogResponse(context, false, "Xóa chi tiêu", state.message);
             }
           },
         ),

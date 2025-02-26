@@ -10,9 +10,11 @@ sealed class CreateExpenseSchedulerState extends Equatable {
 final class CreateExpenseSchedulerInitial extends CreateExpenseSchedulerState {}
 final class CreateExpenseSchedulerLoading extends CreateExpenseSchedulerState {}
 final class CreateExpenseSchedulerFailure extends CreateExpenseSchedulerState {
+  final int statusCode;
   final String message;
 
   const CreateExpenseSchedulerFailure({
+    required this.statusCode,
     required this.message
   });
 }

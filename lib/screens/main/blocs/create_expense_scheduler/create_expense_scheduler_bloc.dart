@@ -20,11 +20,11 @@ class CreateExpenseSchedulerBloc extends Bloc<CreateExpenseSchedulerEvent, Creat
           ExpenseSchedulerResponse task = ExpenseSchedulerResponse.fromMap(response.data[0]);
           emit(CreateExpenseSchedulerSuccess(response: task));
         } else {
-          emit(CreateExpenseSchedulerFailure(message: response.message));
+          emit(CreateExpenseSchedulerFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to create expense scheduler");
-        emit(CreateExpenseSchedulerFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(CreateExpenseSchedulerFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

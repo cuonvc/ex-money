@@ -34,7 +34,7 @@ class GetWalletListBloc extends Bloc<GetWalletListEvent, GetWalletListState> {
             List json = dataList;
             await prefs.setString(partOfPrefKey, jsonEncode(json));
           } else {
-            emit(GetWalletListFailure(response.message));
+            emit(GetWalletListFailure(statusCode: response.statusCode, message: response.message));
           }
         } else {
           log("Trigger wallet list from disk");
@@ -44,7 +44,7 @@ class GetWalletListBloc extends Bloc<GetWalletListEvent, GetWalletListState> {
         }
       } catch (e) {
         log("Get wallet list failed: $e");
-        emit(GetWalletListFailure(e.toString()));
+        emit(GetWalletListFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

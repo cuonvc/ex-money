@@ -20,11 +20,11 @@ class DeleteExpenseBloc extends Bloc<DeleteExpenseEvent, DeleteExpenseState> {
           String message = response.message;
           emit(DeleteExpenseSuccess(message));
         } else {
-          emit(DeleteExpenseFailure(response.message));
+          emit(DeleteExpenseFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to create expense");
-        emit(DeleteExpenseFailure("Có lỗi xảy ra \n${e.toString()}"));
+        emit(DeleteExpenseFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

@@ -33,16 +33,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeState extends State<HomeScreen> {
 
-  GlobalKey comparePrevMonthKey = GlobalKey();
-  GlobalKey selectMonthKey = GlobalKey();
-  GlobalKey notiListKey = GlobalKey();
+  bool isLoading = false;
+
+  final GlobalKey comparePrevMonthKey = GlobalKey();
+  final GlobalKey selectMonthKey = GlobalKey();
+  final GlobalKey notiListKey = GlobalKey();
 
   final ScrollController _homeScrollController = ScrollController();
   final ScrollController _expenseScrollController = ScrollController();
 
-  HomeOverviewResponse? response;
+  HomeOverviewResponse response = HomeOverviewResponse.empty();
   List<NotificationResponse> notificationList = [];
   List<ExpenseResponse> expenseList = [];
+  int unseenNotiCount = 0;
 
 
   @override
@@ -84,6 +87,13 @@ class _HomeState extends State<HomeScreen> {
     context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true)); //reload ẩn
   }
 
+  void onRefresh() {
+    context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+    context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
+    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+    context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+  }
+
   // void onResetNewExpense() {
   //   setState(() {
   //     widget.newExpense = null;
@@ -92,262 +102,267 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeOverviewBloc, HomeOverviewState>(
-      builder: (context, state) {
+    return BlocListener<HomeOverviewBloc, HomeOverviewState>(
+      listener: (context, state) async {
         if (state is HomeOverviewFailure) {
-          return const Center(child: Text(""),);
-        } else if (state is HomeOverviewLoading) {
-          return const Center(
-            child: Loading(loadingColor: null,)
-          );
+          setState(() {
+            isLoading = false;
+          });
+          if (state.statusCode == 403) {
+            await showDialogToRedirectLogin(context, state.message);
+          } else {
+            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+          }
+        } else if (state is HomeOverviewLoading || state is HomeOverviewInitial) {
+          setState(() {
+            isLoading = true;
+          });
         } else if (state is HomeOverviewSuccess) {
-          final HomeOverviewResponse response = state.data;
-          expenseList = response.ownerExpenses;
-          notificationList = response.notifications;
-          int unseenNotiCount = notificationList.where((item) => !item.seen).length;
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
-              context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
-              context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
-              context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
-            },
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20,),
-                  //header
-                  Expanded(
-                    child: ListView(
-                      controller: _homeScrollController,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute<SignInModel>(
-                                      builder: (BuildContext ctx) => MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider(
-                                            create: (ctx) => AccountSettingBloc(UserRepositoryImpl()),
-                                          ),
-                                          BlocProvider(
-                                            create: (ctx) => NotificationTurnBloc(UserRepositoryImpl()),
-                                          ),
-                                          BlocProvider(
-                                            create: (ctx) => SignOutBloc(UserRepositoryImpl()),
-                                          ),
-                                          BlocProvider(
-                                            create: (ctx) => HomeOverviewBloc(OverviewRepositoryImpl()),
-                                          )
-                                        ],
-                                        child: const Setting(),
+          setState(() {
+            response = state.data;
+            expenseList = response.ownerExpenses;
+            notificationList = response.notifications;
+            unseenNotiCount = notificationList.where((item) => !item.seen).length;
+            isLoading = false;
+          });
+        }
+      },
+      child: isLoading ? const Center(child: Loading(loadingColor: null,),) : RefreshIndicator(
+        onRefresh: () async {
+          onRefresh();
+        },
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20,),
+              //header
+              Flexible(
+                child: ListView(
+                  key: ValueKey(expenseList.length),
+                  controller: _homeScrollController,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute<SignInModel>(
+                                  builder: (BuildContext ctx) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (ctx) => AccountSettingBloc(UserRepositoryImpl()),
+                                      ),
+                                      BlocProvider(
+                                        create: (ctx) => NotificationTurnBloc(UserRepositoryImpl()),
+                                      ),
+                                      BlocProvider(
+                                        create: (ctx) => SignOutBloc(UserRepositoryImpl()),
+                                      ),
+                                      BlocProvider(
+                                        create: (ctx) => HomeOverviewBloc(OverviewRepositoryImpl()),
                                       )
+                                    ],
+                                    child: const Setting(),
+                                  )
+                              ),
+                            );
+                          },
+                          child: Row(
+                              children: [
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: cPrimary, width: 4),
+                                    borderRadius: BorderRadius.circular(50),
                                   ),
-                                );
-                              },
-                              child: Row(
-                                  children: [
-                                    DecoratedBox(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: cPrimary, width: 4),
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: (response.user.avatarUrl != null && response.user.avatarUrl!.isNotEmpty) ? NetworkImage(response.user.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 14,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          DateTime.now().hour < 12
-                                              ? "Chào buổi sáng"
-                                              : (DateTime.now().hour > 12 && DateTime.now().hour < 18
-                                                ? "Chào buổi chiều"
-                                                : "Chào buổi tối"
-                                              ),
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              color: cText
-                                          ),
-                                        ),
-                                        Text(
-                                          response.user.name,
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: cText
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ]
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                showBubbleNotificationList(context);
-                              },
-                              child: Stack(
-                                key: notiListKey,
-                                children: [
-                                  const Icon(
-                                    Icons.notifications_outlined,
-                                    size: 28,
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage: (response.user.avatarUrl != null && response.user.avatarUrl!.isNotEmpty) ? NetworkImage(response.user.avatarUrl!) : const AssetImage('assets/images/profile/avt.png'),
                                   ),
-                                  unseenNotiCount > 0 ? Positioned(
-                                    right: 0,
-                                    top: -1,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: cPrimary,
-                                      ),
-                                      child: Text(
-                                        "$unseenNotiCount",
-                                        style: TextStyle(color: Colors.white, fontSize: unseenNotiCount > 9 ? 7 : 10),
-                                      ),
-                                    ),
-                                  ) : const Text("")
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        //---- end header
-                        const SizedBox(height: 16,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Đã chi tiêu",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: cText,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                int selectedMonth = await showMonthSelect(context, response.currentMonth);
-                                if (context.mounted) {
-                                  context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: selectedMonth, year: null, isReload: true));
-                                }
-                              },
-                              child: Container(
-                                key: selectMonthKey,
-                                child: Row(
+                                ),
+                                const SizedBox(width: 14,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
-                                      // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
+                                      DateTime.now().hour < 12
+                                          ? "Chào buổi sáng"
+                                          : (DateTime.now().hour > 12 && DateTime.now().hour < 18
+                                          ? "Chào buổi chiều"
+                                          : "Chào buổi tối"
+                                      ),
                                       style: const TextStyle(
-                                          fontSize: 14,
-                                          color: cTextDisable
+                                          fontSize: 10,
+                                          color: cText
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_sharp,
-                                      color: cTextDisable,
-                                      size: 14,
-                                    )
+                                    Text(
+                                      response.user.name,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: cText
+                                      ),
+                                    ),
                                   ],
-                                ),
-                              ),
-                            )
-                          ],
+                                )
+                              ]
+                          ),
                         ),
-
-                        const SizedBox(height: 6,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  toAmountFormat(response.totalExpenseAmount),
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w700,
-                                      color: cPrimary
+                        GestureDetector(
+                          onTap: () async {
+                            showBubbleNotificationList(context);
+                          },
+                          child: Stack(
+                            key: notiListKey,
+                            children: [
+                              const Icon(
+                                Icons.notifications_outlined,
+                                size: 28,
+                              ),
+                              unseenNotiCount > 0 ? Positioned(
+                                right: 0,
+                                top: -1,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: cPrimary,
+                                  ),
+                                  child: Text(
+                                    "$unseenNotiCount",
+                                    style: TextStyle(color: Colors.white, fontSize: unseenNotiCount > 9 ? 7 : 10),
                                   ),
                                 ),
-                                const Text("VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showBubbleComparePrevMonth(context, response.moreThanLastMonth);
-                              },
-                              child: Container(
-                                key: comparePrevMonthKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        response.moreThanLastMonth > 0 ? const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,) : const Icon(Icons.arrow_downward_rounded, color: Colors.green, size: 12,),
-                                        Text(
-                                          " ${toAmountFormat(response.moreThanLastMonth)}",
-                                          style: const TextStyle(fontSize: 12, color: Colors.red),
-                                        ),
-                                      ],
-                                    ),
-                                    const Row(
-                                      children: [
-                                        Text(
-                                          "So với tháng trước ",
-                                          style: TextStyle(color: cTextDisable, fontSize: 12),
-                                        ),
-                                        Icon(Icons.info_outline, size: 12,)
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width,
-                            height: 200,
-                            child: StatsLineChart(weekList: response.weeks,)
-                        ),
-
-                        const SizedBox(height: 10,),
-
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height - 40,
-                            child: ExpenseList(expenseList, true, _expenseScrollController, widget.newExpense, onExpenseUpdate, widget.resetNewExpense)
+                              ) : const Text("")
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  )
-                ]
-            ),
-          );
-        } else {
-          // showDialogResponse(context, false, "Có lỗi xảy ra", "");
-          return const Center();
-        }
-      },
+                    //---- end header
+                    const SizedBox(height: 16,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Đã chi tiêu",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: cText,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            int selectedMonth = await showMonthSelect(context, response.currentMonth);
+                            if (context.mounted) {
+                              context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: selectedMonth, year: null, isReload: true));
+                            }
+                          },
+                          child: Container(
+                            key: selectMonthKey,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Tháng ${getCurrentMonth(response.currentMonth.toInt())}",
+                                  // "Tháng ${response.currentMonth == response.currentMonth ? "này" : response.currentMonth}",
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      color: cTextDisable
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.keyboard_arrow_down_sharp,
+                                  color: cTextDisable,
+                                  size: 14,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    const SizedBox(height: 6,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              toAmountFormat(response.totalExpenseAmount),
+                              style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w700,
+                                  color: cPrimary
+                              ),
+                            ),
+                            const Text("VNĐ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cTextDisable),)
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showBubbleComparePrevMonth(context, response.moreThanLastMonth);
+                          },
+                          child: Container(
+                            key: comparePrevMonthKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    response.moreThanLastMonth > 0 ? const Icon(Icons.arrow_upward_rounded, color: Colors.red, size: 12,) : const Icon(Icons.arrow_downward_rounded, color: Colors.green, size: 12,),
+                                    Text(
+                                      " ${toAmountFormat(response.moreThanLastMonth)}",
+                                      style: const TextStyle(fontSize: 12, color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                                const Row(
+                                  children: [
+                                    Text(
+                                      "So với tháng trước ",
+                                      style: TextStyle(color: cTextDisable, fontSize: 12),
+                                    ),
+                                    Icon(Icons.info_outline, size: 12,)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        height: 200,
+                        child: StatsLineChart(weekList: response.weeks,)
+                    ),
+
+                    const SizedBox(height: 10,),
+
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height - 40,
+                        child: ExpenseList(expenseList, true, _expenseScrollController, widget.newExpense, onExpenseUpdate, widget.resetNewExpense)
+                    ),
+                  ],
+                ),
+              )
+            ]
+        ),
+      ),
     );
   }
 
@@ -428,9 +443,13 @@ class _HomeState extends State<HomeScreen> {
                   child: Material(
                     color: Colors.transparent,
                     child: BlocListener<MarkReadNotificationBloc, MarkReadNotificationState>(
-                      listener: (context, state) {
+                      listener: (context, state) async {
                         if (state is MarkReadNotificationFailure) {
-                          showDialogResponse(context, false, "Có lỗi xảy ra", "Có lỗi khi cập nhật thông báo");
+                          if (state.statusCode == 403) {
+                            await showDialogToRedirectLogin(context, state.message);
+                          } else {
+                            showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+                          }
                         }
                       },
                       child: Container(

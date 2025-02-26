@@ -37,11 +37,11 @@ class NotificationTurnBloc extends Bloc<NotificationTurnEvent, NotificationTurnS
           await prefs.setString(partOfPrefKey, jsonEncode(SignInResponse.toMap(dataFromDisk)));
           emit(NotificationTurnSuccess(on: turned));
         } else {
-          emit(NotificationTurnFailure(message: response.message));
+          emit(NotificationTurnFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to turn notification");
-        emit(NotificationTurnFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(NotificationTurnFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

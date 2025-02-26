@@ -93,10 +93,10 @@ class _WalletListScreenState extends State<WalletListScreen> {
   }
 
   void onRefresh(BuildContext ctx) {
-    context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
+    // context.read<HomeOverviewBloc>().add(HomeOverViewEv(month: null, year: null, isReload: true));
     context.read<GetWalletListBloc>().add(GetWalletListEv(isReload: true));
-    context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
-    context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
+    // context.read<GetExpenseEditResourceBloc>().add(GetExpenseEditResourceEv(walletId: null, isReload: true));
+    // context.read<GetExpenseFilterResourceBloc>().add(GetExpenseFilterResourceEv(walletId: null, isReload: true, isCache: true));
   }
 
   void onResetNewExpense() {
@@ -110,7 +110,7 @@ class _WalletListScreenState extends State<WalletListScreen> {
     return MultiBlocListener(
       listeners: [
         BlocListener<GetWalletListBloc, GetWalletListState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is GetWalletListLoading) {
               setState(() {
                 isLoading = true;
@@ -124,18 +124,28 @@ class _WalletListScreenState extends State<WalletListScreen> {
               });
 
             } else if (state is GetWalletListFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
               setState(() {
                 isLoading = false;
               });
-              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
             }
           },
         ),
         BlocListener<DeleteWalletBloc, DeleteWalletState>(
           listener: (ctx, state) async {
             if (state is DeleteWalletFailure) {
-              await showDialogResponse(ctx, false, "Xóa ví", state.message);
-              onRefresh(ctx);
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
+              setState(() {
+                isLoading = false;
+              });
             } else if (state is DeleteWalletSuccess) {
               await showDialogResponse(context, true, "Xóa ví", state.message);
               onRefresh(ctx);

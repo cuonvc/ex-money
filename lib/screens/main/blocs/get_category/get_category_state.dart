@@ -8,9 +8,13 @@ sealed class GetCategoryState extends Equatable {
 final class GetCategoryInitial extends GetCategoryState {}
 final class GetCategoryLoading extends GetCategoryState {}
 final class GetCategoryFailure extends GetCategoryState {
+  final int statusCode;
   final String message;
 
-  const GetCategoryFailure(this.message);
+  const GetCategoryFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class GetCategorySuccess extends GetCategoryState {
   final List<ExpenseCategoryResponse> data;

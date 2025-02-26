@@ -23,11 +23,15 @@ class MemberRemove extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<WalletChangeUserBloc, WalletChangeUserState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is WalletChangeUserFailure) {
             Navigator.of(context).maybePop();
             walletChange(WalletResponse.empty());
-            showDialogResponse(context, false, "Xóa thành viên", state.message);
+            if (state.statusCode == 403) {
+              await showDialogToRedirectLogin(context, state.message);
+            } else {
+              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+            }
           } else if (state is WalletChangeUserSuccess) {
             Navigator.of(context).maybePop();
             walletChange(state.response);

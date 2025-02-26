@@ -10,9 +10,11 @@ sealed class GetConfirmExpenseFromSpeechState extends Equatable {
 final class GetConfirmExpenseFromSpeechInitial extends GetConfirmExpenseFromSpeechState {}
 final class GetConfirmExpenseFromSpeechLoading extends GetConfirmExpenseFromSpeechState {}
 final class GetConfirmExpenseFromSpeechFailure extends GetConfirmExpenseFromSpeechState {
+  final int statusCode;
   final String message;
 
   const GetConfirmExpenseFromSpeechFailure({
+    required this.statusCode,
     required this.message
   });
 }

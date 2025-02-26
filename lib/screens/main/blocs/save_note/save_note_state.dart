@@ -10,9 +10,11 @@ sealed class SaveNoteState extends Equatable {
 final class SaveNoteInitial extends SaveNoteState {}
 final class SaveNoteLoading extends SaveNoteState {}
 final class SaveNoteFailure extends SaveNoteState {
+  final int statusCode;
   final String message;
 
   const SaveNoteFailure({
+    required this.statusCode,
     required this.message
   });
 }

@@ -108,11 +108,14 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 isLoading = true;
               });
             } else if (state is SaveCategoryFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
               setState(() {
                 isLoading = false;
               });
-              await showDialogResponse(context, false, "Lưu danh mục", state.message);
-              Navigator.pop(context, ""); // "" != null
             } else if (state is SaveCategorySuccess) {
               setState(() {
                 isLoading = false;
@@ -130,11 +133,14 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 isLoading = true;
               });
             } else if (state is DeleteCategoryFailure) {
+              if (state.statusCode == 403) {
+                await showDialogToRedirectLogin(context, state.message);
+              } else {
+                showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+              }
               setState(() {
                 isLoading = false;
               });
-              await showDialogResponse(context, false, "Xóa danh mục", state.message);
-              Navigator.pop(context, ""); // "" != null
             } else if (state is DeleteCategorySuccess) {
               setState(() {
                 isLoading = false;

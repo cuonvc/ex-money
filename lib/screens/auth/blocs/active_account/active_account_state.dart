@@ -10,9 +10,11 @@ sealed class ActiveAccountState extends Equatable {
 final class ActiveAccountInitial extends ActiveAccountState {}
 final class ActiveAccountLoading extends ActiveAccountState {}
 final class ActiveAccountFailure extends ActiveAccountState {
+  final int statusCode;
   final String message;
 
   const ActiveAccountFailure({
+    required this.statusCode,
     required this.message
   });
 }

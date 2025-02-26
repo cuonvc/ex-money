@@ -8,9 +8,13 @@ sealed class HomeOverviewState extends Equatable {
 final class HomeOverviewInitial extends HomeOverviewState {}
 final class HomeOverviewLoading extends HomeOverviewState {}
 final class HomeOverviewFailure extends HomeOverviewState {
+  final int statusCode;
   final String message;
 
-  const HomeOverviewFailure(this.message);
+  const HomeOverviewFailure({
+    required this.statusCode,
+    required this.message
+  });
 }
 final class HomeOverviewSuccess extends HomeOverviewState {
   final HomeOverviewResponse data;

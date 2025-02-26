@@ -20,11 +20,11 @@ class UpdateExpenseSchedulerBloc extends Bloc<UpdateExpenseSchedulerEvent, Updat
           ExpenseSchedulerResponse task = ExpenseSchedulerResponse.fromMap(response.data[0]);
           emit(UpdateExpenseSchedulerSuccess(message: "Đã cập nhật chi tiêu tự động", response: task));
         } else {
-          emit(UpdateExpenseSchedulerFailure(message: response.message));
+          emit(UpdateExpenseSchedulerFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to update expense scheduler");
-        emit(UpdateExpenseSchedulerFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(UpdateExpenseSchedulerFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

@@ -10,9 +10,11 @@ sealed class DeleteCategoryState extends Equatable {
 final class DeleteCategoryInitial extends DeleteCategoryState {}
 final class DeleteCategoryLoading extends DeleteCategoryState {}
 final class DeleteCategoryFailure extends DeleteCategoryState {
+  final int statusCode;
   final String message;
 
   const DeleteCategoryFailure({
+    required this.statusCode,
     required this.message
   });
 }

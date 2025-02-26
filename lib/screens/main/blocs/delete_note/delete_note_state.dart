@@ -10,9 +10,11 @@ sealed class DeleteNoteState extends Equatable {
 final class DeleteNoteInitial extends DeleteNoteState {}
 final class DeleteNoteLoading extends DeleteNoteState {}
 final class DeleteNoteFailure extends DeleteNoteState {
+  final int statusCode;
   final String message;
 
   const DeleteNoteFailure({
+    required this.statusCode,
     required this.message
   });
 }

@@ -25,7 +25,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -45,7 +45,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense edit resource error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -65,7 +65,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Add expense resource error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -85,7 +85,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Update expense resource error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -105,7 +105,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Delete expense resource error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -125,7 +125,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get expense filter resource error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 
@@ -145,7 +145,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log("Get confirm expense from Speech error - $e");
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 

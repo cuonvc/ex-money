@@ -10,9 +10,11 @@ sealed class OAuthSignInState extends Equatable {
 final class OAuthSignInInitial extends OAuthSignInState {}
 final class OAuthSignInLoading extends OAuthSignInState {}
 final class OAuthSignInFailure extends OAuthSignInState {
+  final int statusCode;
   final String message;
 
   const OAuthSignInFailure({
+    required this.statusCode,
     required this.message
   });
 }

@@ -10,9 +10,11 @@ sealed class PasswordChangeState extends Equatable {
 final class PasswordChangeInitial extends PasswordChangeState {}
 final class PasswordChangeLoading extends PasswordChangeState {}
 final class PasswordChangeFailure extends PasswordChangeState {
+  final int statusCode;
   final String message;
 
   const PasswordChangeFailure({
+    required this.statusCode,
     required this.message
   });
 }

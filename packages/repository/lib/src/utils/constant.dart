@@ -8,6 +8,8 @@ const String response_status_code = "statusCode";
 const String response_message = "message";
 const String response_data = "data";
 
+const String sessionExpired = "Phiên đã hết hạn, vui lòng đăng nhập lại ứng dụng";
+
 class ExpenseConstant {
   static const String entry_type_income = "INCOME";
   static const String entry_type_expense = "EXPENSE";

@@ -10,9 +10,11 @@ sealed class CreateWalletState extends Equatable {
 final class CreateWalletInitial extends CreateWalletState {}
 final class CreateWalletLoading extends CreateWalletState {}
 final class CreateWalletFailure extends CreateWalletState {
+  final int statusCode;
   final String message;
 
   const CreateWalletFailure({
+    required this.statusCode,
     required this.message
   });
 }

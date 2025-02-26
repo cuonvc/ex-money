@@ -19,11 +19,11 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
         if (response.code == 0) {
           emit(DeleteWalletSuccess(message: response.message));
         } else {
-          emit(DeleteWalletFailure(message: response.message));
+          emit(DeleteWalletFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to delete note");
-        emit(DeleteWalletFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(DeleteWalletFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

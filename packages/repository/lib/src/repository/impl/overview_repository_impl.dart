@@ -25,7 +25,7 @@ class OverviewRepositoryImpl implements OverviewRepository {
       return HttpResponse.toObject(mapResponse);
     } catch (e) {
       log('Error cached - ${e.toString()}');
-      return HttpResponse.toError(e.toString(), null);
+      return HttpResponse.toError(sessionExpired, 403);
     }
   }
 }

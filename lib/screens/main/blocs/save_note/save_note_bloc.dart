@@ -21,11 +21,11 @@ class SaveNoteBloc extends Bloc<SaveNoteEvent, SaveNoteState> {
           NoteModel data = NoteModel.fromMap(response.data[0]);
           emit(SaveNoteSuccess(data: data));
         } else {
-          emit(SaveNoteFailure(message: response.message));
+          emit(SaveNoteFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to save note");
-        emit(SaveNoteFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(SaveNoteFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

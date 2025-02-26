@@ -35,7 +35,7 @@ class HomeOverviewBloc extends Bloc<HomeOverViewEvent, HomeOverviewState> {
               await prefs.setString(partOfPrefKey, jsonEncode(json));
             }
           } else {
-            emit(HomeOverviewFailure(response.message));
+            emit(HomeOverviewFailure(statusCode: response.statusCode, message: response.message));
           }
         } else {
           log("Trigger home overview from disk");
@@ -45,7 +45,7 @@ class HomeOverviewBloc extends Bloc<HomeOverViewEvent, HomeOverviewState> {
         }
       } catch (e) {
         log("Get home overview failed: $e");
-        emit(HomeOverviewFailure(e.toString()));
+        emit(HomeOverviewFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

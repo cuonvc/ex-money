@@ -20,10 +20,12 @@ class GetNoteListBloc extends Bloc<GetNoteListEvent, GetNoteListState> {
           List list = response.data[0];
           List<NoteModel> dataList = list.map((e) => NoteModel.fromMap(e)).toList();
           emit(GetNoteListSuccess(list: dataList));
+        } else {
+          emit(GetNoteListFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Get Note list failed: $e");
-        emit(GetNoteListFailure(message: e.toString()));
+        emit(GetNoteListFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

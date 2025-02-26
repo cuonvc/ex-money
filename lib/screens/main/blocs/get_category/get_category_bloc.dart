@@ -28,7 +28,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
         //get and transfer wallet list name to the screen
         List<Map<dynamic, dynamic>>? wallets = await getWalletList(prefs);
         if (wallets == null) {
-          emit(const GetCategoryFailure("Có lỗi xảy ra, vui lòng mở lại app"));
+          emit(const GetCategoryFailure(statusCode: 1, message: "Có lỗi xảy ra, vui lòng mở lại app"));
         }
 
         wallets = [];
@@ -44,7 +44,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
               await prefs.setString(partOfPrefKey, jsonEncode(json));
             }
           } else {
-            emit(GetCategoryFailure(response.message));
+            emit(GetCategoryFailure(statusCode: response.statusCode, message: response.message));
           }
         } else {
           log("Trigger get category from disk");
@@ -54,7 +54,7 @@ class GetCategoryBloc extends Bloc<GetCategoryEvent, GetCategoryState> {
         }
       } catch (e) {
         log("Get category failed - $e");
-        emit(GetCategoryFailure(e.toString()));
+        emit(GetCategoryFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

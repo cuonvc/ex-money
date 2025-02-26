@@ -20,11 +20,11 @@ class PasswordChangeBloc extends Bloc<PasswordChangeEvent, PasswordChangeState> 
           String message = response.message;
           emit(PasswordChangeSuccess(message: message));
         } else {
-          emit(PasswordChangeFailure(message: response.message));
+          emit(PasswordChangeFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to change password");
-        emit(PasswordChangeFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(PasswordChangeFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

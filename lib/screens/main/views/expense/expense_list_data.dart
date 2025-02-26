@@ -5,8 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repository/repository.dart';
 
-class ExpenseListData extends StatelessWidget {
+import '../../../../widgets/dialog_response.dart';
+
+class ExpenseListData extends StatefulWidget {
   const ExpenseListData({super.key});
+
+  @override
+  State<ExpenseListData> createState() => _ExpenseListDataState();
+}
+
+class _ExpenseListDataState extends State<ExpenseListData> {
+
+  bool isLoading = false;
+
+  List<ExpenseResponse> expenseList = [];
 
   void onExpenseUpdate(ExpenseResponse? expense) {
     // setState(() {
@@ -20,19 +32,30 @@ class ExpenseListData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetExpenseBloc, GetExpenseState>(
-        builder: (context, state) {
+    return BlocListener<GetExpenseBloc, GetExpenseState>(
+        listener: (context, state) async {
           if (state is GetExpenseLoading) {
-            return const Center(child: Loading(loadingColor: null,),);
+            setState(() {
+              isLoading = true;
+            });
           } else if (state is GetExpenseSuccess) {
-            List<ExpenseResponse> expenseList = state.data;
-            return ExpenseList(expenseList, false, ScrollController(), null, onExpenseUpdate, onResetNewExpense);
+            setState(() {
+              isLoading = false;
+              expenseList = state.data;
+            });
           } else if (state is GetExpenseFailure) {
-            return Center(child: Text(state.message),);
-          } else {
-            return const Center(child: Text("Ops..."),);
+            if (state.statusCode == 403) {
+              await showDialogToRedirectLogin(context, state.message);
+            } else {
+              showDialogResponse(context, false, "Có lỗi xảy ra", state.message);
+            }
+            setState(() {
+              isLoading = false;
+            });
           }
-        }
+        },
+      child: isLoading ? const Center(child: Loading(loadingColor: null,),)
+          : ExpenseList(expenseList, false, ScrollController(), null, onExpenseUpdate, onResetNewExpense),
     );
   }
 }

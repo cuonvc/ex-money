@@ -22,10 +22,12 @@ class GetExpenseBloc extends Bloc<GetExpenseEvent, GetExpenseState> {
           List list = response.data[0];
           List<ExpenseResponse> dataList = list.map((e) => ExpenseResponse.fromMap(e)).toList();
           emit(GetExpenseSuccess(dataList));
+        } else {
+          emit(GetExpenseFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Get Expense failed: $e");
-        emit(GetExpenseFailure(e.toString()));
+        emit(GetExpenseFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

@@ -10,9 +10,11 @@ sealed class MarkReadNotificationState extends Equatable {
 final class MarkReadNotificationInitial extends MarkReadNotificationState {}
 final class MarkReadNotificationLoading extends MarkReadNotificationState {}
 final class MarkReadNotificationFailure extends MarkReadNotificationState {
+  final int statusCode;
   final String message;
 
   const MarkReadNotificationFailure({
+    required this.statusCode,
     required this.message
   });
 }

@@ -10,9 +10,11 @@ sealed class SignOutState extends Equatable {
 final class SignOutInitial extends SignOutState {}
 final class SignOutLoading extends SignOutState {}
 final class SignOutFailure extends SignOutState {
+  final int statusCode;
   final String message;
 
   const SignOutFailure({
+    required this.statusCode,
     required this.message
   });
 }

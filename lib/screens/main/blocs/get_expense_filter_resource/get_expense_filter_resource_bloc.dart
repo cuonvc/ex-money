@@ -35,7 +35,7 @@ class GetExpenseFilterResourceBloc extends Bloc<GetExpenseFilterResourceEvent, G
               await prefs.setString(partOfPrefKey, jsonEncode(json));
             }
           } else {
-            emit(GetExpenseFilterResourceFailure(response.message));
+            emit(GetExpenseFilterResourceFailure(statusCode: response.statusCode, message: response.message));
           }
         } else {
           log("Trigger expense filter resource from disk");
@@ -45,7 +45,7 @@ class GetExpenseFilterResourceBloc extends Bloc<GetExpenseFilterResourceEvent, G
         }
       } catch (e) {
         log("Get expense filter resource failure: $e");
-        emit(GetExpenseFilterResourceFailure(e.toString()));
+        emit(GetExpenseFilterResourceFailure(statusCode: 1, message: e.toString()));
       }
     });
   }

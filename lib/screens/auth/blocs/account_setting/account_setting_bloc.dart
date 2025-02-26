@@ -37,11 +37,11 @@ class AccountSettingBloc extends Bloc<AccountSettingEvent, AccountSettingState> 
           await prefs.setString(partOfPrefKey, jsonEncode(SignInResponse.toMap(dataFromDisk)));
           emit(AccountSettingSuccess(data: userResponse));
         } else {
-          emit(AccountSettingFailure(message: response.message));
+          emit(AccountSettingFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Failed to update profile");
-        emit(AccountSettingFailure(message: "Có lỗi xảy ra \n${e.toString()}"));
+        emit(AccountSettingFailure(statusCode: 1, message: "Có lỗi xảy ra \n${e.toString()}"));
       }
     });
   }

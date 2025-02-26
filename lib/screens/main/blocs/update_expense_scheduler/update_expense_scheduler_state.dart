@@ -10,9 +10,11 @@ sealed class UpdateExpenseSchedulerState extends Equatable {
 final class UpdateExpenseSchedulerInitial extends UpdateExpenseSchedulerState {}
 final class UpdateExpenseSchedulerLoading extends UpdateExpenseSchedulerState {}
 final class UpdateExpenseSchedulerFailure extends UpdateExpenseSchedulerState {
+  final int statusCode;
   final String message;
 
   const UpdateExpenseSchedulerFailure({
+    required this.statusCode,
     required this.message
   });
 }

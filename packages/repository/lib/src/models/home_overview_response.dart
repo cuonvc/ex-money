@@ -48,6 +48,18 @@ class HomeOverviewResponse {
     );
   }
 
+  static HomeOverviewResponse empty() {
+    return HomeOverviewResponse(
+        currentMonth: DateTime.now().month,
+        user: UserResponse.empty(),
+        notifications: [],
+        totalExpenseAmount: 0,
+        moreThanLastMonth: 0,
+        ownerExpenses: [],
+        weeks: []
+    );
+  }
+
   static Map<String, dynamic> toMap(HomeOverviewResponse data) {
 
     List<ExpenseResponse> list = data.ownerExpenses;

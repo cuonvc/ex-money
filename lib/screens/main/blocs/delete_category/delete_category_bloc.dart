@@ -20,11 +20,11 @@ class DeleteCategoryBloc extends Bloc<DeleteCategoryEvent, DeleteCategoryState> 
         if (response.code == 0) {
           emit(const DeleteCategorySuccess(message: "Đã xóa"));
         } else {
-          emit(DeleteCategoryFailure(message: response.message));
+          emit(DeleteCategoryFailure(statusCode: response.statusCode, message: response.message));
         }
       } catch (e) {
         log("Error delete category: ${e.toString()}");
-        emit(DeleteCategoryFailure(message: e.toString()));
+        emit(DeleteCategoryFailure(statusCode: 1, message: e.toString()));
       }
     });
   }
