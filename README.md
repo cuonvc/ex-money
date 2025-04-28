@@ -2,7 +2,7 @@
 
 ### Step by step to build the application for Android
 - Clone the mobile project from [develop branch](https://github.com/cuonvc/ex-money/tree/develop)
-- Clone the backend project from [develop branch]() and run with Spring or pull the [Docker image]() from Docker hub
+- Clone the backend project from [develop branch](https://github.com/cuonvc/ex-money-backend/tree/develop) and run with Spring or pull the [Docker image]() from Docker hub
 - [Install Dart and Flutter](https://docs.flutter.dev/get-started/install)
 - Create [Firebase](https://console.firebase.google.com/u/0/) project
 - Get SHA1 and SHA256 and config to the Android application on Firebase
